@@ -1,6 +1,6 @@
 package it.polito.model;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -11,7 +11,7 @@ import android.util.Log;
 
 public class RoutesContainer extends JSONDataContainer {
 	private static RoutesContainer container;
-	private HashMap<String, Route> routes;
+	private ArrayList<Route> routes;
 	
 	private RoutesContainer(){
 		try{
@@ -19,11 +19,11 @@ public class RoutesContainer extends JSONDataContainer {
 			String jsonString = readJsonFromFile();
 			JSONObject JsonData = new JSONObject(jsonString);
 			JSONArray JsonRoutes = JsonData.getJSONArray("routes");
-			this.routes = new HashMap<String, Route>();
+			this.routes = new ArrayList<Route>();
 			for(int i=0; i<JsonRoutes.length(); i++){
 				JSONObject JsonRoute = JsonRoutes.getJSONObject(i);
 				Route r = new Route(JsonRoute);
-				this.routes.put(r.getName(),  r);
+				this.routes.add(r);
 			}
 		}catch(JSONException e){
 			e.printStackTrace();
@@ -41,7 +41,18 @@ public class RoutesContainer extends JSONDataContainer {
 	}
 	
 	private void save(){
-		//TODO saves routes to JSON file. Should be called when any change in data occurs.
+		try{
+			JSONObject jobject = new JSONObject();
+			JSONArray jarray = new JSONArray("routes");
+			for(Route r : routes){
+				jarray.put(r.serializeToJson());
+			}
+			jobject.accumulate("routes", jarray);
+			writeJsonToFile(jobject.toString());
+		}catch(JSONException e){
+			Log.d("RoutesContainer", "Error saving to Json file. " + e.getMessage());
+			System.exit(1);
+		}
 	}
 	
 	/***

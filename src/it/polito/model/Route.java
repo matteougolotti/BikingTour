@@ -74,6 +74,34 @@ public class Route {
 		}
 	}
 	
+	public JSONObject serializeToJson() throws JSONException {
+		JSONObject jRoute = new JSONObject();
+		jRoute.put("name", name);
+		jRoute.put("originName", origin.getName());
+		jRoute.put("srcLat", origin.getLat());
+		jRoute.put("srcLon",  origin.getLon());
+		jRoute.put("destinationName",  destination.getName());
+		jRoute.put("dstLat",  destination.getLat());
+		jRoute.put("dstLon",  destination.getLon());
+		JSONArray jWayPoints = new JSONArray("wayPoints");
+		for(Location wayPoint : wayPoints){
+			JSONObject jWayPoint = new JSONObject();
+			jWayPoint.put("lat", wayPoint.getLat());
+			jWayPoint.put("lon",  wayPoint.getLon());
+			jWayPoints.put(jWayPoint);
+		}
+		jRoute.accumulate("wayPoints",  jWayPoints);
+		JSONArray jPointsOfInterest = new JSONArray("pointsOfInterest");
+		for(Location point : pointsOfInterest){
+			JSONObject jPoint = new JSONObject();
+			jPoint.put("lat", point.getLat());
+			jPoint.put("lon",  point.getLon());
+			jPointsOfInterest.put(jPoint);
+		}
+		jRoute.accumulate("pointsOfInterest", jPointsOfInterest);
+		return jRoute;
+	}
+	
 	public void setName(String name){
 		this.name = name;
 	}
