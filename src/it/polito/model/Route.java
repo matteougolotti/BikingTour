@@ -8,14 +8,13 @@ import org.json.JSONObject;
 
 import android.util.Log;
 
-/***
+/**
  * 
  * @author Matteo
  * 
  * This class contains all the data of a single route.
- * It contains and manages both data used for route planning,
- * like origin and destination coordinates, way-points, etc and
- * data gathered during the tour, like pictures, videos and notes file paths.
+ * It contains and manages data used for route planning,
+ * like origin, destination, way-points and points of interest.
  *
  */
 
@@ -25,11 +24,6 @@ public class Route {
 	private Location origin, destination;
 	private ArrayList<Location> wayPoints;
 	private ArrayList<Location> pointsOfInterest;
-	
-	//Data used for route sharing
-	private ArrayList<String> pictures;
-	private ArrayList<String> videos;
-	private ArrayList<String> notes;
 	
 	//Default constructor used to create a new route
 	public Route(){

@@ -12,11 +12,11 @@ import android.util.Log;
 public class RoutesContainer extends JSONDataContainer {
 	private static RoutesContainer container;
 	private ArrayList<Route> routes;
+	private String fileName = "routes.json";
 	
 	private RoutesContainer(){
 		try{
-			this.fileName = "routes.json";
-			String jsonString = readJsonFromFile();
+			String jsonString = readJsonFromFile(fileName);
 			JSONObject JsonData = new JSONObject(jsonString);
 			JSONArray JsonRoutes = JsonData.getJSONArray("routes");
 			this.routes = new ArrayList<Route>();
@@ -27,20 +27,21 @@ public class RoutesContainer extends JSONDataContainer {
 			}
 		}catch(JSONException e){
 			e.printStackTrace();
-			Log.d("RoutesContainer", "Error parsing json data. " + e.getMessage());
+			Log.d("RoutesContainer", e.getMessage());
 			System.exit(1);
 		}
 	}
 	
-	public RoutesContainer newInstance(Context context){
+	public static RoutesContainer newInstance(Context context){
 		if(RoutesContainer.container == null){
-			this.context = context;
+			RoutesContainer.context = context;
 			RoutesContainer.container = new RoutesContainer();
 		}
 		return RoutesContainer.container;
 	}
 	
-	private void save(){
+	//TODO call this method in the onPause() method of the parent Activity
+	public void save(){
 		try{
 			JSONObject jobject = new JSONObject();
 			JSONArray jarray = new JSONArray("routes");
@@ -48,16 +49,23 @@ public class RoutesContainer extends JSONDataContainer {
 				jarray.put(r.serializeToJson());
 			}
 			jobject.accumulate("routes", jarray);
-			writeJsonToFile(jobject.toString());
+			writeJsonToFile(jobject.toString(), fileName);
 		}catch(JSONException e){
-			Log.d("RoutesContainer", "Error saving to Json file. " + e.getMessage());
+			Log.d("RoutesContainer", e.getMessage());
 			System.exit(1);
 		}
 	}
 	
-	/***
-	 * TODO Add methods to add or delete routes.
-	 * 		Each method should automatically call the save() method,
-	 * 		to immediately save any change on persistent storage.
-	 */
+	public void addRoute(Route r){
+		this.routes.add(r);
+	}
+	
+	public void removeRoute(int index){
+		this.routes.remove(index);
+	}
+	
+	public Route getRoute(int index){
+		return this.routes.get(index);
+	}
+	
 }
