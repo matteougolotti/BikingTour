@@ -19,7 +19,6 @@ import android.util.Log;
  */
 
 public class Route {
-	//Data used for route planning
 	private String name;
 	private Location origin, destination;
 	private ArrayList<Location> wayPoints;
