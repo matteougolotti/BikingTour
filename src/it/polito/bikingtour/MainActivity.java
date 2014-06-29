@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.os.Bundle;
@@ -189,6 +190,14 @@ public class MainActivity extends Activity {
 			// error in creating fragment
 			Log.e("MainActivity", "Error in creating fragment");
 		}
+	}
+	
+	public void addRoute(View v) {
+		Fragment newFragment = new NewRouteFragment();
+		FragmentTransaction transaction = getFragmentManager().beginTransaction();
+		transaction.replace(R.id.frame_container, newFragment);
+		transaction.addToBackStack(null);
+		transaction.commit();
 	}
 
 	@Override

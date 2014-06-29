@@ -6,6 +6,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:id="@+id/frag_home"
     tools:context="it.polito.bikingtour.MainActivity$PlaceholderFragment"
     android:orientation="vertical"
     android:gravity="center_horizontal" >
@@ -16,6 +17,7 @@
             android:paddingTop="5dp"
             android:paddingBottom="5dp" 
             android:text="@string/add_route"
+            style="@style/btnStyleArsenic"
             android:onClick="addRoute" />
 
 <!--        <TextView

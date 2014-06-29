@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/tv_actualLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/actual_location" />
+
+    <EditText
+        android:id="@+id/et_actualLocation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="text" >
+
+        <requestFocus />
+    </EditText>
+    
+    
+	<TextView
+        android:id="@+id/tv_destination"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/destination" />
+	
+	<EditText
+        android:id="@+id/et_destination"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="text" >
+
+        <requestFocus />
+    </EditText>
+    
+	<Button 
+    	android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/bt_submit"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp" 
+        android:text="@string/submit"
+        style="@style/btnStyleArsenic" />
+</LinearLayout>
