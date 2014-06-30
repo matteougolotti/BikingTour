@@ -1,10 +1,13 @@
 package it.polito.bikingtour;
 
+import it.polito.adapter.RouteArrayAdapter;
+import it.polito.model.RoutesContainer;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 
@@ -31,6 +34,10 @@ public class HomeFragment extends Fragment {
         
         tabHost.addTab(spec1);
         tabHost.addTab(spec2);
+        
+        RoutesContainer routes = RoutesContainer.newInstance(getActivity());
+        ListView myRoutes = (ListView) rootView.findViewById(R.id.myRoutesListView);
+        myRoutes.setAdapter(new RouteArrayAdapter(getActivity(), routes.getRoutes()));
         
         return rootView;
     }

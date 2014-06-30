@@ -68,4 +68,8 @@ public class RoutesContainer extends JSONDataContainer {
 		return this.routes.get(index);
 	}
 	
+	public ArrayList<Route> getRoutes(){
+		return this.routes;
+	}
+	
 }

@@ -2,7 +2,7 @@
   "routes": [
     {
       "name": "MyFirstRoute",
-      "originName": "",
+      "originName": "Turin",
       "srcLat": "45.0",
       "srcLon": "7.6",
       "destinationName": "Turin",
@@ -31,8 +31,10 @@
     },
     {
       "name": "MySecondRoute",
+      "originName": "Milan",
       "srcLat": "45.0",
       "srcLon": "7.6",
+      "destinationName": "Milan",
       "dstLat": "45.02",
       "dstLon": "7.8",
       "wayPoints": [
