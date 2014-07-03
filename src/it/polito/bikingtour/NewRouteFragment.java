@@ -28,7 +28,7 @@ public class NewRouteFragment extends Fragment {
 				Bundle bundle = new Bundle();
 				bundle.putString("origin", actualLocation.getText().toString());
 				bundle.putString("destination", destLocation.getText().toString());
-				Fragment newFragment = new NewRouteFragment();
+				Fragment newFragment = new InfoFragment();
 				FragmentTransaction transaction = getFragmentManager().beginTransaction();
 				transaction.replace(R.id.frame_container, newFragment);
 				transaction.addToBackStack(null);

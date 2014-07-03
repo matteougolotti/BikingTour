@@ -14,9 +14,11 @@ public class InfoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
         Bundle bundle = this.getArguments();
-        if(bundle != null){
+        if (bundle != null){
             String origin = bundle.getString("origin");
             String destination = bundle.getString("destination");
+            
+            
         }
         return rootView;
     }
