@@ -32,7 +32,7 @@ public class ToursContainer extends JSONDataContainer {
 		}
 	}
 	
-	public ToursContainer newInstance(Context context){
+	public static ToursContainer newInstance(Context context){
 		if(ToursContainer.container == null){
 			ToursContainer.context = context;
 			ToursContainer.container = new ToursContainer();
@@ -65,6 +65,10 @@ public class ToursContainer extends JSONDataContainer {
 	
 	public Tour getTour(int index){
 		return this.tours.get(index);
+	}
+	
+	public ArrayList<Tour> getTours(){
+		return this.tours;
 	}
 	
 }
