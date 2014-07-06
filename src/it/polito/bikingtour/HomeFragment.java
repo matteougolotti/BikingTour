@@ -14,6 +14,12 @@ import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 
 public class HomeFragment extends Fragment {
+	private TabHost tabHost;
+	private TabSpec spec1, spec2;
+	private RoutesContainer routes;
+	private ToursContainer tours;
+	private View rootView;
+	
 	public HomeFragment() {
 		
 	}
@@ -21,30 +27,36 @@ public class HomeFragment extends Fragment {
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_home, container, false);
+        rootView = inflater.inflate(R.layout.fragment_home, container, false);
         
-        TabHost tabHost = (TabHost) rootView.findViewById(R.id.tabhost);
+        return rootView;
+    }
+	
+	@Override
+	public void onResume(){
+		super.onResume();
+		
+		tabHost = (TabHost) rootView.findViewById(R.id.tabhost);
         tabHost.setup();
         
-        TabSpec spec1 = tabHost.newTabSpec("TAB 1");
+        spec1 = tabHost.newTabSpec("TAB 1");
         spec1.setContent(R.id.myRoutesListView);
         spec1.setIndicator("My Routes");
         
-        TabSpec spec2 = tabHost.newTabSpec("TAB 2");
+        spec2 = tabHost.newTabSpec("TAB 2");
         spec2.setContent(R.id.oldRoutesListView);
         spec2.setIndicator("Old Routes");
         
         tabHost.addTab(spec1);
         tabHost.addTab(spec2);
         
-        RoutesContainer routes = RoutesContainer.newInstance(getActivity());
+        routes = RoutesContainer.newInstance(getActivity());
         ListView myRoutes = (ListView) rootView.findViewById(R.id.myRoutesListView);
         myRoutes.setAdapter(new RouteArrayAdapter(getActivity(), routes.getRoutes()));
         
-        ToursContainer tours = ToursContainer.newInstance(getActivity());
+        tours = ToursContainer.newInstance(getActivity());
         ListView myTours = (ListView) rootView.findViewById(R.id.oldRoutesListView);
         myTours.setAdapter(new TourArrayAdapter(getActivity(), tours.getTours()));
-        
-        return rootView;
-    }
+	}
+	
 }

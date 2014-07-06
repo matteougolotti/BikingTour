@@ -1,25 +1,272 @@
 package it.polito.bikingtour;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import it.polito.utils.JSONParser;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.location.Location;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesClient;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.location.LocationClient;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
+
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.app.Fragment;
+import android.app.ProgressDialog;
+import android.content.IntentSender;
+import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-public class InfoFragment extends Fragment {
+import android.widget.Toast;
+
+public class InfoFragment extends Fragment implements
+	GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnectionFailedListener {
+	
+	private MapFragment mapFragment;
+    private GoogleMap map;
+    private LocationClient mLocationClient;
+    private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
+    private it.polito.model.Location origin, destination;
+    
 	public InfoFragment() {
 		
 	}
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_home, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_info, container, false);
         Bundle bundle = this.getArguments();
         if (bundle != null){
             String origin = bundle.getString("origin");
             String destination = bundle.getString("destination");
             
+            //TODO assign valid location to origin and destination based on name.
+            
+            mLocationClient = new LocationClient(getActivity(), this, this);
+            mapFragment = (MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.map);
+            map = mapFragment.getMap();
             
         }
         return rootView;
     }
+
+	@Override
+    public void onStart() {
+        super.onStart();
+        if(isGooglePlayServicesAvailable()){
+            mLocationClient.connect();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        mLocationClient.disconnect();
+        super.onStop();
+    }
+	
+	@Override
+	public void onConnectionFailed(ConnectionResult connectionResult) {
+		if (connectionResult.hasResolution()) {
+            try {
+                connectionResult.startResolutionForResult(
+                        getActivity(),
+                        CONNECTION_FAILURE_RESOLUTION_REQUEST);
+                
+            } catch (IntentSender.SendIntentException e) {
+                e.printStackTrace();
+            }
+        } else {
+            Toast.makeText(getActivity(), "Sorry. Location services are not available to you", Toast.LENGTH_LONG).show();
+        }
+	}
+
+	@Override
+    public void onConnected(Bundle dataBundle) {
+        Toast.makeText(getActivity(), "Connected", Toast.LENGTH_SHORT).show();
+        Location location = mLocationClient.getLastLocation();
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15);
+        map.animateCamera(cameraUpdate);
+        BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.destmarker);
+        map.addMarker(new MarkerOptions()
+                .position(new LatLng(destination.getLat(), destination.getLon()))
+                .title(destination.getName())
+                .icon(icon));
+        String request = makeURLRequest(Double.toString(location.getLatitude()),
+                Double.toString(location.getLongitude()), String.valueOf(destination.getLat()), String.valueOf(destination.getLon()));
+        new getJSONThread(request).execute();
+    }
+
+	public String makeURLRequest(String srclat, String srclng, String destlat, String destlng) {
+        StringBuilder url =  new StringBuilder();
+        url.append("http://maps.googleapis.com/maps/api/directions/json");
+        url.append("?origin=");
+        url.append(srclat);
+        url.append(",");
+        url.append(srclng);
+        url.append("&destination=");
+        url.append(destlat);
+        url.append(",");
+        url.append(destlng);
+        url.append("&sensor=false&mode=walking&alternatives=true");
+        return url.toString();
+    }
+
+	
+	@Override
+	public void onDisconnected() {
+		Toast.makeText(getActivity(), "Disconnected. Please re-connect.",
+                Toast.LENGTH_SHORT).show();
+	}
+	
+	private boolean isGooglePlayServicesAvailable() {
+        int resultCode =  GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity());
+        if (ConnectionResult.SUCCESS == resultCode) {
+            Log.d("Location Updates", "Google Play services is available.");
+            return true;
+        } else {
+            Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(resultCode,
+                    getActivity(),
+                    CONNECTION_FAILURE_RESOLUTION_REQUEST);
+
+            if (errorDialog != null) {
+                ErrorDialogFragment errorFragment = new ErrorDialogFragment();
+                errorFragment.setDialog(errorDialog);
+                errorFragment.show(getFragmentManager(), "Location Updates");
+            }
+
+            return false;
+        }
+    }
+	
+	public static class ErrorDialogFragment extends DialogFragment {
+        private Dialog mDialog;
+
+        public ErrorDialogFragment() {
+            super();
+            mDialog = null;
+        }
+
+        public void setDialog(Dialog dialog) {
+            mDialog = dialog;
+        }
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            return mDialog;
+        }
+    }
+
+	public class getJSONThread extends AsyncTask<Void, Void, String> {
+        private ProgressDialog progressDialog;
+        String url;
+
+        public getJSONThread(String urlPass){
+            this.url = urlPass;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(getActivity());
+            progressDialog.setMessage("Fetching route, Please wait...");
+            progressDialog.setIndeterminate(true);
+            progressDialog.show();
+        }
+        @Override
+        protected String doInBackground(Void... params) {
+            JSONParser jParser = new JSONParser();
+            String json = jParser.getJSONFromUrl(url);
+            return json;
+        }
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            progressDialog.hide();
+            progressDialog.dismiss();
+            if(result != null){
+                drawDirections(result);
+            }
+        }
+    }
+
+    public void drawDirections(String result) {
+        try {
+            final JSONObject json = new JSONObject(result);
+            JSONArray routeArray = json.getJSONArray("routes");
+            JSONObject routes = routeArray.getJSONObject(0);
+            JSONObject overviewPolylines = routes.getJSONObject("overview_polyline");
+            String encodedString = overviewPolylines.getString("points");
+            List<LatLng> list = decodePoly(encodedString);
+
+            for(int z = 0; z < list.size() - 1; z++){
+                LatLng src = list.get(z);
+                LatLng dest = list.get(z+1);
+                Polyline line = map.addPolyline(new PolylineOptions()
+                        .add(new LatLng(src.latitude, src.longitude), new LatLng(dest.latitude, dest.longitude))
+                        .width(10)
+                        .visible(true)
+                        .color(Color.BLUE).geodesic(true));
+            }
+
+        }
+        catch (JSONException e) {
+
+        }
+    }
+
+    private List<LatLng> decodePoly(String encoded) {
+        List<LatLng> poly = new ArrayList<LatLng>();
+        int index = 0, len = encoded.length();
+        int lat = 0, lng = 0;
+
+        while (index < len) {
+            int b, shift = 0, result = 0;
+            do {
+                b = encoded.charAt(index++) - 63;
+                result |= (b & 0x1f) << shift;
+                shift += 5;
+            } while (b >= 0x20);
+            int dlat = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+            lat += dlat;
+
+            shift = 0;
+            result = 0;
+            do {
+                b = encoded.charAt(index++) - 63;
+                result |= (b & 0x1f) << shift;
+                shift += 5;
+            } while (b >= 0x20);
+            int dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+            lng += dlng;
+
+            LatLng p = new LatLng( (((double) lat / 1E5)),
+                    (((double) lng / 1E5) ));
+            poly.add(p);
+        }
+
+        return poly;
+    }
+	
 }
