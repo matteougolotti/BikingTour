@@ -1,5 +1,7 @@
 package it.polito.model;
 
+import java.util.List;
+
 public class Location {
 	private double lat;
 	private double lon;
@@ -7,7 +9,9 @@ public class Location {
 	
 	public Location(String name){
 		this.name = name;
-		//TODO if possible automatically get the coordinates.
+		//GeoPoint point = convertToLatLong(name);
+		//this.lat = (double) point.getLatitudeE6()/1E6;
+		//this.lon = (double) point.getLongitudeE6()/1E6;
 	}
 	
 	public Location(double lat, double lon){

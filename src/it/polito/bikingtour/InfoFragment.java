@@ -1,5 +1,6 @@
 package it.polito.bikingtour;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +10,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -25,11 +28,13 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.maps.GeoPoint;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.IntentSender;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -38,6 +43,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 public class InfoFragment extends Fragment implements
@@ -47,7 +53,7 @@ public class InfoFragment extends Fragment implements
     private GoogleMap map;
     private LocationClient mLocationClient;
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
-    private it.polito.model.Location origin, destination;
+    private it.polito.model.Location locOrigin, locDestination;
     
 	public InfoFragment() {
 		
@@ -57,9 +63,14 @@ public class InfoFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_info, container, false);
         Bundle bundle = this.getArguments();
-        if (bundle != null){
+        if (bundle != null && bundle.containsKey("origin") && bundle.containsKey("destination")) {
             String origin = bundle.getString("origin");
             String destination = bundle.getString("destination");
+            
+            locOrigin = new it.polito.model.Location(origin);
+            locDestination = new it.polito.model.Location(destination);
+            
+            setLatLong();
             
             //TODO assign valid location to origin and destination based on name.
             
@@ -70,6 +81,13 @@ public class InfoFragment extends Fragment implements
         }
         return rootView;
     }
+	
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+	    super.onActivityCreated(savedInstanceState);
+	    final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+	    imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
+	}
 
 	@Override
     public void onStart() {
@@ -84,7 +102,7 @@ public class InfoFragment extends Fragment implements
         mLocationClient.disconnect();
         super.onStop();
     }
-	
+    
 	@Override
 	public void onConnectionFailed(ConnectionResult connectionResult) {
 		if (connectionResult.hasResolution()) {
@@ -104,19 +122,53 @@ public class InfoFragment extends Fragment implements
 	@Override
     public void onConnected(Bundle dataBundle) {
         Toast.makeText(getActivity(), "Connected", Toast.LENGTH_SHORT).show();
-        Location location = mLocationClient.getLastLocation();
-        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        LatLng latLng = new LatLng(locOrigin.getLat(), locOrigin.getLon());
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15);
         map.animateCamera(cameraUpdate);
+        
         BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.destmarker);
         map.addMarker(new MarkerOptions()
-                .position(new LatLng(destination.getLat(), destination.getLon()))
-                .title(destination.getName())
+                .position(new LatLng(locDestination.getLat(), locDestination.getLon()))
+                .title(locDestination.getName())
                 .icon(icon));
-        String request = makeURLRequest(Double.toString(location.getLatitude()),
-                Double.toString(location.getLongitude()), String.valueOf(destination.getLat()), String.valueOf(destination.getLon()));
+        
+        String request = makeURLRequest(Double.toString(locOrigin.getLat()),
+                Double.toString(locOrigin.getLon()), 
+                Double.toString(locDestination.getLat()), 
+                Double.toString(locDestination.getLon()));
         new getJSONThread(request).execute();
     }
+	
+	public void setLatLong() {
+		GeoPoint pointOrigin = convertToLatLong(locOrigin.getName());
+		GeoPoint pointDestination = convertToLatLong(locDestination.getName());
+		locOrigin.setLat(pointOrigin.getLatitudeE6()/1E6);
+		locOrigin.setLon(pointOrigin.getLongitudeE6()/1E6);
+		locDestination.setLat(pointDestination.getLatitudeE6()/1E6);
+		locDestination.setLon(pointDestination.getLongitudeE6()/1E6);
+	}
+	
+	public GeoPoint convertToLatLong(String address) {
+		 Geocoder coder = new Geocoder(getActivity());
+		 List<Address> listAddress;
+		 try {
+			 listAddress = coder.getFromLocationName(address, 5);
+		     if (listAddress == null) {
+		         return null;
+		     }
+		     Address location = listAddress.get(0);
+		     location.getLatitude();
+		     location.getLongitude();
+
+		     GeoPoint point = new GeoPoint((int) (location.getLatitude() * 1E6),
+		                       (int) (location.getLongitude() * 1E6));
+		     return point;
+		 } catch (IOException e) {
+			 e.printStackTrace();
+		}
+		
+		return null;
+	}
 
 	public String makeURLRequest(String srclat, String srclng, String destlat, String destlng) {
         StringBuilder url =  new StringBuilder();
