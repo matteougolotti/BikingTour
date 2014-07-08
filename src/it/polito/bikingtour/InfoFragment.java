@@ -123,14 +123,20 @@ public class InfoFragment extends Fragment implements
     public void onConnected(Bundle dataBundle) {
         Toast.makeText(getActivity(), "Connected", Toast.LENGTH_SHORT).show();
         LatLng latLng = new LatLng(locOrigin.getLat(), locOrigin.getLon());
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15);
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 13);
         map.animateCamera(cameraUpdate);
         
-        BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.destmarker);
+        BitmapDescriptor srcIcon = BitmapDescriptorFactory.fromResource(R.drawable.srcmarker);
+        map.addMarker(new MarkerOptions()
+                .position(new LatLng(locOrigin.getLat(), locOrigin.getLon()))
+                .title(locOrigin.getName())
+                .icon(srcIcon));
+        
+        BitmapDescriptor destIcon = BitmapDescriptorFactory.fromResource(R.drawable.destmarker);
         map.addMarker(new MarkerOptions()
                 .position(new LatLng(locDestination.getLat(), locDestination.getLon()))
                 .title(locDestination.getName())
-                .icon(icon));
+                .icon(destIcon));
         
         String request = makeURLRequest(Double.toString(locOrigin.getLat()),
                 Double.toString(locOrigin.getLon()), 

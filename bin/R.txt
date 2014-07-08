@@ -110,6 +110,7 @@ int drawable list_item_bg_pressed 0x7f020027
 int drawable list_selector 0x7f020028
 int drawable powered_by_google_dark 0x7f020029
 int drawable powered_by_google_light 0x7f02002a
+int drawable srcmarker 0x7f02002b
 int id action_settings 0x7f070029
 int id book_now 0x7f070010
 int id bt_submit 0x7f070026
