@@ -1,7 +1,5 @@
 package it.polito.model;
 
-import java.util.List;
-
 public class Location {
 	private double lat;
 	private double lon;
