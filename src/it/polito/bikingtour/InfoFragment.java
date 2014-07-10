@@ -44,6 +44,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.WebView;
 import android.widget.Toast;
 
 public class InfoFragment extends Fragment implements
@@ -59,11 +60,29 @@ public class InfoFragment extends Fragment implements
 		
 	}
 	
+	public void onCreate(Bundle savedInstanceState) {
+	    setRetainInstance(true); 
+	    super.onCreate(savedInstanceState);     
+	}
+	
+	@Override
+	public void onDestroyView() {
+	    super.onDestroyView();
+	    try {
+	        MapFragment fragment = (MapFragment) getActivity()
+	                                          .getFragmentManager().findFragmentById(
+	                                              R.id.mapfragment);
+	        if (fragment != null) getFragmentManager().beginTransaction().remove(fragment).commit();
+
+	    } catch (IllegalStateException e) {
+	    }
+	}
+	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_info, container, false);
         Bundle bundle = this.getArguments();
-        if (bundle != null && bundle.containsKey("origin") && bundle.containsKey("destination")) {
+        /*if (bundle != null && bundle.containsKey("origin") && bundle.containsKey("destination")) {
             String origin = bundle.getString("origin");
             String destination = bundle.getString("destination");
             
@@ -75,10 +94,11 @@ public class InfoFragment extends Fragment implements
             //TODO assign valid location to origin and destination based on name.
             
             mLocationClient = new LocationClient(getActivity(), this, this);
-            mapFragment = (MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.map);
+            mapFragment = (MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.mapfragment);
             map = mapFragment.getMap();
-            
-        }
+
+        }*/
+        
         return rootView;
     }
 	
@@ -86,7 +106,25 @@ public class InfoFragment extends Fragment implements
 	public void onActivityCreated(Bundle savedInstanceState) {
 	    super.onActivityCreated(savedInstanceState);
 	    final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-	    imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
+	    imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);      
+	    
+	    locOrigin = new it.polito.model.Location("Corso XI Febbraio");
+        locDestination = new it.polito.model.Location("Politecnico di Torino");
+        
+        setLatLong();
+        
+        //TODO assign valid location to origin and destination based on name.
+        
+        mLocationClient = new LocationClient(getActivity(), this, this);
+        mapFragment = ((MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.mapfragment));
+        map = mapFragment.getMap();
+	    
+	    String url = "http://chart.apis.google.com/chart?cht=p3&chs=500x200&chd=e:TNTNTNGa&chts=000000,16&chtt=A+Better+Web&chl=Hello|Hi|anas|Explorer&chco=FF5533,237745,9011D3,335423&chdl=Apple|Mozilla|Google|Microsoft";
+	       
+	    WebView mCharView = (WebView) getActivity().findViewById(R.id.char_view);
+        mCharView.loadUrl(url);
+        
+        //map = mapFragment.getMap();
 	}
 
 	@Override
@@ -122,6 +160,7 @@ public class InfoFragment extends Fragment implements
 	@Override
     public void onConnected(Bundle dataBundle) {
         Toast.makeText(getActivity(), "Connected", Toast.LENGTH_SHORT).show();
+       
         LatLng latLng = new LatLng(locOrigin.getLat(), locOrigin.getLon());
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 13);
         map.animateCamera(cameraUpdate);
@@ -175,7 +214,7 @@ public class InfoFragment extends Fragment implements
 		
 		return null;
 	}
-
+	
 	public String makeURLRequest(String srclat, String srclng, String destlat, String destlng) {
         StringBuilder url =  new StringBuilder();
         url.append("http://maps.googleapis.com/maps/api/directions/json");
