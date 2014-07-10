@@ -9,6 +9,8 @@
     <string name="actual_location">Type your actual location:</string>
     <string name="destination">Type the desired destination:</string>
     <string name="submit">Submit</string>
+    <string name="accept">Accept tour</string>
+    <string name="cancel">Cancel</string>
     
     <!-- Nav Drawer Menu Items -->
     <string-array name="nav_drawer_items">

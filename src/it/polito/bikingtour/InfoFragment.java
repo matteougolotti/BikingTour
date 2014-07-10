@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import it.polito.model.RequestListener;
 import it.polito.utils.JSONParser;
 
 import org.json.JSONArray;
@@ -54,6 +55,7 @@ public class InfoFragment extends Fragment implements
     private LocationClient mLocationClient;
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     private it.polito.model.Location locOrigin, locDestination;
+    private String urlChart = null;
     
 	public InfoFragment() {
 		
@@ -179,7 +181,69 @@ public class InfoFragment extends Fragment implements
                 Double.toString(locOrigin.getLon()), 
                 Double.toString(locDestination.getLat()), 
                 Double.toString(locDestination.getLon()));
-        new getJSONThread(request).execute();
+        
+        JSONThread jsonThread = new JSONThread(request);
+        jsonThread.setRequestListener(new RequestListener() {
+			
+			@Override
+			public void postResponse(String result) {
+				drawDirections(result);
+			}
+		});
+        jsonThread.execute();
+        
+        String requestElevation = makeURLElevationsRequest(Double.toString(locOrigin.getLat()), 
+        		Double.toString(locOrigin.getLon()), 
+        		Double.toString(locDestination.getLat()), 
+        		Double.toString(locDestination.getLon()));
+        
+//        JSONThread elevationJsonThread = new JSONThread(requestElevation);
+//        elevationJsonThread.setRequestListener(new RequestListener() {
+//			@Override
+//			public void postResponse(String result) {
+//				urlChart = result;
+//			}
+//		});
+//        elevationJsonThread.execute();
+        
+    }
+
+	public class JSONThread extends AsyncTask<Void, Void, String> {
+        private ProgressDialog progressDialog;
+        private RequestListener requestListener;
+        String url;
+
+        public JSONThread(String urlPass){
+            this.url = urlPass;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(getActivity());
+            progressDialog.setMessage("Fetching route, Please wait...");
+            progressDialog.setIndeterminate(true);
+            progressDialog.show();
+        }
+        @Override
+        protected String doInBackground(Void... params) {
+            JSONParser jParser = new JSONParser();
+            String json = jParser.getJSONFromUrl(url);
+            return json;
+        }
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            progressDialog.hide();
+            progressDialog.dismiss();
+            if(result != null){
+            	requestListener.postResponse(result);
+            }
+        }
+        
+        public void setRequestListener(RequestListener requestListener) {
+        	this.requestListener = requestListener;
+        }
     }
 	
 	public void setLatLong() {
@@ -215,6 +279,21 @@ public class InfoFragment extends Fragment implements
 		}
 		
 		return null;
+	}
+	
+	public String makeURLElevationsRequest(String srclat, String srclng, String destlat, String destlng) {
+		StringBuilder url =  new StringBuilder();
+        url.append("http://maps.googleapis.com/maps/api/elevation/json");
+        url.append("?path=");
+        url.append(srclat);
+        url.append(",");
+        url.append(srclng);
+        url.append("|");
+        url.append(destlat);
+        url.append(",");
+        url.append(destlng);
+        url.append("&samples=7&sensor=true_or_false");
+        return url.toString();
 	}
 	
 	public String makeURLRequest(String srclat, String srclng, String destlat, String destlng) {
@@ -274,39 +353,6 @@ public class InfoFragment extends Fragment implements
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             return mDialog;
-        }
-    }
-
-	public class getJSONThread extends AsyncTask<Void, Void, String> {
-        private ProgressDialog progressDialog;
-        String url;
-
-        public getJSONThread(String urlPass){
-            this.url = urlPass;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressDialog = new ProgressDialog(getActivity());
-            progressDialog.setMessage("Fetching route, Please wait...");
-            progressDialog.setIndeterminate(true);
-            progressDialog.show();
-        }
-        @Override
-        protected String doInBackground(Void... params) {
-            JSONParser jParser = new JSONParser();
-            String json = jParser.getJSONFromUrl(url);
-            return json;
-        }
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            progressDialog.hide();
-            progressDialog.dismiss();
-            if(result != null){
-                drawDirections(result);
-            }
         }
     }
 
