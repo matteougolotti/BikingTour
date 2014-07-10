@@ -12,7 +12,6 @@ import org.json.JSONObject;
 
 import android.location.Address;
 import android.location.Geocoder;
-import android.location.Location;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
@@ -148,7 +147,6 @@ public class InfoFragment extends Fragment implements
                 connectionResult.startResolutionForResult(
                         getActivity(),
                         CONNECTION_FAILURE_RESOLUTION_REQUEST);
-                
             } catch (IntentSender.SendIntentException e) {
                 e.printStackTrace();
             }
@@ -198,9 +196,12 @@ public class InfoFragment extends Fragment implements
 		 List<Address> listAddress;
 		 try {
 			 listAddress = coder.getFromLocationName(address, 5);
-		     if (listAddress == null) {
-		         return null;
-		     }
+			 //TODO handle possible error situation. Method should not return null
+		     if (listAddress == null)
+		         return null;			
+		     if(listAddress.isEmpty())
+		    	 return null;			
+		     
 		     Address location = listAddress.get(0);
 		     location.getLatitude();
 		     location.getLongitude();
@@ -210,6 +211,7 @@ public class InfoFragment extends Fragment implements
 		     return point;
 		 } catch (IOException e) {
 			 e.printStackTrace();
+			 System.exit(0);
 		}
 		
 		return null;
