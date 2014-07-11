@@ -1,6 +1,8 @@
 package it.polito.bikingtour;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -120,11 +122,10 @@ public class InfoFragment extends Fragment implements
         mapFragment = ((MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.mapfragment));
         map = mapFragment.getMap();
 	    
-	    String url = "http://chart.apis.google.com/chart?cht=p3&chs=500x200&chd=e:TNTNTNGa&chts=000000,16&chtt=A+Better+Web&chl=Hello|Hi|anas|Explorer&chco=FF5533,237745,9011D3,335423&chdl=Apple|Mozilla|Google|Microsoft";
-	       
-	    WebView mCharView = (WebView) getActivity().findViewById(R.id.char_view);
-        mCharView.loadUrl(url);
-        
+	    //String url = "http://chart.apis.google.com/chart?cht=p3&chs=500x200&chd=e:TNTNTNGa&chts=000000,16&chtt=A+Better+Web&chl=Hello|Hi|anas|Explorer&chco=FF5533,237745,9011D3,335423&chdl=Apple|Mozilla|Google|Microsoft";
+	    
+		//WebView mCharView = (WebView) getActivity().findViewById(R.id.char_view);
+	    //mCharView.loadUrl(url);
         //map = mapFragment.getMap();
 	}
 
@@ -192,24 +193,35 @@ public class InfoFragment extends Fragment implements
 		});
         jsonThread.execute();
         
-        String requestElevation = makeURLElevationsRequest(Double.toString(locOrigin.getLat()), 
-        		Double.toString(locOrigin.getLon()), 
-        		Double.toString(locDestination.getLat()), 
-        		Double.toString(locDestination.getLon()));
-        
-//        JSONThread elevationJsonThread = new JSONThread(requestElevation);
-//        elevationJsonThread.setRequestListener(new RequestListener() {
-//			@Override
-//			public void postResponse(String result) {
-//				urlChart = result;
-//			}
-//		});
-//        elevationJsonThread.execute();
-        
+        String requestElevation;
+		try {
+			requestElevation = makeURLElevationsRequest(Double.toString(locOrigin.getLat()), 
+					Double.toString(locOrigin.getLon()), 
+					Double.toString(locDestination.getLat()), 
+					Double.toString(locDestination.getLon()));
+			
+			JSONThread elevationJsonThread = new JSONThread(requestElevation);
+	        elevationJsonThread.setRequestListener(new RequestListener() {
+				@Override
+				public void postResponse(String result) {
+					//urlChart = result;
+					try {
+						createGraph(result);
+					} catch (UnsupportedEncodingException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			});
+	        elevationJsonThread.execute();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 
 	public class JSONThread extends AsyncTask<Void, Void, String> {
-        private ProgressDialog progressDialog;
+        //private ProgressDialog progressDialog;
         private RequestListener requestListener;
         String url;
 
@@ -220,10 +232,10 @@ public class InfoFragment extends Fragment implements
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressDialog = new ProgressDialog(getActivity());
-            progressDialog.setMessage("Fetching route, Please wait...");
-            progressDialog.setIndeterminate(true);
-            progressDialog.show();
+//            progressDialog = new ProgressDialog(getActivity());
+//            progressDialog.setMessage("Fetching route, Please wait...");
+//            progressDialog.setIndeterminate(true);
+//            progressDialog.show();
         }
         @Override
         protected String doInBackground(Void... params) {
@@ -234,8 +246,8 @@ public class InfoFragment extends Fragment implements
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            progressDialog.hide();
-            progressDialog.dismiss();
+           // progressDialog.hide();
+           // progressDialog.dismiss();
             if(result != null){
             	requestListener.postResponse(result);
             }
@@ -281,14 +293,15 @@ public class InfoFragment extends Fragment implements
 		return null;
 	}
 	
-	public String makeURLElevationsRequest(String srclat, String srclng, String destlat, String destlng) {
+	public String makeURLElevationsRequest(String srclat, String srclng, String destlat, String destlng) throws UnsupportedEncodingException {
 		StringBuilder url =  new StringBuilder();
+		String specialCharacter = URLEncoder.encode("|", "UTF-8");
         url.append("http://maps.googleapis.com/maps/api/elevation/json");
         url.append("?path=");
         url.append(srclat);
         url.append(",");
         url.append(srclng);
-        url.append("|");
+        url.append(specialCharacter);
         url.append(destlat);
         url.append(",");
         url.append(destlng);
@@ -355,7 +368,95 @@ public class InfoFragment extends Fragment implements
             return mDialog;
         }
     }
-
+	
+	public void createGraph(String result) throws UnsupportedEncodingException {
+		try {
+			JSONObject json = new JSONObject(result);
+			JSONArray elevationArray = json.getJSONArray("results");
+			ArrayList<String> elevations = new ArrayList<String>();
+			
+			for (int i = 0; i < elevationArray.length(); i++) {
+				JSONObject jsonObject = elevationArray.getJSONObject(i);
+				String elevation = jsonObject.getString("elevation");
+				elevations.add(elevation);
+			}
+			
+			String start = String.valueOf(searchMinValue(elevations));
+			String end = String.valueOf(searchMaxValue(elevations));
+			String url = makeUrlChart(elevations, start, end);
+			
+			WebView mCharView = (WebView) getActivity().findViewById(R.id.char_view);
+		    mCharView.loadUrl(url);
+			//String urlTest = "http://chart.apis.google.com/chart?cht=lc&chs=500x250&chco=FF0000&chxt=y&chxr=0,0,100&chdl=elevation&chtt=Elevation+Chart&chts=000000,24&chd=t:30,50,100";
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public String makeUrlChart(ArrayList<String> elevations, String start, String end) throws UnsupportedEncodingException {
+		StringBuilder url =  new StringBuilder();
+		String specialCharacter = URLEncoder.encode("|", "UTF-8");
+		ArrayList<String> parametrizedArray = getParametrizedArray(elevations);
+        url.append("http://chart.apis.google.com/chart");
+        url.append("?cht=lc");
+        url.append("&chs=400x250");
+        url.append("&chco=FF0000");
+        url.append("&chxt=y&chxr=0,");
+        url.append(start + ",");
+        url.append(end);
+        url.append("&chdl=elevation");
+        url.append("&chtt=Elevation+Chart");
+        url.append("&chts=000000,24");
+        url.append("&chd=t:");
+        for (String elev : parametrizedArray) {
+			url.append(elev + ",");
+		}
+        url.deleteCharAt(url.length() - 1);
+        url.append(specialCharacter);
+        url.append("0");
+        url.append(specialCharacter);
+        url.append("0");
+        url.append(specialCharacter);
+        url.append("0");
+        String test = url.toString();
+        return url.toString();
+	}
+	
+	public ArrayList<String> getParametrizedArray(ArrayList<String> elevations) {
+		ArrayList<String> parametrizedArray = new ArrayList<String>();
+		Double minValue = searchMinValue(elevations);
+		Double maxValue = searchMaxValue(elevations);
+		
+		for (String elevation : elevations) {
+			Double parametrizedValue = (100 * 
+					(Double.parseDouble(elevation) - minValue))/(maxValue - minValue);
+			parametrizedArray.add(String.valueOf(parametrizedValue));
+		}
+		return parametrizedArray;
+	}
+	
+	public Double searchMaxValue(ArrayList<String> elevations) {
+		Double bigger = Double.parseDouble(elevations.get(0));
+		for (String elevation : elevations) {
+			if (Double.parseDouble(elevation) > bigger) {
+				bigger = Double.parseDouble(elevation);
+			}
+		}
+		
+		return bigger;
+	}
+	
+	public Double searchMinValue(ArrayList<String> elevations) {
+		Double smaller = Double.parseDouble(elevations.get(0));
+		for (String elevation : elevations) {
+			if (Double.parseDouble(elevation) < smaller) {
+				smaller = Double.parseDouble(elevation);
+			}
+		}
+		
+		return smaller;
+	}
     public void drawDirections(String result) {
         try {
             final JSONObject json = new JSONObject(result);

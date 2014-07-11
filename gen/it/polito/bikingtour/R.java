@@ -435,7 +435,7 @@ containing a value of this type.
         public static final int srcmarker=0x7f02002b;
     }
     public static final class id {
-        public static final int action_settings=0x7f07002b;
+        public static final int action_settings=0x7f07002e;
         public static final int book_now=0x7f070010;
         public static final int bt_submit=0x7f070028;
         public static final int buttonAccept=0x7f070022;
@@ -445,6 +445,7 @@ containing a value of this type.
         public static final int buy_with_google=0x7f07000e;
         public static final int char_view=0x7f070021;
         public static final int classic=0x7f070011;
+        public static final int close_fragment_picture=0x7f07002b;
         public static final int counter=0x7f070019;
         public static final int drawer_layout=0x7f070014;
         public static final int et_actualLocation=0x7f070025;
@@ -464,17 +465,19 @@ containing a value of this type.
         public static final int none=0x7f070000;
         public static final int normal=0x7f070001;
         public static final int oldRoutesListView=0x7f07001f;
+        public static final int picture_camera_preview=0x7f070029;
         public static final int production=0x7f070007;
-        public static final int route_name=0x7f070029;
+        public static final int route_name=0x7f07002c;
         public static final int sandbox=0x7f070008;
         public static final int satellite=0x7f070002;
         public static final int selectionDetails=0x7f07000b;
         public static final int strict_sandbox=0x7f070009;
         public static final int tabContentLinear=0x7f07001d;
         public static final int tabhost=0x7f07001c;
+        public static final int take_picture_button=0x7f07002a;
         public static final int terrain=0x7f070003;
         public static final int title=0x7f070018;
-        public static final int tour_name=0x7f07002a;
+        public static final int tour_name=0x7f07002d;
         public static final int tv_actualLocation=0x7f070024;
         public static final int tv_destination=0x7f070026;
         public static final int txtLabel=0x7f07001a;
@@ -490,10 +493,11 @@ containing a value of this type.
         public static final int fragment_home=0x7f030003;
         public static final int fragment_info=0x7f030004;
         public static final int fragment_newroute=0x7f030005;
-        public static final int fragment_review=0x7f030006;
-        public static final int fragment_search=0x7f030007;
-        public static final int route_list_layout=0x7f030008;
-        public static final int tour_list_layout=0x7f030009;
+        public static final int fragment_picture=0x7f030006;
+        public static final int fragment_review=0x7f030007;
+        public static final int fragment_search=0x7f030008;
+        public static final int route_list_layout=0x7f030009;
+        public static final int tour_list_layout=0x7f03000a;
     }
     public static final class menu {
         public static final int main=0x7f0b0000;
@@ -511,6 +515,7 @@ containing a value of this type.
         public static final int auth_client_requested_by_msg=0x7f050005;
         public static final int auth_client_using_bad_version_title=0x7f050000;
         public static final int cancel=0x7f050029;
+        public static final int close_fragment_picture_button=0x7f05002c;
         /**  Button in confirmation dialog to enable Google Play services.  Clicking it
         will direct user to application settings of Google Play services where they
         can enable it [CHAR LIMIT=40] 
@@ -607,6 +612,7 @@ containing a value of this type.
         public static final int hello_world=0x7f050021;
         public static final int my_routes=0x7f050024;
         public static final int submit=0x7f050027;
+        public static final int take_picture_button=0x7f05002b;
         /**  Text on a placeholder buy button when Google Play services is not
          available or up-to-date 
          */
