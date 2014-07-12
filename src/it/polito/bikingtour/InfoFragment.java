@@ -35,7 +35,6 @@ import com.google.android.maps.GeoPoint;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.IntentSender;
 import android.graphics.Color;
@@ -47,7 +46,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
+import android.widget.TabHost;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.TabHost.TabSpec;
 
 public class InfoFragment extends Fragment implements
 	GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnectionFailedListener {
@@ -57,7 +59,9 @@ public class InfoFragment extends Fragment implements
     private LocationClient mLocationClient;
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     private it.polito.model.Location locOrigin, locDestination;
-    private String urlChart = null;
+    private View rootView;
+    private TabHost tabHost;
+	private TabSpec specMap, specInfo;
     
 	public InfoFragment() {
 		
@@ -66,6 +70,25 @@ public class InfoFragment extends Fragment implements
 	public void onCreate(Bundle savedInstanceState) {
 	    setRetainInstance(true); 
 	    super.onCreate(savedInstanceState);     
+	}
+	
+	@Override
+	public void onResume(){
+		super.onResume();
+		
+		tabHost = (TabHost) rootView.findViewById(R.id.tabhostinfo);
+        tabHost.setup();
+        
+        specMap = tabHost.newTabSpec("Map");
+        specMap.setContent(R.id.tabmap);
+        specMap.setIndicator("Map");
+        
+        specInfo = tabHost.newTabSpec("Info");
+        specInfo.setContent(R.id.tabinfo);
+        specInfo.setIndicator("Info");
+        
+        tabHost.addTab(specMap);
+        tabHost.addTab(specInfo);
 	}
 	
 	@Override
@@ -83,25 +106,7 @@ public class InfoFragment extends Fragment implements
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_info, container, false);
-        Bundle bundle = this.getArguments();
-        /*if (bundle != null && bundle.containsKey("origin") && bundle.containsKey("destination")) {
-            String origin = bundle.getString("origin");
-            String destination = bundle.getString("destination");
-            
-            locOrigin = new it.polito.model.Location(origin);
-            locDestination = new it.polito.model.Location(destination);
-            
-            setLatLong();
-            
-            //TODO assign valid location to origin and destination based on name.
-            
-            mLocationClient = new LocationClient(getActivity(), this, this);
-            mapFragment = (MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.mapfragment);
-            map = mapFragment.getMap();
-
-        }*/
-        
+        rootView = inflater.inflate(R.layout.fragment_info, container, false);
         return rootView;
     }
 	
@@ -110,7 +115,7 @@ public class InfoFragment extends Fragment implements
 	    super.onActivityCreated(savedInstanceState);
 	    final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
 	    imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);      
-	    
+	    //change after for the text typed in the new route fragment
 	    locOrigin = new it.polito.model.Location("Corso XI Febbraio");
         locDestination = new it.polito.model.Location("Politecnico di Torino");
         
@@ -121,12 +126,6 @@ public class InfoFragment extends Fragment implements
         mLocationClient = new LocationClient(getActivity(), this, this);
         mapFragment = ((MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.mapfragment));
         map = mapFragment.getMap();
-	    
-	    //String url = "http://chart.apis.google.com/chart?cht=p3&chs=500x200&chd=e:TNTNTNGa&chts=000000,16&chtt=A+Better+Web&chl=Hello|Hi|anas|Explorer&chco=FF5533,237745,9011D3,335423&chdl=Apple|Mozilla|Google|Microsoft";
-	    
-		//WebView mCharView = (WebView) getActivity().findViewById(R.id.char_view);
-	    //mCharView.loadUrl(url);
-        //map = mapFragment.getMap();
 	}
 
 	@Override
@@ -189,6 +188,7 @@ public class InfoFragment extends Fragment implements
 			@Override
 			public void postResponse(String result) {
 				drawDirections(result);
+				setDuration(result);
 			}
 		});
         jsonThread.execute();
@@ -221,7 +221,6 @@ public class InfoFragment extends Fragment implements
     }
 
 	public class JSONThread extends AsyncTask<Void, Void, String> {
-        //private ProgressDialog progressDialog;
         private RequestListener requestListener;
         String url;
 
@@ -232,10 +231,6 @@ public class InfoFragment extends Fragment implements
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-//            progressDialog = new ProgressDialog(getActivity());
-//            progressDialog.setMessage("Fetching route, Please wait...");
-//            progressDialog.setIndeterminate(true);
-//            progressDialog.show();
         }
         @Override
         protected String doInBackground(Void... params) {
@@ -246,8 +241,6 @@ public class InfoFragment extends Fragment implements
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-           // progressDialog.hide();
-           // progressDialog.dismiss();
             if(result != null){
             	requestListener.postResponse(result);
             }
@@ -419,7 +412,6 @@ public class InfoFragment extends Fragment implements
         url.append("0");
         url.append(specialCharacter);
         url.append("0");
-        String test = url.toString();
         return url.toString();
 	}
 	
@@ -457,6 +449,31 @@ public class InfoFragment extends Fragment implements
 		
 		return smaller;
 	}
+	
+	public void setDuration(String result) { // toDO: see if mode is walking/bicycling
+		try {
+			String text = null;
+			JSONObject json = new JSONObject(result);
+			JSONArray routeArray = json.getJSONArray("routes");
+			JSONObject routes = routeArray.getJSONObject(0);
+			JSONObject legs = routes.getJSONArray("legs").getJSONObject(0);
+			JSONObject steps = legs.getJSONArray("steps").getJSONObject(0);
+			JSONObject duration = legs.getJSONObject("duration");
+			
+			for (int i = 0; i < duration.length(); i++) {
+				text = duration.getString("text");
+			}
+			
+			TextView textDuration = (TextView) getActivity().findViewById(R.id.textduration);
+			textDuration.setText("Estimated duration of the tour: " + text);
+			
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
     public void drawDirections(String result) {
         try {
             final JSONObject json = new JSONObject(result);

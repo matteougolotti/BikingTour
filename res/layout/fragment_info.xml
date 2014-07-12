@@ -4,53 +4,102 @@ android:layout_width="match_parent"
 android:layout_height="match_parent"
 android:orientation="vertical" >
 
-	<LinearLayout
-    	android:layout_width="match_parent"
-    	android:layout_height="match_parent"
-    	android:layout_weight="1.0"
-    	android:orientation="vertical" >
-
-     	<fragment
-        	android:id="@+id/mapfragment"
-        	android:name="com.google.android.gms.maps.MapFragment"
+    <TabHost 
+    	    android:id="@+id/tabhostinfo"
         	android:layout_width="match_parent"
-        	android:layout_height="match_parent"/>
-	</LinearLayout>
+        	android:layout_height="0dip"
+        	android:layout_weight="1" >
+        
+    	    <LinearLayout
+          		android:id="@+id/tabContentLinear"
+                android:layout_width="match_parent"
+               	android:layout_height="match_parent"
+                android:orientation="vertical" >
+                
+    	   		<TabWidget
+                	android:id="@android:id/tabs"
+                	android:layout_width="match_parent"
+                	android:layout_height="wrap_content"
+                	android:visibility="visible" >
+            	</TabWidget>     
+    	        
+    	   		<FrameLayout
+                	android:id="@android:id/tabcontent"
+                	android:layout_width="match_parent"
+                	android:layout_height="match_parent"
+                	android:padding="5dp" >
+    	   		
+    	   		    <LinearLayout 
+    	   		        android:id="@+id/tabmap"
+						android:layout_width="match_parent"
+						android:layout_height="match_parent"
+						android:orientation="vertical" >
+    	   		    
+    	   		    	<LinearLayout
+    						android:layout_width="match_parent"
+    						android:layout_height="match_parent"
+    						android:layout_weight="1.0"
+    						android:orientation="vertical" >
 
-	<LinearLayout
-    	android:layout_width="match_parent"
-    	android:layout_height="match_parent"
-    	android:layout_weight="1.0"
-    	android:orientation="vertical" >
+     					<fragment
+        					android:id="@+id/mapfragment"
+        					android:name="com.google.android.gms.maps.MapFragment"
+        					android:layout_width="match_parent"
+        					android:layout_height="match_parent"/>
+						</LinearLayout>
+
+						<LinearLayout
+    						android:layout_width="match_parent"
+    						android:layout_height="match_parent"
+    						android:layout_weight="1.0"
+    						android:orientation="vertical" >
     
-    	<WebView
-        	android:id="@+id/char_view"
-        	android:layout_width="match_parent"
-        	android:layout_height="match_parent"
-        	android:visibility="visible" />
+    					<WebView
+        					android:id="@+id/char_view"
+        					android:layout_width="match_parent"
+        					android:layout_height="match_parent"
+        					android:visibility="visible" />
 
-	</LinearLayout>
+						</LinearLayout>
 	
-	<LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+						<LinearLayout
+        					android:layout_width="fill_parent"
+        					android:layout_height="wrap_content"
+        					android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/buttonAccept"
-            android:layout_width="0sp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            style="@style/btnStyleArsenic"
-            android:text="@string/accept" />
+        				<Button
+            				android:id="@+id/buttonAccept"
+           					android:layout_width="0sp"
+            				android:layout_height="wrap_content"
+            				android:layout_weight="1"
+            				style="@style/btnStyleArsenic"
+            				android:text="@string/accept" />
 
-        <Button
-            android:id="@+id/buttonDeny"
-            android:layout_width="0sp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            style="@style/btnStyleArsenic"
-            android:text="@string/cancel" />
-   </LinearLayout>
-
+        				<Button
+            				android:id="@+id/buttonDeny"
+            				android:layout_width="0sp"
+            				android:layout_height="wrap_content"
+            				android:layout_weight="1"
+            				style="@style/btnStyleArsenic"
+            				android:text="@string/cancel" />
+  					 </LinearLayout>
+    	   		 	</LinearLayout>
+    	   		 
+    	   		    <LinearLayout 
+    	   		        android:id="@+id/tabinfo"
+						android:layout_width="match_parent"
+						android:layout_height="match_parent"
+						android:orientation="vertical" >
+						
+    	   		        
+    	   		         <TextView
+        					android:id="@+id/textduration"
+        					android:layout_width="wrap_content"
+        					android:layout_height="wrap_content"
+        					android:textAppearance="?android:attr/textAppearanceMedium" />
+    	   		        
+    	   		    </LinearLayout>  
+    	   		</FrameLayout>
+    	    </LinearLayout>
+   		</TabHost>    
 </LinearLayout>
