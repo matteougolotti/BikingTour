@@ -14,18 +14,17 @@ public class PictureFragment extends Fragment implements OnClickListener {
 	Camera camera;
 	
 	@Override
-	  public View onCreateView(LayoutInflater i, ViewGroup vg,
-		Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater i, ViewGroup vg,
+			Bundle savedInstanceState) {
 		
-	    View v = i.inflate(R.layout.fragment_picture,vg,false);
+		View v = i.inflate(R.layout.fragment_picture,vg,false);
 	    cameraView = (CameraView) v.findViewById(R.id.picture_camera_preview);
 	    camera = null;
-	    
 	    ImageButton takePictureButton = (ImageButton) v.findViewById(R.id.take_picture_button);
 	    takePictureButton.setOnClickListener(this);
 	    
-		return v;
-	  }
+	    return v;
+	}
 	
 	@Override
 	public void onClick(View v){
