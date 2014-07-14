@@ -111,7 +111,7 @@ int drawable list_selector 0x7f020028
 int drawable powered_by_google_dark 0x7f020029
 int drawable powered_by_google_light 0x7f02002a
 int drawable srcmarker 0x7f02002b
-int id action_settings 0x7f070032
+int id action_settings 0x7f070034
 int id book_now 0x7f070010
 int id bt_submit 0x7f07002c
 int id buttonAccept 0x7f070024
@@ -143,7 +143,8 @@ int id normal 0x7f070001
 int id oldRoutesListView 0x7f07001f
 int id picture_camera_preview 0x7f07002d
 int id production 0x7f070007
-int id route_name 0x7f070030
+int id record_video_button 0x7f070031
+int id route_name 0x7f070032
 int id sandbox 0x7f070008
 int id satellite 0x7f070002
 int id selectionDetails 0x7f07000b
@@ -157,10 +158,11 @@ int id take_picture_button 0x7f07002e
 int id terrain 0x7f070003
 int id textduration 0x7f070027
 int id title 0x7f070018
-int id tour_name 0x7f070031
+int id tour_name 0x7f070033
 int id tv_actualLocation 0x7f070028
 int id tv_destination 0x7f07002a
 int id txtLabel 0x7f07001a
+int id video_camera_preview 0x7f070030
 int id wrap_content 0x7f07000d
 int integer google_play_services_version 0x7f080000
 int layout activity_main 0x7f030000
@@ -172,8 +174,9 @@ int layout fragment_newroute 0x7f030005
 int layout fragment_picture 0x7f030006
 int layout fragment_review 0x7f030007
 int layout fragment_search 0x7f030008
-int layout route_list_layout 0x7f030009
-int layout tour_list_layout 0x7f03000a
+int layout fragment_video 0x7f030009
+int layout route_list_layout 0x7f03000a
+int layout tour_list_layout 0x7f03000b
 int menu main 0x7f0b0000
 int string accept 0x7f050028
 int string action_settings 0x7f050022
@@ -188,6 +191,7 @@ int string auth_client_requested_by_msg 0x7f050005
 int string auth_client_using_bad_version_title 0x7f050000
 int string cancel 0x7f050029
 int string close_fragment_picture_button 0x7f05002c
+int string close_fragment_video_button 0x7f05002e
 int string common_google_play_services_enable_button 0x7f050011
 int string common_google_play_services_enable_text 0x7f050010
 int string common_google_play_services_enable_title 0x7f05000f
@@ -217,6 +221,7 @@ int string desc_list_item_icon 0x7f05002a
 int string destination 0x7f050026
 int string hello_world 0x7f050021
 int string my_routes 0x7f050024
+int string record_video_button 0x7f05002d
 int string submit 0x7f050027
 int string take_picture_button 0x7f05002b
 int string wallet_buy_button_place_holder 0x7f05001f
