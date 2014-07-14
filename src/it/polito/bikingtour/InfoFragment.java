@@ -47,6 +47,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -63,6 +65,8 @@ public class InfoFragment extends Fragment implements
     private View rootView;
     private TabHost tabHost;
 	private TabSpec specMap, specInfo;
+	private ListView listPlaces;
+	private ArrayAdapter<String> adapter;
 	private List<String> locationsPlaces = null;
     
 	public InfoFragment() {
@@ -104,6 +108,7 @@ public class InfoFragment extends Fragment implements
         tabHost.addTab(specMap);
         tabHost.addTab(specInfo);
         
+        listPlaces = (ListView) rootView.findViewById(R.id.listviewPlaces);
         return rootView;
     }
 	
@@ -186,7 +191,11 @@ public class InfoFragment extends Fragment implements
 			public void postResponse(String result) {
 				drawDirections(result);
 				setDuration(result);
-				//setPlaces(result);
+				try {
+					setPlaces(result);
+				} catch (UnsupportedEncodingException e) {
+					e.printStackTrace();
+				}
 			}
 		});
         jsonThread.execute();
@@ -316,16 +325,20 @@ public class InfoFragment extends Fragment implements
         return url.toString();
     }
 
-	public String makeURLPlacesRequest(String srclat, String srclng) {
+	public String makeURLPlacesRequest(String srclat, String srclng) throws UnsupportedEncodingException {
 		StringBuilder url =  new StringBuilder();
+		String specialCharacter = URLEncoder.encode("|", "UTF-8");
         url.append("https://maps.googleapis.com/maps/api/place/search/json");
         url.append("?location=");
         url.append(srclat);
         url.append(",");
         url.append(srclng);
-        url.append("&rankby=proeminence");
-        url.append("&types=atm, bank, bicycle_store, cafe, campground, convenience_store, doctor, food, grocery_or_supermarket, hospital, meal_delivery, meal_takeaway, park, pharmacy, police, restaurant, shopping_mall, store");
-        url.append("&sensor=false&key=AIzaSyCQ4cvgmwKE9zKyGMhokgmKALU0nEBiXIM"); ////////// KEY HERE
+        url.append("&radius=500");
+        url.append("&rankby=prominence");
+        url.append("&types=food" + specialCharacter + "bank" + specialCharacter + "atm" + specialCharacter +
+        		"bicycle_store" + specialCharacter + "campground" + specialCharacter + "hospital" + specialCharacter +
+        		"pharmacy" + specialCharacter + "police" + specialCharacter + "restaurant");
+        url.append("&sensor=false&key=AIzaSyCm3iIOz7qAvsC0MmdBtItspW6WH74Mcqc"); // browser key
         String test = url.toString();
         return url.toString();
 	}
@@ -394,7 +407,6 @@ public class InfoFragment extends Fragment implements
 		    mCharView.loadUrl(url);
 			//String urlTest = "http://chart.apis.google.com/chart?cht=lc&chs=500x250&chco=FF0000&chxt=y&chxr=0,0,100&chdl=elevation&chtt=Elevation+Chart&chts=000000,24&chd=t:30,50,100";
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -462,7 +474,7 @@ public class InfoFragment extends Fragment implements
 		return smaller;
 	}
 	
-	public void setPlaces(String result) {
+	public void setPlaces(String result) throws UnsupportedEncodingException {
 		try {
 			JSONObject json = new JSONObject(result);
 			JSONArray routeArray = json.getJSONArray("routes");
@@ -471,28 +483,27 @@ public class InfoFragment extends Fragment implements
 			JSONArray steps = legs.getJSONArray("steps");
 			
 			String location1_start = steps.getJSONObject(0).getString("start_location");
-			String location2_end = steps.getJSONObject(steps.length()/2).getString("end_location");
-			String location3_start = steps.getJSONObject(3*(steps.length())/4).getString("start_location");
+			String location2_end = steps.getJSONObject(steps.length()/3).getString("end_location");
+			String location3_start = steps.getJSONObject(2*(steps.length())/3).getString("start_location");
 			String location4_end = steps.getJSONObject(steps.length() - 1).getString("end_location");
 			
 			locationsPlaces = new ArrayList<String>();
 			
 			location1_start = location1_start.replaceAll("[^0-9.,]+","");
 			locationsPlaces.addAll(Arrays.asList(location1_start.split(",")));
-			//String[] location1 = location1_start.split(",");
+			
 			location2_end = location2_end.replaceAll("[^0-9.,]+","");
 			locationsPlaces.addAll(Arrays.asList(location2_end.split(",")));
-			//String[] location2 = location2_end.split(",");
+			
 			location3_start = location3_start.replaceAll("[^0-9.,]+","");
 			locationsPlaces.addAll(Arrays.asList(location3_start.split(",")));
-			//String[] location3 = location3_start.split(",");
+			
 			location4_end = location4_end.replaceAll("[^0-9.,]+","");
 			locationsPlaces.addAll(Arrays.asList(location4_end.split(",")));
-			//String[] location4 = location4_end.split(",");
 			
 			String request1 = makeURLPlacesRequest(locationsPlaces.get(1), locationsPlaces.get(0));
-			JSONThread placesJsonThread = new JSONThread(request1);
-			placesJsonThread.setRequestListener(new RequestListener() {
+			JSONThread placesJsonThread1 = new JSONThread(request1);
+			placesJsonThread1.setRequestListener(new RequestListener() {
 				
 				@Override
 				public void postResponse(String result) {
@@ -500,7 +511,43 @@ public class InfoFragment extends Fragment implements
 					String stop = "ok";
 				}
 			});
-	        placesJsonThread.execute();
+	        placesJsonThread1.execute();
+	        
+	        String request2 = makeURLPlacesRequest(locationsPlaces.get(3), locationsPlaces.get(2));
+			JSONThread placesJsonThread2 = new JSONThread(request2);
+			placesJsonThread2.setRequestListener(new RequestListener() {
+				
+				@Override
+				public void postResponse(String result) {
+					String response = result;
+					String stop = "ok";
+				}
+			});
+			placesJsonThread2.execute();
+			
+			String request3 = makeURLPlacesRequest(locationsPlaces.get(5), locationsPlaces.get(4));
+			JSONThread placesJsonThread3 = new JSONThread(request3);
+			placesJsonThread3.setRequestListener(new RequestListener() {
+				
+				@Override
+				public void postResponse(String result) {
+					String response = result;
+					String stop = "ok";
+				}
+			});
+			placesJsonThread3.execute();
+			
+			String request4 = makeURLPlacesRequest(locationsPlaces.get(7), locationsPlaces.get(6));
+			JSONThread placesJsonThread4 = new JSONThread(request4);
+			placesJsonThread4.setRequestListener(new RequestListener() {
+				
+				@Override
+				public void postResponse(String result) {
+					String response = result;
+					String stop = "ok";
+				}
+			});
+			placesJsonThread4.execute();
 			
 		} catch (JSONException e) {
 			e.printStackTrace();
