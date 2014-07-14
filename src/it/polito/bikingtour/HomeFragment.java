@@ -29,14 +29,7 @@ public class HomeFragment extends Fragment {
             Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_home, container, false);
         
-        return rootView;
-    }
-	
-	@Override
-	public void onResume(){
-		super.onResume();
-		
-		tabHost = (TabHost) rootView.findViewById(R.id.tabhost);
+        tabHost = (TabHost) rootView.findViewById(R.id.tabhost);
         tabHost.setup();
         
         spec1 = tabHost.newTabSpec("TAB 1");
@@ -50,6 +43,12 @@ public class HomeFragment extends Fragment {
         tabHost.addTab(spec1);
         tabHost.addTab(spec2);
         
+        return rootView;
+    }
+	
+	@Override
+	public void onResume(){
+		super.onResume();
         routes = RoutesContainer.newInstance(getActivity());
         ListView myRoutes = (ListView) rootView.findViewById(R.id.myRoutesListView);
         myRoutes.setAdapter(new RouteArrayAdapter(getActivity(), routes.getRoutes()));
