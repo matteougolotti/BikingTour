@@ -1,36 +1,7 @@
 {
 "tours": [
 	{
-  	"route":
-  		{
-      	"name": "MyFirstRoute",
-      	"originName": "",
-      	"srcLat": "45.0",
-      	"srcLon": "7.6",
-      	"destinationName": "Turin",
-      	"dstLat": "45.02",
-      	"dstLon": "7.8",
-      	"wayPoints": [
-      					{
-      					"lat": "45.02",
-      					 "lon": "7.62"
-      					},
-      					{
-      				 	"lat": "45.03",
-      				 	"lon": "7.59"
-      					}
-      			   	],
-      	"pointsOfInterest": [
-      					{
-      					"lat": "45.02",
-      					 "lon": "7.62"
-      					},
-      					{
-      					 "lat": "45.03",
-      					 "lon": "7.59"
-      					}
-      			   	] 	
-      	},
+  	"route": "1",
     "date": "9999999",
     "duration": "132144",
     "videos": ["video1.mp4", "video2.mp4", "video3.mp4"],

@@ -29,7 +29,7 @@ public class TourArrayAdapter extends ArrayAdapter<Tour>{
  
 		View rowView = inflater.inflate(R.layout.tour_list_layout, parent, false);
 		TextView tourName = (TextView) rowView.findViewById(R.id.tour_name);
-		tourName.setText(values.get(position).getRoute().getName());
+		tourName.setText(String.valueOf(values.get(position).getTourDate()));
 		
 		return rowView;
 	}

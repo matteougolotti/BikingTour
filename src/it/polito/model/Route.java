@@ -1,6 +1,7 @@
 package it.polito.model;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,18 +21,21 @@ import android.util.Log;
 
 public class Route {
 	private String name;
+	private long id;
 	private Location origin, destination;
 	private ArrayList<Location> wayPoints;
 	private ArrayList<Location> pointsOfInterest;
 	
 	//Default constructor used to create a new route
 	public Route(){
+		this.id = Calendar.getInstance().getTimeInMillis();
 	}
 	
 	//Constructor used to load the object from a JSON object
 	public Route(JSONObject jobject){
 		try{
 			this.name = jobject.getString("name");
+			this.id = jobject.getLong("id");
 			
 			this.origin = new Location(jobject.getString("originName"));
 			origin.setLat(jobject.getDouble("srcLat"));
@@ -70,6 +74,7 @@ public class Route {
 	public JSONObject serializeToJson() throws JSONException {
 		JSONObject jRoute = new JSONObject();
 		jRoute.put("name", name);
+		jRoute.put("id",  id);
 		jRoute.put("originName", origin.getName());
 		jRoute.put("srcLat", origin.getLat());
 		jRoute.put("srcLon",  origin.getLon());
@@ -133,5 +138,9 @@ public class Route {
 	
 	public ArrayList<Location> getPointsOfInterest(){
 		return this.pointsOfInterest;
+	}
+	
+	public long getId(){
+		return this.id;
 	}
 }
