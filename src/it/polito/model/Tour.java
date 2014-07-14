@@ -21,7 +21,7 @@ import android.util.Log;
  */
 
 public class Tour {
-	private Route route;
+	private long route;
 	private ArrayList<String> videos;
 	private ArrayList<String> pictures;
 	private ArrayList<String> notes;
@@ -33,8 +33,7 @@ public class Tour {
 	
 	public Tour(JSONObject jobject){
 		try{
-			JSONObject jroute = jobject.getJSONObject("route");
-			this.route = new Route(jroute);
+			this.route = jobject.getLong("route");
 			
 			this.tourDateInMillis = jobject.getLong("date");
 			this.tourDurationInMillis = jobject.getLong("duration");
@@ -64,11 +63,29 @@ public class Tour {
 	}
 	
 	public JSONObject serializeToJson() throws JSONException{
-		//TODO serializes the object to a JSONObject
-		return null;
+		JSONObject jTour = new JSONObject();
+		jTour.put("route", route);
+		jTour.put("date", tourDateInMillis);
+		jTour.put("duration", tourDurationInMillis);
+		JSONArray jVideos = new JSONArray("videos");
+		for(String video : videos){
+			jVideos.put(video);
+		}
+		jTour.accumulate("videos",  jVideos);
+		JSONArray jPictures = new JSONArray("pictures");
+		for(String picture : pictures){
+			jPictures.put(picture);
+		}
+		jTour.accumulate("pictures", jPictures);
+		JSONArray jNotes = new JSONArray("notes");
+		for(String note : notes){
+			jNotes.put(note);
+		}
+		jTour.accumulate("notes", jNotes);
+		return jTour;
 	}
 	
-	public Route getRoute(){
+	public long getRouteId(){
 		return this.route;
 	}
 	
@@ -92,8 +109,8 @@ public class Tour {
 		return this.notes;
 	}
 	
-	public void setRoute(Route route){
-		this.route = route;
+	public void setRouteId(long routeId){
+		this.route = routeId;
 	}
 	
 	public void setTourDate(long tourDateInMillis){

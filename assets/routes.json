@@ -2,6 +2,7 @@
   "routes": [
     {
       "name": "MyFirstRoute",
+      "id": "1",
       "originName": "Turin",
       "srcLat": "45.0",
       "srcLon": "7.6",
@@ -31,6 +32,7 @@
     },
     {
       "name": "MySecondRoute",
+      "id": "2",
       "originName": "Milan",
       "srcLat": "45.0",
       "srcLon": "7.6",

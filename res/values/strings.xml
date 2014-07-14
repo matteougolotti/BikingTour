@@ -33,5 +33,8 @@
     <string name="desc_list_item_icon">Item Icon</string>
     <string name="take_picture_button">Take Picture</string>
     <string name="close_fragment_picture_button">Close picture fragment</string>
+    <string name="record_video_button">Record video button</string>
+    <string name="close_fragment_video_button">Close fragment video button</string>
+    <string name="my_tours">My tours</string>
     
 </resources>

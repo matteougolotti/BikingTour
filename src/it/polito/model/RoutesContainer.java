@@ -1,6 +1,7 @@
 package it.polito.model;
 
-import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -11,7 +12,7 @@ import android.util.Log;
 
 public class RoutesContainer extends JSONDataContainer {
 	private static RoutesContainer container;
-	private ArrayList<Route> routes;
+	private HashMap<String, Route> routes;
 	private String fileName = "routes.json";
 	
 	private RoutesContainer(){
@@ -19,11 +20,11 @@ public class RoutesContainer extends JSONDataContainer {
 			String jsonString = readJsonFromFile(fileName);
 			JSONObject JsonData = new JSONObject(jsonString);
 			JSONArray JsonRoutes = JsonData.getJSONArray("routes");
-			this.routes = new ArrayList<Route>();
+			this.routes = new HashMap<String, Route>();
 			for(int i=0; i<JsonRoutes.length(); i++){
 				JSONObject JsonRoute = JsonRoutes.getJSONObject(i);
 				Route r = new Route(JsonRoute);
-				this.routes.add(r);
+				this.routes.put(String.valueOf(r.getId()), r);
 			}
 		}catch(JSONException e){
 			e.printStackTrace();
@@ -45,7 +46,7 @@ public class RoutesContainer extends JSONDataContainer {
 		try{
 			JSONObject jobject = new JSONObject();
 			JSONArray jarray = new JSONArray("routes");
-			for(Route r : routes){
+			for(Route r : routes.values()){
 				jarray.put(r.serializeToJson());
 			}
 			jobject.accumulate("routes", jarray);
@@ -57,7 +58,7 @@ public class RoutesContainer extends JSONDataContainer {
 	}
 	
 	public void addRoute(Route r){
-		this.routes.add(r);
+		this.routes.put(String.valueOf(r.getId()), r);
 	}
 	
 	public void removeRoute(int index){
@@ -68,8 +69,8 @@ public class RoutesContainer extends JSONDataContainer {
 		return this.routes.get(index);
 	}
 	
-	public ArrayList<Route> getRoutes(){
-		return this.routes;
+	public Collection<Route> getRoutes(){
+		return this.routes.values();
 	}
 	
 }
