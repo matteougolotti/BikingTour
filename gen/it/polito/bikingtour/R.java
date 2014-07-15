@@ -443,21 +443,20 @@ containing a value of this type.
         public static final int buyButton=0x7f07000a;
         public static final int buy_now=0x7f07000f;
         public static final int buy_with_google=0x7f07000e;
-        public static final int char_view=0x7f070021;
         public static final int classic=0x7f070011;
         public static final int close_fragment_picture=0x7f070030;
         public static final int counter=0x7f070019;
         public static final int drawer_layout=0x7f070014;
-        public static final int et_actualLocation=0x7f07002a;
-        public static final int et_destination=0x7f07002c;
         public static final int frag_home=0x7f07001b;
         public static final int frame_container=0x7f070015;
+        public static final int from=0x7f07002a;
         public static final int grayscale=0x7f070012;
         public static final int holo_dark=0x7f070005;
         public static final int holo_light=0x7f070006;
         public static final int hybrid=0x7f070004;
         public static final int icon=0x7f070017;
         public static final int img=0x7f070034;
+        public static final int iv_chart=0x7f070021;
         public static final int list_slidermenu=0x7f070016;
         public static final int listviewPlaces=0x7f070028;
         public static final int mapfragment=0x7f070020;
@@ -485,6 +484,7 @@ containing a value of this type.
         public static final int textduration=0x7f070025;
         public static final int textsupport=0x7f070027;
         public static final int title=0x7f070018;
+        public static final int to=0x7f07002c;
         public static final int tour_name=0x7f070037;
         public static final int tv_actualLocation=0x7f070029;
         public static final int tv_destination=0x7f07002b;
@@ -507,9 +507,10 @@ containing a value of this type.
         public static final int fragment_review=0x7f030007;
         public static final int fragment_search=0x7f030008;
         public static final int fragment_video=0x7f030009;
-        public static final int list_single=0x7f03000a;
-        public static final int route_list_layout=0x7f03000b;
-        public static final int tour_list_layout=0x7f03000c;
+        public static final int list_item=0x7f03000a;
+        public static final int list_single=0x7f03000b;
+        public static final int route_list_layout=0x7f03000c;
+        public static final int tour_list_layout=0x7f03000d;
     }
     public static final class menu {
         public static final int main=0x7f0b0000;
@@ -527,8 +528,8 @@ containing a value of this type.
         public static final int auth_client_requested_by_msg=0x7f050005;
         public static final int auth_client_using_bad_version_title=0x7f050000;
         public static final int cancel=0x7f050029;
-        public static final int close_fragment_picture_button=0x7f05002d;
-        public static final int close_fragment_video_button=0x7f05002f;
+        public static final int close_fragment_picture_button=0x7f05002e;
+        public static final int close_fragment_video_button=0x7f050030;
         /**  Button in confirmation dialog to enable Google Play services.  Clicking it
         will direct user to application settings of Google Play services where they
         can enable it [CHAR LIMIT=40] 
@@ -618,17 +619,18 @@ containing a value of this type.
         /**  Long form sign-in button text [CHAR LIMIT=30] 
          */
         public static final int common_signin_button_text_long=0x7f05001e;
+        public static final int desc_chart=0x7f05002b;
         /**  Content Description 
          */
-        public static final int desc_list_item_icon=0x7f05002b;
+        public static final int desc_list_item_icon=0x7f05002c;
         public static final int destination=0x7f050026;
         public static final int hello_world=0x7f050021;
         public static final int my_routes=0x7f050024;
-        public static final int my_tours=0x7f050030;
-        public static final int record_video_button=0x7f05002e;
+        public static final int my_tours=0x7f050031;
+        public static final int record_video_button=0x7f05002f;
         public static final int submit=0x7f050027;
         public static final int support=0x7f05002a;
-        public static final int take_picture_button=0x7f05002c;
+        public static final int take_picture_button=0x7f05002d;
         /**  Text on a placeholder buy button when Google Play services is not
          available or up-to-date 
          */

@@ -8,37 +8,35 @@
         android:id="@+id/tv_actualLocation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/actual_location" />
 
-    <EditText
-        android:id="@+id/et_actualLocation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="text" >
-
-        <requestFocus />
-    </EditText>
+    <AutoCompleteTextView
+		android:id="@+id/from"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_gravity="fill_horizontal"
+		android:textAppearance="?android:attr/textAppearanceMedium"
+		android:completionThreshold="3" />
     
     
 	<TextView
         android:id="@+id/tv_destination"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/destination" />
-	
-	<EditText
-        android:id="@+id/et_destination"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="text" >
 
-        <requestFocus />
-    </EditText>
+	<AutoCompleteTextView
+		android:id="@+id/to"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_gravity="fill_horizontal"
+		android:textAppearance="?android:attr/textAppearanceMedium"
+		android:completionThreshold="3" />
     
 	<Button 
-    	android:layout_width="wrap_content"
+    	android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/bt_submit"
         android:paddingTop="5dp"

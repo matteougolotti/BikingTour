@@ -4,12 +4,11 @@ public class Location {
 	private double lat;
 	private double lon;
 	private String name;
+	private String urlImage;
+	private String address;
 	
 	public Location(String name){
 		this.name = name;
-		//GeoPoint point = convertToLatLong(name);
-		//this.lat = (double) point.getLatitudeE6()/1E6;
-		//this.lon = (double) point.getLongitudeE6()/1E6;
 	}
 	
 	public Location(double lat, double lon){
@@ -39,5 +38,21 @@ public class Location {
 	
 	public String getName(){
 		return this.name;
+	}
+	
+	public String getUrlImage() {
+		return urlImage;
+	}
+
+	public void setUrlImage(String urlImage) {
+		this.urlImage = urlImage;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
 	}
 }

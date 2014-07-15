@@ -12,6 +12,7 @@
     <string name="accept">Accept tour</string>
     <string name="cancel">Cancel</string>
     <string name="support">Logistical support along the tour (food, restaurants, etc):</string>
+    <string name="desc_chart">Elevation chart</string>
     
     <!-- Nav Drawer Menu Items -->
     <string-array name="nav_drawer_items">
