@@ -36,10 +36,11 @@
 		android:completionThreshold="3" />
     
 	<Button 
-    	android:layout_width="fill_parent"
+    	android:layout_width="130dp"
         android:layout_height="wrap_content"
         android:id="@+id/bt_submit"
-        android:paddingTop="5dp"
+        android:layout_gravity="center"
+        android:paddingTop="10dp"
         android:paddingBottom="5dp" 
         android:text="@string/submit"
         style="@style/btnStyleArsenic" />

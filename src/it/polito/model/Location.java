@@ -3,6 +3,7 @@ package it.polito.model;
 public class Location {
 	private double lat;
 	private double lon;
+	private double distance;
 	private String name;
 	private String urlImage;
 	private String address;
@@ -54,5 +55,13 @@ public class Location {
 
 	public void setAddress(String address) {
 		this.address = address;
+	}
+
+	public double getDistance() {
+		return distance;
+	}
+
+	public void setDistance(double distance) {
+		this.distance = distance;
 	}
 }

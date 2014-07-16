@@ -37,7 +37,7 @@ android:orientation="vertical" >
     	   		    
     	   		    	<LinearLayout
     						android:layout_width="match_parent"
-    						android:layout_height="match_parent"
+    						android:layout_height="0dp"
     						android:layout_weight="1.0"
     						android:orientation="vertical" >
 
@@ -49,50 +49,49 @@ android:orientation="vertical" >
 						</LinearLayout>
 
 						<LinearLayout
-    						android:layout_width="match_parent"
-    						android:layout_height="match_parent"
-    						android:layout_weight="1.0"
-    						android:orientation="vertical" >
-    
-						<ImageView
-        					android:id="@+id/iv_chart"
-        					android:layout_width="match_parent"
-        					android:layout_height="match_parent"
-        					android:contentDescription="@string/desc_chart"/>
-
-						</LinearLayout>
-	
-						<LinearLayout
         					android:layout_width="fill_parent"
         					android:layout_height="wrap_content"
         					android:orientation="horizontal">
 
-        				<Button
-            				android:id="@+id/buttonAccept"
-           					android:layout_width="0sp"
-            				android:layout_height="wrap_content"
-            				android:layout_weight="1"
-            				style="@style/btnStyleArsenic"
-            				android:text="@string/accept" />
+        					<Button
+            					android:id="@+id/buttonAccept"
+           						android:layout_width="0sp"
+            					android:layout_height="wrap_content"
+            					android:layout_weight="1"
+            					style="@style/btnStyleArsenic"
+            					android:text="@string/accept" />
 
-        				<Button
-            				android:id="@+id/buttonDeny"
-            				android:layout_width="0sp"
-            				android:layout_height="wrap_content"
-            				android:layout_weight="1"
-            				style="@style/btnStyleArsenic"
-            				android:text="@string/cancel" />
-  					 </LinearLayout>
+        					<Button
+            					android:id="@+id/buttonDeny"
+            					android:layout_width="0sp"
+            					android:layout_height="wrap_content"
+            					android:layout_weight="1"
+            					style="@style/btnStyleArsenic"
+            					android:text="@string/cancel" />
+  					 	</LinearLayout>
     	   		 	</LinearLayout>
-    	   		 
-    	   		    <LinearLayout 
-    	   		        android:id="@+id/tabinfo"
-						android:layout_width="match_parent"
-						android:layout_height="match_parent"
-						android:orientation="vertical" >
+    	   		 	
+    	   		    <LinearLayout
+    	   		            android:id="@+id/tabInfo"
+    						android:layout_width="match_parent"
+    						android:layout_height="match_parent"
+    						android:orientation="vertical" >
 						
-    	   		        
-    	   		         <TextView
+						<ImageView
+        					android:id="@+id/iv_chart"
+        					android:layout_width="fill_parent"
+        					android:layout_height="wrap_content"
+        					android:adjustViewBounds="true"
+        					android:scaleType="fitStart"
+        					android:contentDescription="@string/desc_chart"/>
+						
+						<ProgressBar
+        					android:id="@+id/progressBar_chart"
+        					android:layout_width="wrap_content"
+        					android:layout_height="wrap_content"
+        					android:layout_gravity="center"/>
+						
+						<TextView
         					android:id="@+id/textduration"
         					android:layout_width="wrap_content"
         					android:layout_height="wrap_content"
@@ -104,17 +103,26 @@ android:orientation="vertical" >
         					android:layout_height="wrap_content"
         					android:textAppearance="?android:attr/textAppearanceMedium" />
     	   		         
-    	   		         <TextView
-        					android:id="@+id/textsupport"
-        					android:text="@string/support"
+					</LinearLayout>
+    	   		 
+    	   		    <LinearLayout 
+    	   		        android:id="@+id/tabSupport"
+						android:layout_width="match_parent"
+						android:layout_height="match_parent"
+						android:orientation="vertical" >
+    	   		         
+    	   		        <ProgressBar
+        					android:id="@+id/progressBar_listView"
         					android:layout_width="wrap_content"
         					android:layout_height="wrap_content"
-        					android:textAppearance="?android:attr/textAppearanceMedium" />
-    	   		         
+        					android:layout_gravity="center"/>
+						
     	   		         <ListView
-    						android:id="@+id/listviewPlaces"
-    						android:layout_width="match_parent"
-    						android:layout_height="wrap_content" />
+        					android:id="@+id/listviewPlaces"
+        					android:layout_width="fill_parent"
+        					android:layout_height="fill_parent"
+        					android:dividerHeight="1dp"
+        					android:listSelector="@drawable/list_selector_flatcolor" />
     	   		         
 					</LinearLayout>
     	   		</FrameLayout>

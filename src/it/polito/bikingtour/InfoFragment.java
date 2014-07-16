@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import it.polito.adapter.LazyAdapter;
 import it.polito.model.Location;
 import it.polito.model.RequestListener;
 import it.polito.utils.JSONParser;
@@ -27,7 +28,6 @@ import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import android.app.Dialog;
@@ -38,15 +38,21 @@ import android.content.IntentSender;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -62,13 +68,14 @@ public class InfoFragment extends Fragment implements
     private it.polito.model.Location locOrigin, locDestination;
     private View rootView;
     private TabHost tabHost;
-	private TabSpec specMap, specInfo;
+	private TabSpec specMap, specSupport, specInfo;
 	private ArrayList<Location> places;
-	private ListView listPlaces;
 	private ImageView chart;
 	private TextView difficulty;
+	private ListView listPlaces;
 	private String origin, destination;
 	private List<String> locationsPlaces = null;
+	private ProgressBar mProgressChart, mProgressList = null;
     
 	public InfoFragment() {
 		
@@ -101,15 +108,24 @@ public class InfoFragment extends Fragment implements
         specMap.setIndicator("Map");
         
         specInfo = tabHost.newTabSpec("Info");
-        specInfo.setContent(R.id.tabinfo);
+        specInfo.setContent(R.id.tabInfo);
         specInfo.setIndicator("Info");
+        
+        specSupport = tabHost.newTabSpec("Support");
+        specSupport.setContent(R.id.tabSupport);
+        specSupport.setIndicator("Support");
         
         tabHost.addTab(specMap);
         tabHost.addTab(specInfo);
+        tabHost.addTab(specSupport);
         
         listPlaces = (ListView) rootView.findViewById(R.id.listviewPlaces);
         chart = (ImageView) rootView.findViewById(R.id.iv_chart);
         difficulty = (TextView) rootView.findViewById(R.id.textdifficulty);
+        mProgressChart = (ProgressBar) rootView.findViewById(R.id.progressBar_chart);
+        mProgressList = (ProgressBar) rootView.findViewById(R.id.progressBar_listView);
+        mProgressChart.setVisibility(View.VISIBLE);
+        mProgressList.setVisibility(View.VISIBLE);
         
         return rootView;
     }
@@ -260,7 +276,6 @@ public class InfoFragment extends Fragment implements
 			});
 	        elevationJsonThread.execute();
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -317,6 +332,7 @@ public class InfoFragment extends Fragment implements
 	    }
 
 	    protected void onPostExecute(Bitmap result) {
+	    	mProgressChart.setVisibility(View.GONE);
 	        bmImage.setImageBitmap(result);
 	    }
 	}
@@ -335,8 +351,6 @@ public class InfoFragment extends Fragment implements
 				locDestination.setLat(location.getDouble("lat"));
 				locDestination.setLon(location.getDouble("lng"));
 			}
-				
-			String stop = "ok";
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -350,7 +364,6 @@ public class InfoFragment extends Fragment implements
             url.append("?address=");
             url.append(URLEncoder.encode(address, "utf8"));
             url.append("&sensor=false");
-            String test = url.toString();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -386,7 +399,6 @@ public class InfoFragment extends Fragment implements
         url.append(",");
         url.append(destlng);
         url.append("&sensor=false&mode=walking&alternatives=true");
-        String test = url.toString();
         return url.toString();
     }
 
@@ -398,13 +410,12 @@ public class InfoFragment extends Fragment implements
         url.append(srclat);
         url.append(",");
         url.append(srclng);
-        url.append("&radius=500");
+        url.append("&radius=200");
         url.append("&rankby=prominence");
         url.append("&types=food" + specialCharacter + "bank" + specialCharacter + "atm" + specialCharacter +
         		"bicycle_store" + specialCharacter + "campground" + specialCharacter + "hospital" + specialCharacter +
         		"pharmacy" + specialCharacter + "police" + specialCharacter + "restaurant");
         url.append("&sensor=false&key=AIzaSyCm3iIOz7qAvsC0MmdBtItspW6WH74Mcqc"); // browser key
-        String test = url.toString();
         return url.toString();
 	}
 	
@@ -480,12 +491,16 @@ public class InfoFragment extends Fragment implements
 	}
 	
 	public void setDifficulty(Double average) {
+		String sDifficulty = "Difficulty of the tour: ";
+		SpannableString spanDifficulty = new SpannableString(sDifficulty);
+		spanDifficulty.setSpan(new StyleSpan(Typeface.BOLD), 0, spanDifficulty.length(), 0);
+		
 		if (average < 300) {
-			difficulty.setText("Difficulty of the tour: Easy");
+			difficulty.setText(spanDifficulty + "Easy");
 		} else if (300 <= average && average < 500) {
-			difficulty.setText("Difficulty of the tour: Medium");
+			difficulty.setText(spanDifficulty + "Medium");
 		} else {
-			difficulty.setText("Difficulty of the tour: Hard");
+			difficulty.setText(spanDifficulty + "Hard");
 		}
 	}
 	
@@ -640,8 +655,19 @@ public class InfoFragment extends Fragment implements
 				@Override
 				public void postResponse(String result) { 
 					setLogisticalSupport(result);
-					String test = result;
-					test.charAt(0);
+					listPlaces.setAdapter(new LazyAdapter(getActivity(), places));
+					mProgressList.setVisibility(View.GONE);
+			        listPlaces.setOnItemClickListener(new OnItemClickListener() {
+			        	 
+						@Override
+						public void onItemClick(AdapterView<?> a, View v, int position, long id) {
+							Object o = listPlaces.getItemAtPosition(position);
+							Location newsData = (Location) o;
+							Toast.makeText(getActivity(), "Selected :" + " " + newsData,
+									Toast.LENGTH_LONG).show();
+						}
+			 
+					});
 				}
 			});
 			placesJsonThread4.execute();
@@ -654,7 +680,7 @@ public class InfoFragment extends Fragment implements
 			JSONObject json = new JSONObject(result);
 			JSONArray resultsArray = json.getJSONArray("results");
 			
-			for (int i = 0; i < resultsArray.length(); i++) {
+			for (int i = 0; i <= 10; i++) {
 				JSONObject object = resultsArray.getJSONObject(i);
 				Location place = new Location(object.getString("name"));
 				place.setAddress(object.getString("vicinity"));
@@ -665,7 +691,6 @@ public class InfoFragment extends Fragment implements
 				place.setUrlImage(object.getString("icon"));
 				places.add(place);
 			}
-			
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -685,7 +710,10 @@ public class InfoFragment extends Fragment implements
 			}
 			
 			TextView textDuration = (TextView) getActivity().findViewById(R.id.textduration);
-			textDuration.setText("Estimated duration of the tour: " + text);
+			String sDuration = "Estimated duration of the tour: ";
+			SpannableString spanDuration = new SpannableString(sDuration);
+			spanDuration.setSpan(new StyleSpan(Typeface.BOLD), 0, spanDuration.length(), 0);
+			textDuration.setText(spanDuration + text);
 			
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
@@ -706,7 +734,7 @@ public class InfoFragment extends Fragment implements
             for(int z = 0; z < list.size() - 1; z++){
                 LatLng src = list.get(z);
                 LatLng dest = list.get(z+1);
-                Polyline line = map.addPolyline(new PolylineOptions()
+                map.addPolyline(new PolylineOptions()
                         .add(new LatLng(src.latitude, src.longitude), new LatLng(dest.latitude, dest.longitude))
                         .width(10)
                         .visible(true)
