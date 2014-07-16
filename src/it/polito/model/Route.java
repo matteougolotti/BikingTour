@@ -34,6 +34,7 @@ public class Route {
 	private ArrayList<Location> wayPoints;
 	private ArrayList<Location> pointsOfInterest;
 	private String difficulty;
+	private int lengthInMeters;
 	
 	//This constructor should not be used.
 	protected Route(){
@@ -47,6 +48,7 @@ public class Route {
 			ArrayList<Location> pointsOfInterest,
 			Bitmap mapImage,
 			String difficulty,
+			int lengthInMeters,
 			Context context){
 		
 		this.id = Calendar.getInstance().getTimeInMillis();
@@ -55,6 +57,7 @@ public class Route {
 		this.destination = destination;
 		this.wayPoints = wayPoints;
 		this.difficulty = difficulty;
+		this.lengthInMeters = lengthInMeters;
 		this.pointsOfInterest = pointsOfInterest;
 		
 		String file_name = new String(String.valueOf(id) + ".png");
@@ -87,6 +90,7 @@ public class Route {
 			destination.setLon(jobject.getDouble("dstLon"));
 			
 			difficulty = jobject.getString("difficulty");
+			lengthInMeters = jobject.getInt("lengthInMeters");
 			
 			JSONArray JsonWayPoints = jobject.getJSONArray("wayPoints");
 			this.wayPoints = new ArrayList<Location>();
@@ -125,6 +129,7 @@ public class Route {
 		jRoute.put("dstLat",  destination.getLat());
 		jRoute.put("dstLon",  destination.getLon());
 		jRoute.put("difficulty", difficulty);
+		jRoute.put("lengthInMeters", lengthInMeters);
 		JSONArray jWayPoints = new JSONArray("wayPoints");
 		for(Location wayPoint : wayPoints){
 			JSONObject jWayPoint = new JSONObject();
@@ -158,6 +163,10 @@ public class Route {
 	
 	public void setDifficulty(String difficulty){
 		this.difficulty = difficulty;
+	}
+	
+	public void setLengthInMeters(int lengthInMeters){
+		this.lengthInMeters = lengthInMeters;
 	}
 	
 	public void setWayPoints(ArrayList<Location> wayPoints){
@@ -197,6 +206,10 @@ public class Route {
 	
 	public String getDifficulty(){
 		return this.difficulty;
+	}
+	
+	public int getLengthInMeters(){
+		return this.lengthInMeters;
 	}
 	
 	public ArrayList<Location> getWayPoints(){

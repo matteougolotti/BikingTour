@@ -11,6 +11,7 @@ import it.polito.adapter.LazyAdapter;
 import it.polito.model.Location;
 import it.polito.model.RequestListener;
 import it.polito.utils.JSONParser;
+import it.polito.utils.JSONThread;
 
 import org.json.JSONArray;
 import org.json.JSONException;

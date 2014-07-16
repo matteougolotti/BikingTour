@@ -75,7 +75,8 @@
             				android:layout_height="wrap_content"
             				android:layout_weight="1"
             				style="@style/btnStyleArsenic"
-            				android:text="@string/exit" />
+            				android:text="@string/exit"
+            				android:onClick="exit" />
         				
   					 </LinearLayout>
     	   		 	</LinearLayout>
@@ -88,28 +89,32 @@
 						
     	   		        
     	   		         <TextView
-        					android:id="@+id/route_textduration"
+        					android:id="@+id/route_textlength"
         					android:layout_width="wrap_content"
         					android:layout_height="wrap_content"
-        					android:textAppearance="?android:attr/textAppearanceMedium" />
+        					android:textAppearance="?android:attr/textAppearanceMedium"
+        					android:text="@string/route_length" />
     	   		         
     	   		         <TextView
         					android:id="@+id/route_textdifficulty"
         					android:layout_width="wrap_content"
         					android:layout_height="wrap_content"
-        					android:textAppearance="?android:attr/textAppearanceMedium" />
+        					android:textAppearance="?android:attr/textAppearanceMedium" 
+        					android:text="@string/route_difficulty"/>
     	   		         
-    	   		         <TextView
-        					android:id="@+id/route_textsupport"
-        					android:text="@string/support"
-        					android:layout_width="wrap_content"
-        					android:layout_height="wrap_content"
-        					android:textAppearance="?android:attr/textAppearanceMedium" />
-    	   		         
-    	   		         <ListView
-    						android:id="@+id/route_listviewPlaces"
-    						android:layout_width="match_parent"
-    						android:layout_height="wrap_content" />
+    	   		    	 <TextView 
+    	   		    	     android:id="@+id/route_textorigin"
+    	   		    	     android:layout_width="match_parent"
+    	   		    	     android:layout_height="wrap_content"
+    	   		    	     android:textAppearance="?android:attr/textAppearanceMedium"
+    	   		    	     android:text="@string/route_origin"/>
+    	   		    	 
+    	   		    	 <TextView 
+    	   		    	     android:id="@+id/route_textdestination"
+    	   		    	     android:layout_width="match_parent"
+    	   		    	     android:layout_height="wrap_content"
+    	   		    	     android:textAppearance="?android:attr/textAppearanceMedium"
+    	   		    	     android:text="@string/route_destination"/>
     	   		         
 					</LinearLayout>
     	   		</FrameLayout>

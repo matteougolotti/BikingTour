@@ -42,5 +42,9 @@
     <string name="start">Start</string>
     <string name="delete">Delete</string>
     <string name="exit">Exit</string>
+    <string name="route_length">Length : </string>
+    <string name="route_origin">Origin : </string>
+    <string name="route_destination">Destination : </string>
+    <string name="route_difficulty">Difficulty : </string>
     
 </resources>

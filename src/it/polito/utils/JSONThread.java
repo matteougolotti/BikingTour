@@ -1,7 +1,6 @@
-package it.polito.bikingtour;
+package it.polito.utils;
 
 import it.polito.model.RequestListener;
-import it.polito.utils.JSONParser;
 import android.os.AsyncTask;
 
 public class JSONThread extends AsyncTask<Void, Void, String> {
