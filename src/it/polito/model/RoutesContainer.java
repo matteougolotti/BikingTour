@@ -61,12 +61,13 @@ public class RoutesContainer extends JSONDataContainer {
 		this.routes.put(String.valueOf(r.getId()), r);
 	}
 	
-	public void removeRoute(int index){
-		this.routes.remove(index);
+	public void removeRoute(long id){
+		this.routes.remove(String.valueOf(id));
 	}
 	
-	public Route getRoute(int index){
-		return this.routes.get(index);
+	public Route getRoute(long id){
+		
+		return this.routes.get(String.valueOf(id));
 	}
 	
 	public Collection<Route> getRoutes(){

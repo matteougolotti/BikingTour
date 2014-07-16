@@ -280,7 +280,8 @@ public class InfoFragment extends Fragment implements
 		}
 	}
 	
-	public class JSONThread extends AsyncTask<Void, Void, String> {
+	//TODO if not needed delete this code
+	/*public class JSONThread extends AsyncTask<Void, Void, String> {
         private RequestListener requestListener;
         String url;
 
@@ -309,7 +310,7 @@ public class InfoFragment extends Fragment implements
         public void setRequestListener(RequestListener requestListener) {
         	this.requestListener = requestListener;
         }
-    }
+    }*/
 	
 	private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
 	    ImageView bmImage;
@@ -730,7 +731,7 @@ public class InfoFragment extends Fragment implements
             JSONObject overviewPolylines = routes.getJSONObject("overview_polyline");
             String encodedString = overviewPolylines.getString("points");
             List<LatLng> list = decodePoly(encodedString);
-
+           
             for(int z = 0; z < list.size() - 1; z++){
                 LatLng src = list.get(z);
                 LatLng dest = list.get(z+1);

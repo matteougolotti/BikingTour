@@ -9,6 +9,7 @@
       "destinationName": "Turin",
       "dstLat": "45.02",
       "dstLon": "7.8",
+      "difficulty": "hard",
       "wayPoints": [
       				{
       				"lat": "45.02",
@@ -39,6 +40,7 @@
       "destinationName": "Milan",
       "dstLat": "45.02",
       "dstLon": "7.8",
+      "difficulty": "hard",
       "wayPoints": [
       				{
       				"lat": "45.02",

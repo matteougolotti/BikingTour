@@ -1,5 +1,9 @@
 package it.polito.model;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -7,6 +11,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
+import android.content.res.AssetManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 /**
@@ -25,10 +33,43 @@ public class Route {
 	private Location origin, destination;
 	private ArrayList<Location> wayPoints;
 	private ArrayList<Location> pointsOfInterest;
+	private String difficulty;
+	
+	//This constructor should not be used.
+	protected Route(){
+	}
 	
 	//Default constructor used to create a new route
-	public Route(){
+	public Route(String name, 
+			Location origin,
+			Location destination,
+			ArrayList<Location> wayPoints,
+			ArrayList<Location> pointsOfInterest,
+			Bitmap mapImage,
+			String difficulty,
+			Context context){
+		
 		this.id = Calendar.getInstance().getTimeInMillis();
+		this.name = name;
+		this.origin = origin;
+		this.destination = destination;
+		this.wayPoints = wayPoints;
+		this.difficulty = difficulty;
+		this.pointsOfInterest = pointsOfInterest;
+		
+		String file_name = new String(String.valueOf(id) + ".png");
+	    File file = new File (file_name);
+	    if (file.exists ()) file.delete (); 
+	    try {
+	           FileOutputStream out = new FileOutputStream(file);
+	           mapImage.compress(Bitmap.CompressFormat.PNG, 90, out);
+	           out.flush();
+	           out.close();
+
+	    } catch (Exception e) {
+	           Log.d("Route.Route", e.getMessage());
+	    }
+
 	}
 	
 	//Constructor used to load the object from a JSON object
@@ -44,6 +85,8 @@ public class Route {
 			this.destination = new Location(jobject.getString("destinationName"));
 			destination.setLat(jobject.getDouble("dstLat"));
 			destination.setLon(jobject.getDouble("dstLon"));
+			
+			difficulty = jobject.getString("difficulty");
 			
 			JSONArray JsonWayPoints = jobject.getJSONArray("wayPoints");
 			this.wayPoints = new ArrayList<Location>();
@@ -81,6 +124,7 @@ public class Route {
 		jRoute.put("destinationName",  destination.getName());
 		jRoute.put("dstLat",  destination.getLat());
 		jRoute.put("dstLon",  destination.getLon());
+		jRoute.put("difficulty", difficulty);
 		JSONArray jWayPoints = new JSONArray("wayPoints");
 		for(Location wayPoint : wayPoints){
 			JSONObject jWayPoint = new JSONObject();
@@ -112,12 +156,31 @@ public class Route {
 		this.destination = destination;
 	}
 	
+	public void setDifficulty(String difficulty){
+		this.difficulty = difficulty;
+	}
+	
 	public void setWayPoints(ArrayList<Location> wayPoints){
 		this.wayPoints = wayPoints;
 	}
 	
 	public void setPointsOfInterest(ArrayList<Location> pointsOfInterest){
 		this.pointsOfInterest = pointsOfInterest;
+	}
+	
+	public void setMapImage(Bitmap mapImage){
+		String file_name = new String(String.valueOf(id) + ".png");
+	    File file = new File (file_name);
+	    if (file.exists ()) file.delete (); 
+	    try {
+	           FileOutputStream out = new FileOutputStream(file);
+	           mapImage.compress(Bitmap.CompressFormat.PNG, 90, out);
+	           out.flush();
+	           out.close();
+
+	    } catch (Exception e) {
+	           Log.d("Route.Route", e.getMessage());
+	    }
 	}
 	
 	public String getName(){
@@ -132,6 +195,10 @@ public class Route {
 		return this.destination;
 	}
 	
+	public String getDifficulty(){
+		return this.difficulty;
+	}
+	
 	public ArrayList<Location> getWayPoints(){
 		return this.wayPoints;
 	}
@@ -143,4 +210,19 @@ public class Route {
 	public long getId(){
 		return this.id;
 	}
+	
+	public Bitmap getMapImage(Context context){
+		String file_name = new String(String.valueOf(id) + ".png");
+    	AssetManager assetManager = context.getAssets();
+		InputStream is = null;
+		try{
+			is = assetManager.open(file_name);
+		}catch(IOException e){
+			Log.e("RoomEditorActivity", "Exception caught: " + e.getMessage());
+		}
+		Bitmap bitmap = BitmapFactory.decodeStream(is);
+		
+		return bitmap;
+	}
+	
 }
