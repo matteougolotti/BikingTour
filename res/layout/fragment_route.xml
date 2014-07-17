@@ -55,7 +55,7 @@
         					android:orientation="vertical">
 
         				<Button
-            				android:id="@+id/buttonStart"
+            				android:id="@+id/route_buttonStart"
            					android:layout_width="match_parent"
             				android:layout_height="wrap_content"
             				android:layout_weight="1"
@@ -63,7 +63,7 @@
             				android:text="@string/start" />
 
         				<Button
-            				android:id="@+id/buttonDelete"
+            				android:id="@+id/route_buttonDelete"
             				android:layout_width="match_parent"
             				android:layout_height="wrap_content"
             				android:layout_weight="1"
@@ -71,13 +71,12 @@
             				android:text="@string/delete" />
         				
         				<Button
-            				android:id="@+id/buttonExit"
+            				android:id="@+id/route_buttonExit"
             				android:layout_width="match_parent"
             				android:layout_height="wrap_content"
             				android:layout_weight="1"
             				style="@style/btnStyleArsenic"
-            				android:text="@string/exit"
-            				android:onClick="exit" />
+            				android:text="@string/exit"/>
         				
   					 </LinearLayout>
     	   		 	</LinearLayout>

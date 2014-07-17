@@ -10,12 +10,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 
-public class RouteFragment extends Fragment implements OnClickListener {
+public class RouteFragment extends Fragment {
 
 	private View rootView;
 	private TabHost tabHost;
@@ -23,16 +24,10 @@ public class RouteFragment extends Fragment implements OnClickListener {
 	private TextView origin, destination, length, difficulty;
 	private Route route;
 	private RoutesContainer routesContainer;
+	private Button startButton, deleteButton, exitButton;
 	
 	public void onCreate(Bundle savedInstanceState) { 
 	    super.onCreate(savedInstanceState);   
-	}
-	
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState){
-		super.onActivityCreated(savedInstanceState);
-		//routesContainer = RoutesContainer.newInstance(getActivity());
-	    //route = routesContainer.getRoute(savedInstanceState.getLong("routeId"));
 	}
 	
 	@Override
@@ -74,43 +69,43 @@ public class RouteFragment extends Fragment implements OnClickListener {
         ImageView mapImage = (ImageView) rootView.findViewById(R.id.route_mapimage);
         //mapImage.setImageBitmap(route.getMapImage(getActivity()));
         
+        startButton = (Button) rootView.findViewById(R.id.route_buttonStart);
+        startButton.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				Bundle bundle = new Bundle();
+				bundle.putLong("routeId", route.getId());
+				Fragment newFragment = new NavigationFragment();
+				newFragment.setArguments(bundle);
+				FragmentTransaction transaction = getFragmentManager().beginTransaction();
+				transaction.replace(R.id.frame_container, newFragment);
+				transaction.addToBackStack(null);
+				transaction.commit();
+			}
+        });
+        
+        deleteButton = (Button) rootView.findViewById(R.id.route_buttonDelete);
+        deleteButton.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				FragmentManager fragmentManager = getFragmentManager();
+				routesContainer.removeRoute(route.getId());
+				fragmentManager.beginTransaction()
+						.replace(R.id.frame_container, new HomeFragment()).commit();
+			}
+        });
+        
+        exitButton = (Button) rootView.findViewById(R.id.route_buttonExit);
+        exitButton.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				FragmentManager fragmentManager = getFragmentManager();
+				fragmentManager.beginTransaction()
+						.replace(R.id.frame_container, new HomeFragment()).commit();
+			}
+        });
+        
         return rootView;
     }
-
-	@Override
-	public void onClick(View v) {
-		switch(v.getId()){
-		case R.id.buttonStart:
-			start();
-		case R.id.buttonDelete:
-			delete();
-		case R.id.buttonExit:
-			exit();
-		}
-	}
-	
-	private void start(){
-		Bundle bundle = new Bundle();
-		bundle.putLong("routeId", route.getId());
-		Fragment newFragment = new NavigationFragment();
-		newFragment.setArguments(bundle);
-		FragmentTransaction transaction = getFragmentManager().beginTransaction();
-		transaction.replace(R.id.frame_container, newFragment);
-		transaction.addToBackStack(null);
-		transaction.commit();
-	}
-		
-	private void delete(){
-		FragmentManager fragmentManager = getFragmentManager();
-		routesContainer.removeRoute(route.getId());
-		fragmentManager.beginTransaction()
-				.replace(R.id.frame_container, new HomeFragment()).commit();
-	}
-	
-	private void exit(){
-		FragmentManager fragmentManager = getFragmentManager();
-		fragmentManager.beginTransaction()
-				.replace(R.id.frame_container, new HomeFragment()).commit();
-	}
 	
 }
