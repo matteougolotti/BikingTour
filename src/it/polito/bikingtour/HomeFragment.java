@@ -18,6 +18,8 @@ import android.widget.ListView;
 public class HomeFragment extends Fragment {
 	private RoutesContainer routes;
 	private View rootView;
+	private ListView myRoutes;
+	private ArrayList<Route> routesArray;
 	
 	public HomeFragment() {
 		
@@ -27,6 +29,8 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_home, container, false);
+        myRoutes = (ListView) rootView.findViewById(R.id.myRoutesListView);
+        routesArray = new ArrayList<Route>();
         
         return rootView;
     }
@@ -35,29 +39,33 @@ public class HomeFragment extends Fragment {
 	public void onResume(){
 		super.onResume();
         routes = RoutesContainer.newInstance(getActivity());
-        ListView myRoutes = (ListView) rootView.findViewById(R.id.myRoutesListView);
-        ArrayList<Route> routesArray = new ArrayList<Route>();
         routesArray.addAll(routes.getRoutes());
-        myRoutes.setAdapter(new RouteArrayAdapter(getActivity(), routesArray));
-        myRoutes.setOnItemClickListener(new OnItemClickListener(){
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position,
-					long id) {
-				ArrayList<Route> routesArray = new ArrayList<Route>();
-		        routesArray.addAll(routes.getRoutes());
-		        long routeId = routesArray.get(position).getId();
-		        Bundle bundle = new Bundle();
-				bundle.putLong("routeId", routeId);
-				Fragment newFragment = new RouteFragment();
-				newFragment.setArguments(bundle);
-				FragmentTransaction transaction = getFragmentManager().beginTransaction();
-				transaction.replace(R.id.frame_container, newFragment);
-				transaction.addToBackStack(null);
-				transaction.commit();
-			}
-        	
-        });
-        
+		
+		if (!routesArray.isEmpty()) {
+			myRoutes.setAdapter(new RouteArrayAdapter(getActivity(), routesArray));
+	        myRoutes.setOnItemClickListener(new OnItemClickListener(){
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view, int position,
+						long id) {
+					ArrayList<Route> routesArray = new ArrayList<Route>();
+			        routesArray.addAll(routes.getRoutes());
+			        long routeId = routesArray.get(position).getId();
+			        Bundle bundle = new Bundle();
+					bundle.putLong("routeId", routeId);
+					Fragment newFragment = new RouteFragment();
+					newFragment.setArguments(bundle);
+					FragmentTransaction transaction = getFragmentManager().beginTransaction();
+					transaction.replace(R.id.frame_container, newFragment);
+					transaction.addToBackStack(null);
+					transaction.commit();
+				}
+	        	
+	        });
+		}
+	}
+	
+	public void addRouteOnListView(Route route) {
+		routesArray.add(route);
 	}
 	
 }

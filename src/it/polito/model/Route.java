@@ -16,6 +16,7 @@ import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
+import android.widget.TextView;
 
 /**
  * 
@@ -34,10 +35,27 @@ public class Route {
 	private ArrayList<Location> wayPoints;
 	private ArrayList<Location> pointsOfInterest;
 	private String difficulty;
-	private int lengthInMeters;
+	private int lengthInMeters; // It's better use the distance of the tour in km, because probably will be large tours. I made another constructor, with the basic informations
+	private String distance; 
 	
 	//This constructor should not be used.
 	protected Route(){
+	}
+	
+	// Basic constructor of the route
+	public Route(String name, 
+			Location origin,
+			Location destination,
+			ArrayList<Location> wayPoints,
+			String difficulty,
+			String distance) {
+		this.id = Calendar.getInstance().getTimeInMillis();
+		this.name = name;
+		this.origin = origin;
+		this.destination = destination;
+		this.wayPoints = wayPoints;
+		this.difficulty = difficulty;
+		this.distance = distance;
 	}
 	
 	//Default constructor used to create a new route
@@ -90,7 +108,7 @@ public class Route {
 			destination.setLon(jobject.getDouble("dstLon"));
 			
 			difficulty = jobject.getString("difficulty");
-			lengthInMeters = jobject.getInt("lengthInMeters");
+			//lengthInMeters = jobject.getInt("lengthInMeters"); // this line was stopping the correct initialization of the app, so I commented it
 			
 			JSONArray JsonWayPoints = jobject.getJSONArray("wayPoints");
 			this.wayPoints = new ArrayList<Location>();
@@ -236,6 +254,14 @@ public class Route {
 		Bitmap bitmap = BitmapFactory.decodeStream(is);
 		
 		return bitmap;
+	}
+
+	public String getDistance() {
+		return distance;
+	}
+
+	public void setDistance(String distance) {
+		this.distance = distance;
 	}
 	
 }

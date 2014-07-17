@@ -3,13 +3,16 @@ package it.polito.bikingtour;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import it.polito.adapter.LazyAdapter;
 import it.polito.model.Location;
 import it.polito.model.RequestListener;
+import it.polito.model.Route;
 import it.polito.utils.JSONThread;
 
 import org.json.JSONArray;
@@ -19,6 +22,7 @@ import org.json.JSONObject;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.data.d;
 import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -33,6 +37,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.IntentSender;
 import android.graphics.Bitmap;
@@ -42,6 +47,7 @@ import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.SpannableString;
+import android.text.format.DateFormat;
 import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -50,6 +56,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -71,11 +78,13 @@ public class InfoFragment extends Fragment implements
 	private TabSpec specMap, specSupport, specInfo;
 	private ArrayList<Location> places;
 	private ImageView chart;
-	private TextView difficulty;
+	private TextView difficulty, distance, textDuration;
 	private ListView listPlaces;
-	private String origin, destination;
+	private String origin, destination, textDistance, textDifficulty;
 	private List<String> locationsPlaces = null;
 	private ProgressBar mProgressChart, mProgressList = null;
+	private Button buttonAccept, buttonDeny;
+	private Route route;
     
 	public InfoFragment() {
 		
@@ -122,10 +131,25 @@ public class InfoFragment extends Fragment implements
         listPlaces = (ListView) rootView.findViewById(R.id.listviewPlaces);
         chart = (ImageView) rootView.findViewById(R.id.iv_chart);
         difficulty = (TextView) rootView.findViewById(R.id.textdifficulty);
+        textDuration = (TextView) rootView.findViewById(R.id.textduration);
+        distance = (TextView) rootView.findViewById(R.id.textdistance);
         mProgressChart = (ProgressBar) rootView.findViewById(R.id.progressBar_chart);
         mProgressList = (ProgressBar) rootView.findViewById(R.id.progressBar_listView);
+        buttonAccept = (Button) rootView.findViewById(R.id.buttonAccept);
+        buttonDeny = (Button) rootView.findViewById(R.id.buttonDeny);
         mProgressChart.setVisibility(View.VISIBLE);
         mProgressList.setVisibility(View.VISIBLE);
+        
+        buttonDeny.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Fragment newFragment = new HomeFragment();
+				FragmentTransaction transaction = getFragmentManager().beginTransaction();
+				transaction.replace(R.id.frame_container, newFragment);
+				transaction.addToBackStack(null);
+				transaction.commit();
+			}
+        });
         
         return rootView;
     }
@@ -244,7 +268,7 @@ public class InfoFragment extends Fragment implements
 			@Override
 			public void postResponse(String result) {
 				drawDirections(result); // Drawing route
-				setDuration(result); // Setting the duration of the tour
+				setDurationAndDistance(result); // Setting the duration and total distance of the tour
 				try {
 					setPlaces(result); // Setting the places that will be part of the logistical support
 				} catch (UnsupportedEncodingException e) {
@@ -279,38 +303,6 @@ public class InfoFragment extends Fragment implements
 			e.printStackTrace();
 		}
 	}
-	
-	//TODO if not needed delete this code
-	/*public class JSONThread extends AsyncTask<Void, Void, String> {
-        private RequestListener requestListener;
-        String url;
-
-        public JSONThread(String urlPass){
-            this.url = urlPass;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-        @Override
-        protected String doInBackground(Void... params) {
-            JSONParser jParser = new JSONParser();
-            String json = jParser.getJSONFromUrl(url);
-            return json;
-        }
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            if(result != null){
-            	requestListener.postResponse(result);
-            }
-        }
-        
-        public void setRequestListener(RequestListener requestListener) {
-        	this.requestListener = requestListener;
-        }
-    }*/
 	
 	private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
 	    ImageView bmImage;
@@ -411,7 +403,7 @@ public class InfoFragment extends Fragment implements
         url.append(srclat);
         url.append(",");
         url.append(srclng);
-        url.append("&radius=200");
+        url.append("&radius=300");
         url.append("&rankby=prominence");
         url.append("&types=food" + specialCharacter + "bank" + specialCharacter + "atm" + specialCharacter +
         		"bicycle_store" + specialCharacter + "campground" + specialCharacter + "hospital" + specialCharacter +
@@ -492,16 +484,15 @@ public class InfoFragment extends Fragment implements
 	}
 	
 	public void setDifficulty(Double average) {
-		String sDifficulty = "Difficulty of the tour: ";
-		SpannableString spanDifficulty = new SpannableString(sDifficulty);
-		spanDifficulty.setSpan(new StyleSpan(Typeface.BOLD), 0, spanDifficulty.length(), 0);
-		
 		if (average < 300) {
-			difficulty.setText(spanDifficulty + "Easy");
+			textDifficulty = "Easy";
+			difficulty.setText("Difficulty of the tour: " + textDifficulty);
 		} else if (300 <= average && average < 500) {
-			difficulty.setText(spanDifficulty + "Medium");
+			textDifficulty = "Medium";
+			difficulty.setText("Difficulty of the tour: " + textDifficulty);
 		} else {
-			difficulty.setText(spanDifficulty + "Hard");
+			textDifficulty = "Hard";
+			difficulty.setText("Difficulty of the tour: " + textDifficulty);
 		}
 	}
 	
@@ -667,7 +658,18 @@ public class InfoFragment extends Fragment implements
 							Toast.makeText(getActivity(), "Selected :" + " " + newsData,
 									Toast.LENGTH_LONG).show();
 						}
-			 
+					});
+			        
+			        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy_HHmm");
+			        String currentDateandTime = sdf.format(new Date());
+			        route = new Route("Route of" + currentDateandTime, locOrigin, locDestination, places, textDifficulty, textDistance);
+			        
+			        buttonAccept.setOnClickListener(new View.OnClickListener() {
+						
+						@Override
+						public void onClick(View v) {
+							
+						}
 					});
 				}
 			});
@@ -681,7 +683,7 @@ public class InfoFragment extends Fragment implements
 			JSONObject json = new JSONObject(result);
 			JSONArray resultsArray = json.getJSONArray("results");
 			
-			for (int i = 0; i <= 10; i++) {
+			for (int i = 0; i <= resultsArray.length()/2; i++) {
 				JSONObject object = resultsArray.getJSONObject(i);
 				Location place = new Location(object.getString("name"));
 				place.setAddress(object.getString("vicinity"));
@@ -697,27 +699,20 @@ public class InfoFragment extends Fragment implements
 		}
 	}
 	
-	public void setDuration(String result) { 
+	public void setDurationAndDistance(String result) { 
 		try {
-			String text = null;
 			JSONObject json = new JSONObject(result);
 			JSONArray routeArray = json.getJSONArray("routes");
 			JSONObject routes = routeArray.getJSONObject(0);
 			JSONObject legs = routes.getJSONArray("legs").getJSONObject(0);
+			JSONObject distanceObject = legs.getJSONObject("distance");
+			textDistance = distanceObject.getString("text");
 			JSONObject duration = legs.getJSONObject("duration");
+			String text = duration.getString("text");
 			
-			for (int i = 0; i < duration.length(); i++) {
-				text = duration.getString("text");
-			}
-			
-			TextView textDuration = (TextView) getActivity().findViewById(R.id.textduration);
-			String sDuration = "Estimated duration of the tour: ";
-			SpannableString spanDuration = new SpannableString(sDuration);
-			spanDuration.setSpan(new StyleSpan(Typeface.BOLD), 0, spanDuration.length(), 0);
-			textDuration.setText(spanDuration + text);
-			
+			textDuration.setText("Estimated duration of the tour: " + text);
+			distance.setText("Total distance of the tour: " + textDistance);
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -779,6 +774,5 @@ public class InfoFragment extends Fragment implements
         }
 
         return poly;
-    }
-	
+    }	
 }
