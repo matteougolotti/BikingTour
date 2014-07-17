@@ -74,6 +74,9 @@ GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnect
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_navigation, container, false);
+        routesContainer = RoutesContainer.newInstance(getActivity());
+        Bundle bundle = getArguments();
+        route = routesContainer.getRoute(bundle.getLong("routeId"));
         return rootView;
     }
 	
@@ -91,7 +94,7 @@ GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnect
 	    }
 	    
         mLocationClient = new LocationClient(getActivity(), this, this);
-        mapFragment = ((MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.mapfragment));
+        mapFragment = ((MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.navigation_mapfragment));
         map = mapFragment.getMap();
 	}
 	
@@ -284,11 +287,12 @@ GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnect
 				text = duration.getString("text");
 			}
 			
-			TextView textDuration = (TextView) getActivity().findViewById(R.id.textduration);
+			//TODO add some text to show tour duration
+			//TextView textDuration = (TextView) getActivity().findViewById(R.id.textduration);
 			String sDuration = "Estimated duration of the tour: ";
 			SpannableString spanDuration = new SpannableString(sDuration);
 			spanDuration.setSpan(new StyleSpan(Typeface.BOLD), 0, spanDuration.length(), 0);
-			textDuration.setText(spanDuration + text);
+			//textDuration.setText(spanDuration + text);
 			
 		} catch (JSONException e) {
 			Log.d("NavigationFragment.setDuration", e.getMessage());
