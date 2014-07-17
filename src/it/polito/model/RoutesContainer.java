@@ -1,5 +1,6 @@
 package it.polito.model;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
 
@@ -62,6 +63,9 @@ public class RoutesContainer extends JSONDataContainer {
 	}
 	
 	public void removeRoute(long id){
+		File file = new File(String.valueOf(id) + ".png");
+		if(file.exists())
+		  file.delete();
 		this.routes.remove(String.valueOf(id));
 	}
 	

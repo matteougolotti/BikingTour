@@ -46,5 +46,9 @@
     <string name="route_origin">Origin : </string>
     <string name="route_destination">Destination : </string>
     <string name="route_difficulty">Difficulty : </string>
+    <string name="route_map_image">Route map image</string>
+    <string name="navigation_picture_button">Navigation picture button</string>
+    <string name="navigation_video_button">Navigation video button</string>
+    <string name="navigation_help_button">Navigation help button</string>
     
 </resources>

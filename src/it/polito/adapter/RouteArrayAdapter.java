@@ -20,7 +20,7 @@ public class RouteArrayAdapter extends ArrayAdapter<Route>{
 		this.context = context;
 		this.values = values;
 	}
-
+	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		LayoutInflater inflater = (LayoutInflater) context

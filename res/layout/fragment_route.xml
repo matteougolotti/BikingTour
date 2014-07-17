@@ -5,7 +5,7 @@
     android:orientation="vertical" >
     
 	<TabHost 
-    	    android:id="@+id/route_tabhostinfo"
+    	    android:id="@+id/route_tabhost"
         	android:layout_width="match_parent"
         	android:layout_height="0dip"
         	android:layout_weight="1" >
@@ -44,7 +44,8 @@
      					<ImageView
         					android:id="@+id/route_mapimage"
         					android:layout_width="wrap_content"
-        					android:layout_height="wrap_content"/>
+        					android:layout_height="wrap_content"
+        					android:contentDescription="@string/route_map_image"/>
      					
 						</LinearLayout>
 	

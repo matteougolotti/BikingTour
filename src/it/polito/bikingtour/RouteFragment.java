@@ -4,6 +4,7 @@ import it.polito.model.Route;
 import it.polito.model.RoutesContainer;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,8 +25,14 @@ public class RouteFragment extends Fragment implements OnClickListener {
 	private RoutesContainer routesContainer;
 	
 	public void onCreate(Bundle savedInstanceState) { 
-	    super.onCreate(savedInstanceState);
-	    routesContainer = RoutesContainer.newInstance(getActivity());
+	    super.onCreate(savedInstanceState);   
+	}
+	
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState){
+		super.onActivityCreated(savedInstanceState);
+		//routesContainer = RoutesContainer.newInstance(getActivity());
+	    //route = routesContainer.getRoute(savedInstanceState.getLong("routeId"));
 	}
 	
 	@Override
@@ -35,13 +42,14 @@ public class RouteFragment extends Fragment implements OnClickListener {
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		route = routesContainer.getRoute(savedInstanceState.getLong("route_id"));
+		routesContainer = RoutesContainer.newInstance(getActivity());
+	    route = routesContainer.getRoute(this.getArguments().getLong("routeId"));
         rootView = inflater.inflate(R.layout.fragment_route, container, false);
-        tabHost = (TabHost) rootView.findViewById(R.id.tabhostinfo);
+        tabHost = (TabHost) rootView.findViewById(R.id.route_tabhost);
         tabHost.setup();
         
         specMap = tabHost.newTabSpec("Map");
-        specMap.setContent(R.id.tabmap);
+        specMap.setContent(R.id.route_tabmap);
         specMap.setIndicator("Map");
         
         specInfo = tabHost.newTabSpec("Info");
@@ -51,7 +59,7 @@ public class RouteFragment extends Fragment implements OnClickListener {
         tabHost.addTab(specMap);
         tabHost.addTab(specInfo);
         
-        difficulty = (TextView) rootView.findViewById(R.id.textdifficulty);
+        difficulty = (TextView) rootView.findViewById(R.id.route_textdifficulty);
         difficulty.append(route.getDifficulty());
         
         origin = (TextView) rootView.findViewById(R.id.route_textorigin);
@@ -64,7 +72,7 @@ public class RouteFragment extends Fragment implements OnClickListener {
         length.append(String.valueOf(route.getLengthInMeters()) + "m");
         
         ImageView mapImage = (ImageView) rootView.findViewById(R.id.route_mapimage);
-        mapImage.setImageBitmap(route.getMapImage(getActivity()));
+        //mapImage.setImageBitmap(route.getMapImage(getActivity()));
         
         return rootView;
     }
@@ -79,11 +87,17 @@ public class RouteFragment extends Fragment implements OnClickListener {
 		case R.id.buttonExit:
 			exit();
 		}
-
 	}
 	
 	private void start(){
-		
+		Bundle bundle = new Bundle();
+		bundle.putLong("routeId", route.getId());
+		Fragment newFragment = new NavigationFragment();
+		newFragment.setArguments(bundle);
+		FragmentTransaction transaction = getFragmentManager().beginTransaction();
+		transaction.replace(R.id.frame_container, newFragment);
+		transaction.addToBackStack(null);
+		transaction.commit();
 	}
 		
 	private void delete(){
