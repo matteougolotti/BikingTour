@@ -40,6 +40,12 @@ public class ToursContainer extends JSONDataContainer {
 		return ToursContainer.container;
 	}
 	
+	public void CreateNewTour(Route route){
+		Tour tour = new Tour(route, context);
+		this.addTour(tour);
+		this.save();
+	}
+	
 	public void save(){
 		try{
 			JSONObject jobject = new JSONObject();

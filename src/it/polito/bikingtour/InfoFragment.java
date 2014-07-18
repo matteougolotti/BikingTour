@@ -1,19 +1,16 @@
 package it.polito.bikingtour;
 
-import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import it.polito.adapter.LazyAdapter;
 import it.polito.model.Location;
 import it.polito.model.RequestListener;
-import it.polito.model.Route;
+import it.polito.model.RoutesContainer;
 import it.polito.utils.JSONThread;
 
 import org.json.JSONArray;
@@ -23,7 +20,6 @@ import org.json.JSONObject;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.common.data.d;
 import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -45,12 +41,8 @@ import android.content.IntentSender;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.SpannableString;
-import android.text.format.DateFormat;
-import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -86,7 +78,7 @@ public class InfoFragment extends Fragment implements
 	private List<String> locationsPlaces = null;
 	private ProgressBar mProgressChart, mProgressList = null;
 	private Button buttonAccept, buttonDeny;
-	private Route route;
+	private RoutesContainer routesContainer;
 	Bitmap mapImage;
     
 	public InfoFragment() {
@@ -95,7 +87,8 @@ public class InfoFragment extends Fragment implements
 	
 	public void onCreate(Bundle savedInstanceState) {
 	    setRetainInstance(true); 
-	    super.onCreate(savedInstanceState);     
+	    super.onCreate(savedInstanceState); 
+	    routesContainer = RoutesContainer.newInstance(getActivity());
 	}
 	
 	@Override
@@ -663,24 +656,24 @@ public class InfoFragment extends Fragment implements
 						}
 					});
 			        
-			        //SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy_HHmm");
-			        //String currentDateandTime = sdf.format(new Date());
-			        //route = new Route("Route of" + currentDateandTime, locOrigin, locDestination, places, textDifficulty, textDistance);
-			        SnapshotReadyCallback callback = new SnapshotReadyCallback() {
-			            @Override
-			            public void onSnapshotReady(Bitmap snapshot) {
-			                mapImage = snapshot;
-			            }
-			        };
-			        
-			        map.snapshot(callback);
-			        route = new Route(locOrigin, locDestination, places, mapImage, textDifficulty, Integer.getInteger(textDistance), getActivity());
-			        
 			        buttonAccept.setOnClickListener(new View.OnClickListener() {
 						
 						@Override
 						public void onClick(View v) {
-							
+							SnapshotReadyCallback callback = new SnapshotReadyCallback() {
+					            @Override
+					            public void onSnapshotReady(Bitmap snapshot) {
+					                mapImage = snapshot;
+					            }
+					        };
+					        
+					        map.snapshot(callback);
+					        routesContainer.CreateNewRoute(locOrigin,
+					        						locDestination,
+					        						places,
+					        						mapImage,
+					        						textDifficulty,
+					        						Integer.getInteger(textDistance));
 						}
 					});
 				}

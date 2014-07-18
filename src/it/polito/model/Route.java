@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 
 import org.json.JSONArray;
@@ -42,23 +41,6 @@ public class Route {
 	protected Route(){
 	}
 	
-	// Basic constructor of the route
-	public Route(String name, 
-			Location origin,
-			Location destination,
-			ArrayList<Location> wayPoints,
-			String difficulty,
-			String distance) {
-		this.id = Calendar.getInstance().getTimeInMillis();
-		this.name = name;
-		this.origin = origin;
-		this.destination = destination;
-		this.wayPoints = wayPoints;
-		this.difficulty = difficulty;
-		this.distance = distance;
-	}
-	
-	//Default constructor used to create a new route
 	public Route(Location origin,
 			Location destination,
 			ArrayList<Location> wayPoints,

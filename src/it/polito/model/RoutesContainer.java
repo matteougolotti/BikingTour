@@ -1,6 +1,7 @@
 package it.polito.model;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
@@ -9,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.util.Log;
 
 public class RoutesContainer extends JSONDataContainer {
@@ -42,6 +44,22 @@ public class RoutesContainer extends JSONDataContainer {
 		return RoutesContainer.container;
 	}
 	
+	public void CreateNewRoute(Location origin,
+			Location destination,
+			ArrayList<Location> wayPoints,
+			Bitmap mapImage,
+			String difficulty,
+			int lengthInMeters){
+		Route route = new Route(origin,
+							destination,
+							wayPoints,
+							mapImage,
+							difficulty,
+							lengthInMeters,
+							RoutesContainer.context);
+		this.addRoute(route);
+	}
+	
 	//TODO call this method in the onPause() method of the parent Activity
 	public void save(){
 		try{
@@ -60,6 +78,7 @@ public class RoutesContainer extends JSONDataContainer {
 	
 	public void addRoute(Route r){
 		this.routes.put(String.valueOf(r.getId()), r);
+		this.save();
 	}
 	
 	public void removeRoute(long id){

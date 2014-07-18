@@ -11,6 +11,8 @@ import it.polito.bikingtour.InfoFragment.ErrorDialogFragment;
 import it.polito.model.RequestListener;
 import it.polito.model.Route;
 import it.polito.model.RoutesContainer;
+import it.polito.model.Tour;
+import it.polito.model.ToursContainer;
 import it.polito.utils.JSONThread;
 import android.app.Dialog;
 import android.app.Fragment;
@@ -26,7 +28,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -47,8 +48,7 @@ public class NavigationFragment extends Fragment implements
 GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnectionFailedListener {
 
 	private View rootView;
-	private Route route;
-	private RoutesContainer routesContainer;
+	private Tour tour;
 	private LocationClient mLocationClient;
 	private MapFragment mapFragment;
 	private GoogleMap map;
@@ -56,7 +56,11 @@ GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnect
 	
 	public void onCreate(Bundle savedInstanceState) {
 	    setRetainInstance(true); 
-	    super.onCreate(savedInstanceState);     
+	    super.onCreate(savedInstanceState);   
+	    ToursContainer toursContainer = ToursContainer.newInstance(getActivity());
+	    RoutesContainer routesContainer = RoutesContainer.newInstance(getActivity());
+	    Route route = routesContainer.getRoute(getArguments().getLong("routeId"));
+	    toursContainer.CreateNewTour(route);
 	}
 	
 	@Override
@@ -74,9 +78,6 @@ GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnect
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_navigation, container, false);
-        routesContainer = RoutesContainer.newInstance(getActivity());
-        Bundle bundle = getArguments();
-        route = routesContainer.getRoute(bundle.getLong("routeId"));
         return rootView;
     }
 	
@@ -85,13 +86,6 @@ GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnect
 	    super.onActivityCreated(savedInstanceState);
 	    final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
 	    imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);      
-	    
-	    Bundle bundle = this.getArguments();
-	    if (bundle != null) {
-	    	routesContainer = RoutesContainer.newInstance(getActivity());
-	    	long routeId = bundle.getLong("routeId");
-	    	route = routesContainer.getRoute(routeId);
-	    }
 	    
         mLocationClient = new LocationClient(getActivity(), this, this);
         mapFragment = ((MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.navigation_mapfragment));
@@ -162,28 +156,28 @@ GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnect
     }
 	
 	private void addingMarkers() {
-		LatLng latLng = new LatLng(route.getOrigin().getLat(), route.getOrigin().getLon());
+		LatLng latLng = new LatLng(tour.getRoute().getOrigin().getLat(), tour.getRoute().getOrigin().getLon());
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 13);
         map.animateCamera(cameraUpdate);
         
         BitmapDescriptor srcIcon = BitmapDescriptorFactory.fromResource(R.drawable.srcmarker);
         map.addMarker(new MarkerOptions()
-                .position(new LatLng(route.getOrigin().getLat(), route.getOrigin().getLon()))
-                .title(route.getOrigin().getName())
+                .position(new LatLng(tour.getRoute().getOrigin().getLat(), tour.getRoute().getOrigin().getLon()))
+                .title(tour.getRoute().getOrigin().getName())
                 .icon(srcIcon));
         
         BitmapDescriptor destIcon = BitmapDescriptorFactory.fromResource(R.drawable.destmarker);
         map.addMarker(new MarkerOptions()
-                .position(new LatLng(route.getDestination().getLat(), route.getDestination().getLon()))
-                .title(route.getDestination().getName())
+                .position(new LatLng(tour.getRoute().getDestination().getLat(), tour.getRoute().getDestination().getLon()))
+                .title(tour.getRoute().getDestination().getName())
                 .icon(destIcon));
 	}
 	
 	private void requestDirections() {
-		String request = makeURLRequest(Double.toString(route.getOrigin().getLat()),
-                Double.toString(route.getOrigin().getLon()), 
-                Double.toString(route.getDestination().getLat()), 
-                Double.toString(route.getDestination().getLon()));
+		String request = makeURLRequest(Double.toString(tour.getRoute().getOrigin().getLat()),
+                Double.toString(tour.getRoute().getOrigin().getLon()), 
+                Double.toString(tour.getRoute().getDestination().getLat()), 
+                Double.toString(tour.getRoute().getDestination().getLon()));
         
         JSONThread jsonThread = new JSONThread(request);
         jsonThread.setRequestListener(new RequestListener() {

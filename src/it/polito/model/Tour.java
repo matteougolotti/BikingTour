@@ -1,11 +1,13 @@
 package it.polito.model;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
 import android.util.Log;
 
 /**
@@ -21,19 +23,23 @@ import android.util.Log;
  */
 
 public class Tour {
-	private long route;
+	private Route route;
+	private RoutesContainer routesContainer;
 	private ArrayList<String> videos;
 	private ArrayList<String> pictures;
 	private ArrayList<String> notes;
 	private long tourDateInMillis, tourDurationInMillis;
 	
-	public Tour(){
-		//Default constructor used to build a new tour.
+	public Tour(Route route, Context context){
+		Date date = new Date();
+		this.tourDateInMillis = date.getTime();
+		this.route = route;
+		routesContainer = RoutesContainer.newInstance(context);
 	}
 	
 	public Tour(JSONObject jobject){
 		try{
-			this.route = jobject.getLong("route");
+			this.route = routesContainer.getRoute(jobject.getLong("route"));
 			
 			this.tourDateInMillis = jobject.getLong("date");
 			this.tourDurationInMillis = jobject.getLong("duration");
@@ -64,7 +70,7 @@ public class Tour {
 	
 	public JSONObject serializeToJson() throws JSONException{
 		JSONObject jTour = new JSONObject();
-		jTour.put("route", route);
+		jTour.put("route", route.getId());
 		jTour.put("date", tourDateInMillis);
 		jTour.put("duration", tourDurationInMillis);
 		JSONArray jVideos = new JSONArray("videos");
@@ -85,7 +91,7 @@ public class Tour {
 		return jTour;
 	}
 	
-	public long getRouteId(){
+	public Route getRoute(){
 		return this.route;
 	}
 	
@@ -109,12 +115,8 @@ public class Tour {
 		return this.notes;
 	}
 	
-	public void setRouteId(long routeId){
-		this.route = routeId;
-	}
-	
-	public void setTourDate(long tourDateInMillis){
-		this.tourDateInMillis = tourDateInMillis;
+	public void setRoute(Route route){
+		this.route = route;
 	}
 	
 	public void setTourDuration(long tourDurationInMillis){
