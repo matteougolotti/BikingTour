@@ -1,5 +1,6 @@
 package it.polito.bikingtour;
 
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -27,6 +28,7 @@ import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.SnapshotReadyCallback;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -85,6 +87,7 @@ public class InfoFragment extends Fragment implements
 	private ProgressBar mProgressChart, mProgressList = null;
 	private Button buttonAccept, buttonDeny;
 	private Route route;
+	Bitmap mapImage;
     
 	public InfoFragment() {
 		
@@ -660,9 +663,18 @@ public class InfoFragment extends Fragment implements
 						}
 					});
 			        
-			        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy_HHmm");
-			        String currentDateandTime = sdf.format(new Date());
-			        route = new Route("Route of" + currentDateandTime, locOrigin, locDestination, places, textDifficulty, textDistance);
+			        //SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy_HHmm");
+			        //String currentDateandTime = sdf.format(new Date());
+			        //route = new Route("Route of" + currentDateandTime, locOrigin, locDestination, places, textDifficulty, textDistance);
+			        SnapshotReadyCallback callback = new SnapshotReadyCallback() {
+			            @Override
+			            public void onSnapshotReady(Bitmap snapshot) {
+			                mapImage = snapshot;
+			            }
+			        };
+			        
+			        map.snapshot(callback);
+			        route = new Route(locOrigin, locDestination, places, mapImage, textDifficulty, Integer.getInteger(textDistance), getActivity());
 			        
 			        buttonAccept.setOnClickListener(new View.OnClickListener() {
 						

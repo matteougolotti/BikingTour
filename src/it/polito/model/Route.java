@@ -4,8 +4,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -16,7 +18,6 @@ import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
-import android.widget.TextView;
 
 /**
  * 
@@ -33,7 +34,6 @@ public class Route {
 	private long id;
 	private Location origin, destination;
 	private ArrayList<Location> wayPoints;
-	private ArrayList<Location> pointsOfInterest;
 	private String difficulty;
 	private int lengthInMeters; // It's better use the distance of the tour in km, because probably will be large tours. I made another constructor, with the basic informations
 	private String distance; 
@@ -59,24 +59,24 @@ public class Route {
 	}
 	
 	//Default constructor used to create a new route
-	public Route(String name, 
-			Location origin,
+	public Route(Location origin,
 			Location destination,
 			ArrayList<Location> wayPoints,
-			ArrayList<Location> pointsOfInterest,
 			Bitmap mapImage,
 			String difficulty,
 			int lengthInMeters,
 			Context context){
 		
-		this.id = Calendar.getInstance().getTimeInMillis();
-		this.name = name;
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy_HHmm");
+		Date date = new Date();
+        String currentDateandTime = sdf.format(date);
+		this.id = date.getTime();
+		this.name = "Route of " + currentDateandTime;
 		this.origin = origin;
 		this.destination = destination;
 		this.wayPoints = wayPoints;
 		this.difficulty = difficulty;
 		this.lengthInMeters = lengthInMeters;
-		this.pointsOfInterest = pointsOfInterest;
 		
 		String file_name = new String(String.valueOf(id) + ".png");
 	    File file = new File (file_name);
@@ -119,16 +119,6 @@ public class Route {
 						JsonWayPoint.getDouble("lon"));
 				this.wayPoints.add(wayPoint);	
 			}
-			
-			JSONArray JsonPointsOfInterest = jobject.getJSONArray("pointsOfInterest");
-			this.pointsOfInterest = new ArrayList<Location>();
-			for(int i=0; i<JsonPointsOfInterest.length(); i++){
-				JSONObject JsonPointOfInterest = JsonPointsOfInterest.getJSONObject(i);
-				Location pointOfInterest = new Location(
-						JsonPointOfInterest.getDouble("lat"),
-						JsonPointOfInterest.getDouble("lon"));
-				this.pointsOfInterest.add(pointOfInterest);
-			}
 		}catch(JSONException e){
 			e.printStackTrace();
 			Log.d("Route", "Error parsing json. " + e.getMessage());
@@ -156,14 +146,6 @@ public class Route {
 			jWayPoints.put(jWayPoint);
 		}
 		jRoute.accumulate("wayPoints",  jWayPoints);
-		JSONArray jPointsOfInterest = new JSONArray("pointsOfInterest");
-		for(Location point : pointsOfInterest){
-			JSONObject jPoint = new JSONObject();
-			jPoint.put("lat", point.getLat());
-			jPoint.put("lon",  point.getLon());
-			jPointsOfInterest.put(jPoint);
-		}
-		jRoute.accumulate("pointsOfInterest", jPointsOfInterest);
 		return jRoute;
 	}
 	
@@ -189,10 +171,6 @@ public class Route {
 	
 	public void setWayPoints(ArrayList<Location> wayPoints){
 		this.wayPoints = wayPoints;
-	}
-	
-	public void setPointsOfInterest(ArrayList<Location> pointsOfInterest){
-		this.pointsOfInterest = pointsOfInterest;
 	}
 	
 	public void setMapImage(Bitmap mapImage){
@@ -232,10 +210,6 @@ public class Route {
 	
 	public ArrayList<Location> getWayPoints(){
 		return this.wayPoints;
-	}
-	
-	public ArrayList<Location> getPointsOfInterest(){
-		return this.pointsOfInterest;
 	}
 	
 	public long getId(){
