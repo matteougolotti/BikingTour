@@ -1,5 +1,6 @@
 package it.polito.model;
 
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -27,7 +28,6 @@ public class Tour {
 	private RoutesContainer routesContainer;
 	private ArrayList<String> videos;
 	private ArrayList<String> pictures;
-	private ArrayList<String> notes;
 	private long tourDateInMillis, tourDurationInMillis;
 	
 	public Tour(Route route, Context context){
@@ -55,12 +55,6 @@ public class Tour {
 			for(int i=0; i<jpictures.length(); i++){
 				pictures.add(jpictures.getString(i));
 			}
-			
-			this.notes = new ArrayList<String>();
-			JSONArray jnotes = jobject.getJSONArray("notes");
-			for(int i=0; i<jnotes.length(); i++){
-				notes.add(jnotes.getString(i));
-			}
 		}catch(JSONException e){
 			e.printStackTrace();
 			Log.d("Tour", e.getMessage());
@@ -73,21 +67,17 @@ public class Tour {
 		jTour.put("route", route.getId());
 		jTour.put("date", tourDateInMillis);
 		jTour.put("duration", tourDurationInMillis);
-		JSONArray jVideos = new JSONArray("videos");
+		JSONArray jVideos = new JSONArray();
 		for(String video : videos){
 			jVideos.put(video);
 		}
 		jTour.accumulate("videos",  jVideos);
-		JSONArray jPictures = new JSONArray("pictures");
+		JSONArray jPictures = new JSONArray();
 		for(String picture : pictures){
 			jPictures.put(picture);
 		}
 		jTour.accumulate("pictures", jPictures);
-		JSONArray jNotes = new JSONArray("notes");
-		for(String note : notes){
-			jNotes.put(note);
-		}
-		jTour.accumulate("notes", jNotes);
+		
 		return jTour;
 	}
 	
@@ -111,10 +101,6 @@ public class Tour {
 		return this.pictures;
 	}
 	
-	public ArrayList<String> getNotes(){
-		return this.notes;
-	}
-	
 	public void setRoute(Route route){
 		this.route = route;
 	}
@@ -123,16 +109,34 @@ public class Tour {
 		this.tourDurationInMillis = tourDurationInMillis;
 	}
 	
-	public void setVideos(ArrayList<String> videos){
-		this.videos = videos;
+	public void addVideo(String videoName){
+		if(this.videos == null)
+			this.videos = new ArrayList<String>();
+		this.videos.add(videoName);
 	}
 	
-	public void setPictures(ArrayList<String> pictures){
-		this.pictures = pictures;
+	public String getNewVideoName(){
+		String tour = String.valueOf(this.tourDateInMillis);
+		String number = String.valueOf(videos.size());
+		String videoName = "tour" + tour + "vid" + number + ".mp4";
+		return videoName;
 	}
 	
-	public void setNotes(ArrayList<String> notes){
-		this.notes = notes;
+	public void addPicture(byte[] data, Context context){
+		if(this.pictures == null)
+			this.pictures = new ArrayList<String>();
+		String picNumber = String.valueOf(this.pictures.size());
+		String tourId = String.valueOf(this.tourDateInMillis);
+		String picName = "tour" + tourId + "pic" + picNumber + ".png";
+		FileOutputStream fos;
+		try{
+			fos = context.openFileOutput(picName, Context.MODE_PRIVATE);
+			fos.write(data);
+			fos.close();
+			this.pictures.add(picName);
+		}catch(Exception e){
+			Log.d("Tour.addPicture", e.getMessage());
+		}
 	}
 	
 }

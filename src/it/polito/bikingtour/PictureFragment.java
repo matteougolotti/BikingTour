@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.hardware.Camera;
 
-public class PictureFragment extends Fragment implements OnClickListener {
+public class PictureFragment extends Fragment {
 	CameraView cameraView;
 	Camera camera;
 	
@@ -21,18 +21,22 @@ public class PictureFragment extends Fragment implements OnClickListener {
 	    cameraView = (CameraView) v.findViewById(R.id.picture_camera_preview);
 	    camera = null;
 	    ImageButton takePictureButton = (ImageButton) v.findViewById(R.id.take_picture_button);
-	    takePictureButton.setOnClickListener(this);
+	    takePictureButton.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				cameraView.capture();	
+			}
+	    });
+	    ImageButton exitButton = (ImageButton) v.findViewById(R.id.close_fragment_picture);
+	    exitButton.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				//TODO return to navigation fragment
+			}
+	    });
+	    
 	    
 	    return v;
-	}
-	
-	@Override
-	public void onClick(View v){
-		if(v.getId() == R.id.take_picture_button){
-			cameraView.capture();
-		}else if(v.getId() == R.id.close_fragment_picture){
-			//TODO close fragment
-		}
 	}
 	
 }

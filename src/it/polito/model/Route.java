@@ -2,7 +2,6 @@ package it.polito.model;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -75,6 +74,25 @@ public class Route {
 
 	}
 	
+	public Route(Location origin,
+			Location destination,
+			ArrayList<Location> wayPoints,
+			String difficulty,
+			String distance,
+			Context context){
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy_HHmm");
+		Date date = new Date();
+        String currentDateandTime = sdf.format(date);
+		this.id = date.getTime();
+		this.name = "Route of " + currentDateandTime;
+		this.origin = origin;
+		this.destination = destination;
+		this.wayPoints = wayPoints;
+		this.difficulty = difficulty;
+		this.distance = distance;
+	}
+	
 	//Constructor used to load the object from a JSON object
 	public Route(JSONObject jobject){
 		try{
@@ -90,7 +108,7 @@ public class Route {
 			destination.setLon(jobject.getDouble("dstLon"));
 			
 			difficulty = jobject.getString("difficulty");
-			//lengthInMeters = jobject.getInt("lengthInMeters"); // this line was stopping the correct initialization of the app, so I commented it
+			lengthInMeters = jobject.getInt("lengthInMeters");
 			
 			JSONArray JsonWayPoints = jobject.getJSONArray("wayPoints");
 			this.wayPoints = new ArrayList<Location>();
@@ -120,7 +138,7 @@ public class Route {
 		jRoute.put("dstLon",  destination.getLon());
 		jRoute.put("difficulty", difficulty);
 		jRoute.put("lengthInMeters", lengthInMeters);
-		JSONArray jWayPoints = new JSONArray("wayPoints");
+		JSONArray jWayPoints = new JSONArray();
 		for(Location wayPoint : wayPoints){
 			JSONObject jWayPoint = new JSONObject();
 			jWayPoint.put("lat", wayPoint.getLat());
@@ -204,12 +222,13 @@ public class Route {
 		InputStream is = null;
 		try{
 			is = assetManager.open(file_name);
-		}catch(IOException e){
+			Bitmap bitmap = BitmapFactory.decodeStream(is);
+			return bitmap;
+		}catch(Exception e){
 			Log.e("RoomEditorActivity", "Exception caught: " + e.getMessage());
 		}
-		Bitmap bitmap = BitmapFactory.decodeStream(is);
 		
-		return bitmap;
+		return null;
 	}
 
 	public String getDistance() {

@@ -1,5 +1,6 @@
 package it.polito.model;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
@@ -13,6 +14,7 @@ public class ToursContainer extends JSONDataContainer {
 	private static ToursContainer container;
 	private ArrayList<Tour> tours;
 	private String fileName = "tours.json";
+	private Tour currentTour;
 	
 	private ToursContainer(){
 		try{
@@ -44,12 +46,13 @@ public class ToursContainer extends JSONDataContainer {
 		Tour tour = new Tour(route, context);
 		this.addTour(tour);
 		this.save();
+		this.currentTour = tour;
 	}
 	
 	public void save(){
 		try{
 			JSONObject jobject = new JSONObject();
-			JSONArray jarray = new JSONArray("tours");
+			JSONArray jarray = new JSONArray();
 			for(Tour t : tours){
 				jarray.put(t.serializeToJson());
 			}
@@ -63,10 +66,22 @@ public class ToursContainer extends JSONDataContainer {
 	
 	public void addTour(Tour t){
 		this.tours.add(t);
+		this.save();
 	}
 	
 	public void removeTour(int index){
+		for(String picName : tours.get(index).getPictures()){
+			File file = new File(picName);
+			if(file.exists())
+			  file.delete();
+		}
+		for(String vidName : tours.get(index).getVideos()){
+			File file = new File(vidName);
+			if(file.exists())
+			  file.delete();
+		}
 		this.tours.remove(index);
+		this.save();
 	}
 	
 	public Tour getTour(int index){
@@ -75,6 +90,10 @@ public class ToursContainer extends JSONDataContainer {
 	
 	public ArrayList<Tour> getTours(){
 		return this.tours;
+	}
+	
+	public Tour getCurrentTour(){
+		return this.currentTour;
 	}
 	
 }

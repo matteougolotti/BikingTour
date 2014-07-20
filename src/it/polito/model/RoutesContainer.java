@@ -60,11 +60,24 @@ public class RoutesContainer extends JSONDataContainer {
 		this.addRoute(route);
 	}
 	
-	//TODO call this method in the onPause() method of the parent Activity
+	public void CreateNewRoute(Location origin,
+			Location destination,
+			ArrayList<Location> wayPoints,
+			String difficulty,
+			String distance){
+		Route route = new Route(origin,
+							destination,
+							wayPoints,
+							difficulty,
+							distance,
+							RoutesContainer.context);
+		this.addRoute(route);
+	}
+	
 	public void save(){
 		try{
 			JSONObject jobject = new JSONObject();
-			JSONArray jarray = new JSONArray("routes");
+			JSONArray jarray = new JSONArray();
 			for(Route r : routes.values()){
 				jarray.put(r.serializeToJson());
 			}
@@ -86,10 +99,10 @@ public class RoutesContainer extends JSONDataContainer {
 		if(file.exists())
 		  file.delete();
 		this.routes.remove(String.valueOf(id));
+		this.save();
 	}
 	
 	public Route getRoute(long id){
-		
 		return this.routes.get(String.valueOf(id));
 	}
 	

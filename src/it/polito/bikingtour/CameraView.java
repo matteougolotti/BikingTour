@@ -1,6 +1,7 @@
 package it.polito.bikingtour;
 
-import java.io.FileOutputStream;
+import it.polito.model.Tour;
+import it.polito.model.ToursContainer;
 
 import android.content.Context;
 import android.hardware.Camera;
@@ -14,10 +15,12 @@ public class CameraView extends SurfaceView
 	private Camera camera;
 	private SurfaceHolder surfaceHolder;
 	private Context context;
+	private Tour currentTour;
 	
 	
 	public CameraView(Context context) {
 		super(context);
+		this.currentTour = ToursContainer.newInstance(context).getCurrentTour();
 		this.context = context;
 		camera = null;
 		surfaceHolder = getHolder();
@@ -75,15 +78,7 @@ public class CameraView extends SurfaceView
 	
 	@Override
 	public void onPictureTaken(byte[] data, Camera c) {
-		FileOutputStream fos;
-		try{
-			//TODO handle picture naming. Also it is needed to add the picture to the current Tour record.
-			fos = context.openFileOutput("capture.jpg", Context.MODE_PRIVATE);
-			fos.write(data);
-			fos.close();
-		}catch(Exception e){
-			Log.d("CameraView.onPictureTaken", e.getMessage());
-		}
+		currentTour.addPicture(data,  context);
 	}
 	
 }

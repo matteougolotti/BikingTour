@@ -5,6 +5,7 @@ import it.polito.model.RoutesContainer;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -67,7 +68,9 @@ public class RouteFragment extends Fragment {
         length.append(String.valueOf(route.getLengthInMeters()) + "m");
         
         ImageView mapImage = (ImageView) rootView.findViewById(R.id.route_mapimage);
-        //mapImage.setImageBitmap(route.getMapImage(getActivity()));
+        Bitmap mapBitmap = route.getMapImage(getActivity());
+        if(mapBitmap != null)
+        	mapImage.setImageBitmap(route.getMapImage(getActivity()));
         
         startButton = (Button) rootView.findViewById(R.id.route_buttonStart);
         startButton.setOnClickListener(new OnClickListener(){

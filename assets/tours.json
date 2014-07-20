@@ -2,11 +2,10 @@
 "tours": [
 	{
   	"route": "1",
-    "date": "9999999",
+    "date": "999",
     "duration": "132144",
-    "videos": ["video1.mp4", "video2.mp4", "video3.mp4"],
-    "pictures": ["picture1.png", "picture2.png", "picture3.png"],
-    "notes": ["note1", "note2", "note3"]  		
+    "videos": ["tour999vid0.mp4", "tour999vid1.mp4", "tour999vid2.mp4"],
+    "pictures": ["tour999pic0.png", "tour999pic1.png", "tour999pic2.png"], 		
     }
 
     ]

@@ -1,5 +1,7 @@
 package it.polito.bikingtour;
 
+import it.polito.model.Tour;
+import it.polito.model.ToursContainer;
 import android.content.Context;
 import android.media.MediaRecorder;
 import android.util.Log;
@@ -11,17 +13,19 @@ public class VideoRecorderView extends SurfaceView
 	private MediaRecorder recorder;
 	private SurfaceHolder surfaceHolder;
 	private boolean isRecording = false;
+	private Tour currentTour;
+	private String videoName;
 	
 	public VideoRecorderView(Context context) {
 		super(context);
 		
 		recorder = new MediaRecorder();
-		recorder = new MediaRecorder();
 	    recorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
 	    recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
 	    recorder.setVideoEncoder(MediaRecorder.VideoEncoder.MPEG_4_SP);
-	    //TODO set output file name based on current route
-	    recorder.setOutputFile("fileName.mp4");
+	    this.currentTour = ToursContainer.newInstance(context).getCurrentTour();
+	    this.videoName = currentTour.getNewVideoName();
+	    recorder.setOutputFile(this.videoName);
 		
 		surfaceHolder = getHolder();
 		surfaceHolder.addCallback(this);
@@ -29,7 +33,7 @@ public class VideoRecorderView extends SurfaceView
 
 	@Override
 	public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-		//TODO method stub
+		
 	}
 
 	@Override
@@ -53,6 +57,7 @@ public class VideoRecorderView extends SurfaceView
 				recorder.stop();
 			recorder.release();
 		}
+		currentTour.addVideo(videoName);
 	}
 	
 	public void startRecording(){
@@ -65,6 +70,7 @@ public class VideoRecorderView extends SurfaceView
 		if(isRecording)
 			recorder.stop();
 		isRecording = false;
+		
 	}
 	
 	public boolean isRecording(){

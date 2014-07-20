@@ -25,6 +25,7 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.SnapshotReadyCallback;
+import com.google.android.gms.common.data.d;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -660,20 +661,48 @@ public class InfoFragment extends Fragment implements
 						
 						@Override
 						public void onClick(View v) {
-							SnapshotReadyCallback callback = new SnapshotReadyCallback() {
+							/*SnapshotReadyCallback callback = new SnapshotReadyCallback() {
 					            @Override
 					            public void onSnapshotReady(Bitmap snapshot) {
-					                mapImage = snapshot;
+					            	Log.d("InfoFragment.buttonAccept.onClick", "Accept button clicked");
+					            	try{
+					            	routesContainer.CreateNewRoute(locOrigin,
+			        						locDestination,
+			        						places,
+			        						snapshot,
+			        						textDifficulty,
+			        						Integer.getInteger(textDistance));
+					            	}catch(Exception e){
+					            		Log.d("InfoFragment.buttonAccept.onClick", e.getMessage());
+					            	}
+					            	Log.d("InfoFragment.buttonAccept.onClick", "Route created");
 					            }
 					        };
 					        
-					        map.snapshot(callback);
-					        routesContainer.CreateNewRoute(locOrigin,
-					        						locDestination,
-					        						places,
-					        						mapImage,
-					        						textDifficulty,
-					        						Integer.getInteger(textDistance));
+					        map.snapshot(callback);*/
+							Log.d("InfoFragment.buttonAccept.click", "Button Accept clicked");
+							try{
+								if(routesContainer == null)
+									Log.d("x", "routesContainer");
+								if(locOrigin == null)
+									Log.d("x", "locOrigin");
+								if(locDestination == null)
+									Log.d("x", "locDestination");
+								if(places == null)
+									Log.d("x", "places");
+								if(textDifficulty == null)
+									Log.d("x", "textDifficulty");
+								if(Integer.getInteger(textDistance) == null)
+									Log.d("x", "textDistance");
+							routesContainer.CreateNewRoute(locOrigin,
+	        						locDestination,
+	        						places,
+	        						textDifficulty,
+	        						textDistance);
+							}catch(Exception e){
+								Log.d("InfoFragment.buttonAccept.click", e.getMessage());
+							}
+							Log.d("InfoFragment.buttonAccept.click", "Route object created");
 						}
 					});
 				}
