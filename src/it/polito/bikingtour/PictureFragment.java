@@ -1,6 +1,7 @@
 package it.polito.bikingtour;
 
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,7 +32,11 @@ public class PictureFragment extends Fragment {
 	    exitButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				//TODO return to navigation fragment
+				Fragment newFragment = new NavigationFragment();
+				FragmentTransaction transaction = getFragmentManager().beginTransaction();
+				transaction.replace(R.id.frame_container, newFragment);
+				transaction.addToBackStack(null);
+				transaction.commit();
 			}
 	    });
 	    

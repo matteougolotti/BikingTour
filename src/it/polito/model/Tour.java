@@ -9,6 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.os.SystemClock;
 import android.util.Log;
 
 /**
@@ -28,7 +29,8 @@ public class Tour {
 	private RoutesContainer routesContainer;
 	private ArrayList<String> videos;
 	private ArrayList<String> pictures;
-	private long tourDateInMillis, tourDurationInMillis;
+	private long tourDateInMillis = 0;
+	private long tourDurationInMillis = 0;
 	private Context context;
 	
 	public Tour(Route route, Context context){

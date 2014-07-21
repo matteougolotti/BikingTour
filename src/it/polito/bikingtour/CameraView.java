@@ -6,6 +6,7 @@ import it.polito.model.ToursContainer;
 import android.content.Context;
 import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
+import android.text.format.Time;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Surface;
@@ -88,17 +89,13 @@ public class CameraView extends SurfaceView
 		}
 
 	public void takePicture() { 
-		   camera.takePicture(null, null, new Camera.PictureCallback(){
-		       public void onPictureTaken(byte[] data,
-		         Camera c) { 
-		    	   currentTour.addPicture(data,  context);
-		       }
-		     });
+		   camera.takePicture(null, null, this);
 	}
 	
 	@Override
 	public void onPictureTaken(byte[] data, Camera c) {
 		currentTour.addPicture(data,  context);
+		camera.startPreview();
 	}
 	
 	private void setCameraDisplayOrientation(){

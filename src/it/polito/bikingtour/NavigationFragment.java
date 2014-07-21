@@ -1,6 +1,7 @@
 package it.polito.bikingtour;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -20,6 +21,7 @@ import android.content.IntentSender;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
 import android.util.DisplayMetrics;
@@ -29,6 +31,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Chronometer;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -50,24 +53,29 @@ public class NavigationFragment extends Fragment implements
 GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnectionFailedListener {
 
 	private View rootView;
-	private Tour tour;
+	private Tour currentTour;
 	private LocationClient mLocationClient;
 	private MapFragment mapFragment;
 	private GoogleMap map;
 	private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
 	private ImageButton buttonPicture, buttonVideo, buttonHelp;
+	private Chronometer chronometer;
+	private Date date;
 	
 	public void onCreate(Bundle savedInstanceState) {
 	    setRetainInstance(true); 
 	    super.onCreate(savedInstanceState);   
 	    ToursContainer toursContainer = ToursContainer.newInstance(getActivity());
-	    this.tour = toursContainer.getCurrentTour();
+	    this.currentTour = toursContainer.getCurrentTour();
+	    this.date = new Date();
 	}
 	
 	@Override
 	public void onDestroyView() {
 	    super.onDestroyView();
 	    try {
+	    	this.currentTour.setTourDuration(date.getTime() - currentTour.getTourDate());
+	    	chronometer.stop();
 	        MapFragment fragment = (MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.navigation_mapfragment);
 	        if (fragment != null) 
 	        	getFragmentManager().beginTransaction().remove(fragment).commit();
@@ -106,6 +114,10 @@ GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnect
 				helpDialog.show(getFragmentManager(), null);
 			}
         });
+        
+        chronometer = (Chronometer) rootView.findViewById(R.id.navigation_chronometer);
+        chronometer.setBase(SystemClock.elapsedRealtime() - date.getTime() + currentTour.getTourDate());
+        chronometer.start();
         
         return rootView;
     }
@@ -186,28 +198,28 @@ GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnect
     }
 	
 	private void addingMarkers() {
-		LatLng latLng = new LatLng(tour.getRoute().getOrigin().getLat(), tour.getRoute().getOrigin().getLon());
+		LatLng latLng = new LatLng(currentTour.getRoute().getOrigin().getLat(), currentTour.getRoute().getOrigin().getLon());
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 13);
         map.animateCamera(cameraUpdate);
         
         BitmapDescriptor srcIcon = BitmapDescriptorFactory.fromResource(R.drawable.srcmarker);
         map.addMarker(new MarkerOptions()
-                .position(new LatLng(tour.getRoute().getOrigin().getLat(), tour.getRoute().getOrigin().getLon()))
-                .title(tour.getRoute().getOrigin().getName())
+                .position(new LatLng(currentTour.getRoute().getOrigin().getLat(), currentTour.getRoute().getOrigin().getLon()))
+                .title(currentTour.getRoute().getOrigin().getName())
                 .icon(srcIcon));
         
         BitmapDescriptor destIcon = BitmapDescriptorFactory.fromResource(R.drawable.destmarker);
         map.addMarker(new MarkerOptions()
-                .position(new LatLng(tour.getRoute().getDestination().getLat(), tour.getRoute().getDestination().getLon()))
-                .title(tour.getRoute().getDestination().getName())
+                .position(new LatLng(currentTour.getRoute().getDestination().getLat(), currentTour.getRoute().getDestination().getLon()))
+                .title(currentTour.getRoute().getDestination().getName())
                 .icon(destIcon));
 	}
 	
 	private void requestDirections() {
-		String request = makeURLRequest(Double.toString(tour.getRoute().getOrigin().getLat()),
-                Double.toString(tour.getRoute().getOrigin().getLon()), 
-                Double.toString(tour.getRoute().getDestination().getLat()), 
-                Double.toString(tour.getRoute().getDestination().getLon()));
+		String request = makeURLRequest(Double.toString(currentTour.getRoute().getOrigin().getLat()),
+                Double.toString(currentTour.getRoute().getOrigin().getLon()), 
+                Double.toString(currentTour.getRoute().getDestination().getLat()), 
+                Double.toString(currentTour.getRoute().getDestination().getLon()));
         
         JSONThread jsonThread = new JSONThread(request);
         jsonThread.setRequestListener(new RequestListener() {
