@@ -29,16 +29,22 @@ public class Tour {
 	private ArrayList<String> videos;
 	private ArrayList<String> pictures;
 	private long tourDateInMillis, tourDurationInMillis;
+	private Context context;
 	
 	public Tour(Route route, Context context){
 		Date date = new Date();
 		this.tourDateInMillis = date.getTime();
 		this.route = route;
-		routesContainer = RoutesContainer.newInstance(context);
+		this.context = context;
+		this.routesContainer = RoutesContainer.newInstance(context);
+		this.videos = new ArrayList<String>();
+		this.pictures = new ArrayList<String>();
 	}
 	
-	public Tour(JSONObject jobject){
+	public Tour(JSONObject jobject, Context context){
 		try{
+			this.context = context;
+			this.routesContainer = RoutesContainer.newInstance(context);
 			this.route = routesContainer.getRoute(jobject.getLong("route"));
 			
 			this.tourDateInMillis = jobject.getLong("date");

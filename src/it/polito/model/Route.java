@@ -120,9 +120,7 @@ public class Route {
 				this.wayPoints.add(wayPoint);	
 			}
 		}catch(JSONException e){
-			e.printStackTrace();
 			Log.d("Route", "Error parsing json. " + e.getMessage());
-			System.exit(1);
 		}
 	}
 	
@@ -225,7 +223,7 @@ public class Route {
 			Bitmap bitmap = BitmapFactory.decodeStream(is);
 			return bitmap;
 		}catch(Exception e){
-			Log.e("RoomEditorActivity", "Exception caught: " + e.getMessage());
+			Log.e("Route.getMapImage", e.getMessage());
 		}
 		
 		return null;

@@ -2,6 +2,7 @@ package it.polito.model;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -14,7 +15,7 @@ public class ToursContainer extends JSONDataContainer {
 	private static ToursContainer container;
 	private ArrayList<Tour> tours;
 	private String fileName = "tours.json";
-	private Tour currentTour;
+	private Tour currentTour = null;
 	
 	private ToursContainer(){
 		try{
@@ -24,7 +25,7 @@ public class ToursContainer extends JSONDataContainer {
 			this.tours = new ArrayList<Tour>();
 			for(int i=0; i<JsonTours.length(); i++){
 				JSONObject JsonTour = JsonTours.getJSONObject(i);
-				Tour t = new Tour(JsonTour);
+				Tour t = new Tour(JsonTour, context);
 				this.tours.add(t);
 			}
 		}catch(JSONException e){
@@ -47,6 +48,14 @@ public class ToursContainer extends JSONDataContainer {
 		this.addTour(tour);
 		this.save();
 		this.currentTour = tour;
+	}
+	
+	public void stopCurrentTour(){
+		if(currentTour != null){
+			Date date = new Date();
+			currentTour.setTourDuration(date.getTime() - currentTour.getTourDate());
+			currentTour = null;
+		}
 	}
 	
 	public void save(){

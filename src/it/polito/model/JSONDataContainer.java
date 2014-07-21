@@ -1,6 +1,7 @@
 package it.polito.model;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -16,8 +17,13 @@ public abstract class JSONDataContainer {
         StringBuffer sb = new StringBuffer();
         BufferedReader br = null;
         try {
-            br = new BufferedReader(new InputStreamReader(context.getAssets().
-                    open(fileName)));
+        	InputStreamReader isr;
+    	    try{
+    	    	isr = new InputStreamReader(context.openFileInput(fileName));
+    	    }catch(FileNotFoundException e){
+    	    	isr = new InputStreamReader(context.getAssets().open(fileName));
+    	    }
+            br = new BufferedReader(isr);
             String temp;
             while ((temp = br.readLine()) != null)
                 sb.append(temp);

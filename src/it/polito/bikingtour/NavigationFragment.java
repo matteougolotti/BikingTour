@@ -9,13 +9,12 @@ import org.json.JSONObject;
 
 import it.polito.bikingtour.InfoFragment.ErrorDialogFragment;
 import it.polito.model.RequestListener;
-import it.polito.model.Route;
-import it.polito.model.RoutesContainer;
 import it.polito.model.Tour;
 import it.polito.model.ToursContainer;
 import it.polito.utils.JSONThread;
 import android.app.Dialog;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.IntentSender;
 import android.graphics.Color;
@@ -23,11 +22,14 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -53,14 +55,13 @@ GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnect
 	private MapFragment mapFragment;
 	private GoogleMap map;
 	private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
+	private ImageButton buttonPicture, buttonVideo, buttonHelp;
 	
 	public void onCreate(Bundle savedInstanceState) {
 	    setRetainInstance(true); 
 	    super.onCreate(savedInstanceState);   
 	    ToursContainer toursContainer = ToursContainer.newInstance(getActivity());
-	    RoutesContainer routesContainer = RoutesContainer.newInstance(getActivity());
-	    Route route = routesContainer.getRoute(getArguments().getLong("routeId"));
-	    toursContainer.CreateNewTour(route);
+	    this.tour = toursContainer.getCurrentTour();
 	}
 	
 	@Override
@@ -78,6 +79,16 @@ GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnect
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_navigation, container, false);
+        buttonPicture = (ImageButton) rootView.findViewById(R.id.navigation_button_picture);
+        buttonPicture.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				FragmentManager fragmentManager = getFragmentManager();
+				fragmentManager.beginTransaction()
+						.replace(R.id.frame_container, new PictureFragment()).commit();	
+			}
+        });
+        
         return rootView;
     }
 	
@@ -102,7 +113,8 @@ GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnect
 	
 	@Override
     public void onStop() {
-        mLocationClient.disconnect();
+		if(mLocationClient.isConnected())
+			mLocationClient.disconnect();
         super.onStop();
     }
 	
@@ -225,7 +237,7 @@ GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnect
                 LatLng dest = list.get(z+1);
                 map.addPolyline(new PolylineOptions()
                         .add(new LatLng(src.latitude, src.longitude), new LatLng(dest.latitude, dest.longitude))
-                        .width(10)
+                        .width(getScaledPolylineWidth())
                         .visible(true)
                         .color(Color.BLUE).geodesic(true));
             }
@@ -291,6 +303,23 @@ GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnect
 		} catch (JSONException e) {
 			Log.d("NavigationFragment.setDuration", e.getMessage());
 		}	
+	}
+	
+	private int getScaledPolylineWidth(){
+		DisplayMetrics metrics = new DisplayMetrics();
+	    getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+		if(metrics.densityDpi == DisplayMetrics.DENSITY_LOW)
+			return 3;
+		else if(metrics.densityDpi == DisplayMetrics.DENSITY_MEDIUM)
+			return 6;
+		else if(metrics.densityDpi == DisplayMetrics.DENSITY_HIGH)
+			return 10;
+		else if(metrics.densityDpi == DisplayMetrics.DENSITY_XHIGH)
+			return 13;
+		else if(metrics.densityDpi == DisplayMetrics.DENSITY_XXHIGH)
+			return 16;
+		else
+			return 5;
 	}
 	
 }

@@ -2,6 +2,7 @@ package it.polito.bikingtour;
 
 import it.polito.model.Route;
 import it.polito.model.RoutesContainer;
+import it.polito.model.ToursContainer;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -76,10 +77,11 @@ public class RouteFragment extends Fragment {
         startButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				Bundle bundle = new Bundle();
-				bundle.putLong("routeId", route.getId());
+				ToursContainer toursContainer = ToursContainer.newInstance(getActivity());
+				if(toursContainer.getCurrentTour() != null)
+					toursContainer.stopCurrentTour();
+				toursContainer.CreateNewTour(route);
 				Fragment newFragment = new NavigationFragment();
-				newFragment.setArguments(bundle);
 				FragmentTransaction transaction = getFragmentManager().beginTransaction();
 				transaction.replace(R.id.frame_container, newFragment);
 				transaction.addToBackStack(null);

@@ -36,6 +36,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.IntentSender;
@@ -44,6 +45,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -680,29 +682,14 @@ public class InfoFragment extends Fragment implements
 					        };
 					        
 					        map.snapshot(callback);*/
-							Log.d("InfoFragment.buttonAccept.click", "Button Accept clicked");
-							try{
-								if(routesContainer == null)
-									Log.d("x", "routesContainer");
-								if(locOrigin == null)
-									Log.d("x", "locOrigin");
-								if(locDestination == null)
-									Log.d("x", "locDestination");
-								if(places == null)
-									Log.d("x", "places");
-								if(textDifficulty == null)
-									Log.d("x", "textDifficulty");
-								if(Integer.getInteger(textDistance) == null)
-									Log.d("x", "textDistance");
 							routesContainer.CreateNewRoute(locOrigin,
 	        						locDestination,
 	        						places,
 	        						textDifficulty,
 	        						textDistance);
-							}catch(Exception e){
-								Log.d("InfoFragment.buttonAccept.click", e.getMessage());
-							}
-							Log.d("InfoFragment.buttonAccept.click", "Route object created");
+							FragmentManager fragmentManager = getFragmentManager();
+							fragmentManager.beginTransaction()
+									.replace(R.id.frame_container, new HomeFragment()).commit();
 						}
 					});
 				}
@@ -766,7 +753,7 @@ public class InfoFragment extends Fragment implements
                 LatLng dest = list.get(z+1);
                 map.addPolyline(new PolylineOptions()
                         .add(new LatLng(src.latitude, src.longitude), new LatLng(dest.latitude, dest.longitude))
-                        .width(10)
+                        .width(getScaledPolylineWidth())
                         .visible(true)
                         .color(Color.BLUE).geodesic(true));
             }
@@ -809,4 +796,21 @@ public class InfoFragment extends Fragment implements
 
         return poly;
     }	
+    
+    private int getScaledPolylineWidth(){
+		DisplayMetrics metrics = new DisplayMetrics();
+	    getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+		if(metrics.densityDpi == DisplayMetrics.DENSITY_LOW)
+			return 3;
+		else if(metrics.densityDpi == DisplayMetrics.DENSITY_MEDIUM)
+			return 6;
+		else if(metrics.densityDpi == DisplayMetrics.DENSITY_HIGH)
+			return 10;
+		else if(metrics.densityDpi == DisplayMetrics.DENSITY_XHIGH)
+			return 13;
+		else if(metrics.densityDpi == DisplayMetrics.DENSITY_XXHIGH)
+			return 16;
+		else
+			return 5;
+	}
 }

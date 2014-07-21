@@ -5,6 +5,7 @@ import it.polito.model.ToursContainer;
 
 import android.content.Context;
 import android.hardware.Camera;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -20,15 +21,24 @@ public class CameraView extends SurfaceView
 	
 	public CameraView(Context context) {
 		super(context);
+		init(context);
+	}
+	
+	public CameraView(Context context, AttributeSet attributeSet){
+		super(context, attributeSet);
+		init(context);
+	}
+
+	private void init(Context context){
 		this.currentTour = ToursContainer.newInstance(context).getCurrentTour();
 		this.context = context;
 		camera = null;
 		surfaceHolder = getHolder();
 		surfaceHolder.addCallback(this);
 		//TODO this method is deprecated, but maybe we need it (???!!!)
-		//surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+		surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 	}
-
+	
 	@Override
 	public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
 		if(holder.getSurface() == null || camera == null)
@@ -65,7 +75,7 @@ public class CameraView extends SurfaceView
 			camera = null;
 		}
 	}
-
+	
 	public  boolean capture() { 
 		   if (camera != null) {
 		      camera.takePicture(null, null, this);
@@ -75,6 +85,14 @@ public class CameraView extends SurfaceView
 		   }
 		}
 
+	public void takePicture() { 
+		   camera.takePicture(null, null, new Camera.PictureCallback(){
+		       public void onPictureTaken(byte[] data,
+		         Camera c) { 
+		    	   currentTour.addPicture(data,  context);
+		       }
+		     });
+	}
 	
 	@Override
 	public void onPictureTaken(byte[] data, Camera c) {

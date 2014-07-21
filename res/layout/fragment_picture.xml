@@ -4,11 +4,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
     
-    <CameraView
+    <it.polito.bikingtour.CameraView
         android:id="@+id/picture_camera_preview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
+        android:layout_height="match_parent"/>
     
     <LinearLayout 
         android:layout_width="match_parent"
