@@ -50,5 +50,14 @@
     <string name="navigation_picture_button">Navigation picture button</string>
     <string name="navigation_video_button">Navigation video button</string>
     <string name="navigation_help_button">Navigation help button</string>
+    <string name="places_restaurant">Restaurants</string>
+    <string name="places_food">Food</string>
+    <string name="places_bank">Banks</string>
+    <string name="places_atm">ATMs</string>
+    <string name="places_bicycle_store">Bicycle Stores</string>
+    <string name="places_campground">Campgrounds</string>
+    <string name="places_hospital">Hospitals</string>
+    <string name="places_pharmacy">Pharmacies</string>
+    <string name="places_police">Police</string>
     
 </resources>

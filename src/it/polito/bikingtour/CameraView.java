@@ -5,8 +5,10 @@ import it.polito.model.ToursContainer;
 
 import android.content.Context;
 import android.hardware.Camera;
+import android.hardware.Camera.CameraInfo;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -17,7 +19,7 @@ public class CameraView extends SurfaceView
 	private SurfaceHolder surfaceHolder;
 	private Context context;
 	private Tour currentTour;
-	
+	private int cameraId = 0;
 	
 	public CameraView(Context context) {
 		super(context);
@@ -35,8 +37,7 @@ public class CameraView extends SurfaceView
 		camera = null;
 		surfaceHolder = getHolder();
 		surfaceHolder.addCallback(this);
-		//TODO this method is deprecated, but maybe we need it (???!!!)
-		surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+		//surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 	}
 	
 	@Override
@@ -45,6 +46,7 @@ public class CameraView extends SurfaceView
 			return;
 		try{
 			camera.stopPreview();
+			this.setCameraDisplayOrientation();
 			camera.startPreview();
 		}catch(Exception e){
 			Log.d("CameraView.surfaceChanged", e.getMessage());
@@ -53,7 +55,7 @@ public class CameraView extends SurfaceView
 
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
-		camera = Camera.open();
+		camera = Camera.open(cameraId);
 		try{
 			camera.setPreviewDisplay(surfaceHolder);
 			camera.startPreview();
@@ -97,6 +99,38 @@ public class CameraView extends SurfaceView
 	@Override
 	public void onPictureTaken(byte[] data, Camera c) {
 		currentTour.addPicture(data,  context);
+	}
+	
+	private void setCameraDisplayOrientation(){
+	    CameraInfo info = new CameraInfo();
+	    Camera.getCameraInfo(cameraId, info);
+	    int rotation = info.orientation;
+	    int degrees = 0;
+	    switch (rotation)
+	    {
+	    case Surface.ROTATION_0:
+	        degrees = 0;
+	        break;
+	    case Surface.ROTATION_90:
+	        degrees = 90;
+	        break;
+	    case Surface.ROTATION_180:
+	        degrees = 180;
+	        break;
+	    case Surface.ROTATION_270:
+	        degrees = 270;
+	        break;
+	    }
+
+	    int result;
+	    if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT){
+	        result = (info.orientation + degrees) % 360;
+	        result = (360 - result) % 360;
+	    }
+	    else{
+	        result = (info.orientation - degrees + 360) % 360;
+	    }
+	    camera.setDisplayOrientation(result);
 	}
 	
 }

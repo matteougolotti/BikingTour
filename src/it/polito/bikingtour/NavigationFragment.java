@@ -88,6 +88,24 @@ GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnect
 						.replace(R.id.frame_container, new PictureFragment()).commit();	
 			}
         });
+        buttonVideo = (ImageButton) rootView.findViewById(R.id.navigation_button_video);
+        buttonVideo.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				FragmentManager fragmentManager = getFragmentManager();
+				fragmentManager.beginTransaction()
+					.replace(R.id.frame_container,  new VideoFragment()).commit();
+			}
+        });
+        
+        buttonHelp = (ImageButton) rootView.findViewById(R.id.navigation_button_help);
+        buttonHelp.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				NavigationHelpDialog helpDialog = NavigationHelpDialog.newInstance();
+				helpDialog.show(getFragmentManager(), null);
+			}
+        });
         
         return rootView;
     }
