@@ -663,7 +663,7 @@ public class InfoFragment extends Fragment implements
 						
 						@Override
 						public void onClick(View v) {
-							/*SnapshotReadyCallback callback = new SnapshotReadyCallback() {
+							SnapshotReadyCallback callback = new SnapshotReadyCallback() {
 					            @Override
 					            public void onSnapshotReady(Bitmap snapshot) {
 					            	Log.d("InfoFragment.buttonAccept.onClick", "Accept button clicked");
@@ -681,12 +681,12 @@ public class InfoFragment extends Fragment implements
 					            }
 					        };
 					        
-					        map.snapshot(callback);*/
-							routesContainer.CreateNewRoute(locOrigin,
+					        map.snapshot(callback);
+							/*routesContainer.CreateNewRoute(locOrigin,
 	        						locDestination,
 	        						places,
 	        						textDifficulty,
-	        						textDistance);
+	        						textDistance);*/
 							FragmentManager fragmentManager = getFragmentManager();
 							fragmentManager.beginTransaction()
 									.replace(R.id.frame_container, new HomeFragment()).commit();

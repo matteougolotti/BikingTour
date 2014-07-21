@@ -9,7 +9,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
-import android.os.SystemClock;
 import android.util.Log;
 
 /**
@@ -31,13 +30,11 @@ public class Tour {
 	private ArrayList<String> pictures;
 	private long tourDateInMillis = 0;
 	private long tourDurationInMillis = 0;
-	private Context context;
 	
 	public Tour(Route route, Context context){
 		Date date = new Date();
 		this.tourDateInMillis = date.getTime();
 		this.route = route;
-		this.context = context;
 		this.routesContainer = RoutesContainer.newInstance(context);
 		this.videos = new ArrayList<String>();
 		this.pictures = new ArrayList<String>();
@@ -45,7 +42,6 @@ public class Tour {
 	
 	public Tour(JSONObject jobject, Context context){
 		try{
-			this.context = context;
 			this.routesContainer = RoutesContainer.newInstance(context);
 			this.route = routesContainer.getRoute(jobject.getLong("route"));
 			

@@ -23,10 +23,11 @@ public class RouteArrayAdapter extends ArrayAdapter<Route>{
 	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
+		View rowView = convertView;
 		LayoutInflater inflater = (LayoutInflater) context
-			.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
- 
-		View rowView = inflater.inflate(R.layout.route_list_layout, parent, false);
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		if(rowView == null)
+			rowView = inflater.inflate(R.layout.route_list_layout, parent, false);
 		TextView routeName = (TextView) rowView.findViewById(R.id.route_name);
 		routeName.setText(values.get(position).getName());
 		

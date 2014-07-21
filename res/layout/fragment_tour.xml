@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TabHost 
+    	    android:id="@+id/tour_tabhost"
+        	android:layout_width="match_parent"
+        	android:layout_height="0dip"
+        	android:layout_weight="1" >
+        
+    	    <LinearLayout
+          		android:id="@+id/tour_tabContentLinear"
+                android:layout_width="match_parent"
+               	android:layout_height="match_parent"
+                android:orientation="vertical" >
+                
+    	   		<TabWidget
+                	android:id="@android:id/tabs"
+                	android:layout_width="match_parent"
+                	android:layout_height="wrap_content"
+                	android:visibility="visible" >
+            	</TabWidget>     
+    	        
+    	   		<FrameLayout
+                	android:id="@android:id/tabcontent"
+                	android:layout_width="match_parent"
+                	android:layout_height="match_parent"
+                	android:padding="5dp" >
+    	   		
+    	   		    <LinearLayout 
+    	   		        android:id="@+id/tour_tab_pictures"
+						android:layout_width="match_parent"
+						android:layout_height="match_parent"
+						android:orientation="vertical" >
+						
+    	   		        <ListView 
+    	   		            android:id="@+id/tour_pictures_listview"
+    	   		            android:layout_width="match_parent"
+    	   		            android:layout_height="wrap_content">
+    	   		            
+    	   		        </ListView>
+    	   		        
+    	   		 	</LinearLayout>
+    	   		 
+    	   		    <LinearLayout 
+    	   		        android:id="@+id/tour_tab_videos"
+    	   		        android:layout_width="match_parent"
+    	   		        android:layout_height="wrap_content"
+    	   		        android:orientation="vertical">
+    	   		        
+    	   		    </LinearLayout>
+    	   		    
+    	   		    <LinearLayout 
+    	   		        android:id="@+id/tour_tab_info"
+						android:layout_width="match_parent"
+						android:layout_height="match_parent"
+						android:orientation="vertical" >
+    	   		    	 
+    	   		        <TextView 
+    	   		    	     android:id="@+id/tour_origin"
+    	   		    	     android:layout_width="match_parent"
+    	   		    	     android:layout_height="wrap_content"
+    	   		    	     android:textAppearance="?android:attr/textAppearanceMedium"
+    	   		    	     android:text="@string/tour_origin"/>
+    	   		        
+    	   		    	 <TextView 
+    	   		    	     android:id="@+id/tour_destination"
+    	   		    	     android:layout_width="match_parent"
+    	   		    	     android:layout_height="wrap_content"
+    	   		    	     android:textAppearance="?android:attr/textAppearanceMedium"
+    	   		    	     android:text="@string/tour_destination"/>
+    	   		    	 
+    	   		    	 <TextView
+    	   		    	     android:id="@+id/tour_length"
+    	   		    	     android:layout_width="match_parent"
+    	   		    	     android:layout_height="wrap_content"
+    	   		    	     android:textAppearance="?android:attr/textAppearanceMedium"
+    	   		    	     android:text="@string/tour_length"/>
+    	   		    	 
+    	   		    	 <TextView
+    	   		    	     android:id="@+id/tour_date"
+    	   		    	     android:layout_width="match_parent"
+    	   		    	     android:layout_height="wrap_content"
+    	   		    	     android:textAppearance="?android:attr/textAppearanceMedium"
+    	   		    	     android:text="@string/tour_date"/>
+    	   		         
+    	   		    	 <TextView
+    	   		    	     android:id="@+id/tour_duration"
+    	   		    	     android:layout_width="match_parent"
+    	   		    	     android:layout_height="wrap_content"
+    	   		    	     android:textAppearance="?android:attr/textAppearanceMedium"
+    	   		    	     android:text="@string/tour_duration"/>
+    	   		    	 
+					</LinearLayout>
+    	   		</FrameLayout>
+    	    </LinearLayout>
+   		</TabHost>    
+
+</LinearLayout>

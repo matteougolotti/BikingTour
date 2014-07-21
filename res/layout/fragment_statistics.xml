@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="30sp"
+        android:gravity="center_horizontal"
+        android:text="@string/statistics"/>
+
+    <ScrollView 
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.7">
+        
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+        
+        	<LinearLayout
+            	android:layout_width="match_parent"
+            	android:layout_height="wrap_content"
+            	android:orientation="horizontal"
+            	android:paddingTop="5dp">
+        		<TextView 
+            		android:layout_width="0dp"
+            		android:layout_height="wrap_content"
+            		android:layout_weight="0.5"
+            		android:textSize="20sp"
+            		android:text="@string/statistics_number_of_tours"/>
+        		<TextView 
+        	    	android:id="@+id/statistics_number_of_tours"
+            		android:layout_width="match_parent"
+            		android:layout_height="wrap_content"
+            		android:textSize="20sp"/>
+        	</LinearLayout>
+        
+        	<LinearLayout
+            	android:layout_width="match_parent"
+            	android:layout_height="wrap_content"
+            	android:orientation="horizontal"
+            	android:paddingTop="5dp">
+        		<TextView 
+            		android:layout_width="0dp"
+            		android:layout_height="wrap_content"
+            		android:layout_weight="0.5"
+            		android:textSize="20sp"
+            		android:text="@string/statistics_total_distance_covered"/>
+        		<TextView 
+        	    	android:id="@+id/statistics_distance_covered"
+            		android:layout_width="match_parent"
+            		android:layout_height="wrap_content"
+            		android:textSize="20sp"/>
+        	</LinearLayout>
+        	
+        	<LinearLayout
+            	android:layout_width="match_parent"
+            	android:layout_height="wrap_content"
+            	android:orientation="horizontal"
+            	android:paddingTop="5dp">
+        		<TextView 
+            		android:layout_width="0dp"
+            		android:layout_height="wrap_content"
+            		android:layout_weight="0.5"
+            		android:textSize="20sp"
+            		android:text="@string/statistics_biking_time"/>
+        		<TextView 
+        	    	android:id="@+id/statistics_biking_time"
+            		android:layout_width="match_parent"
+            		android:layout_height="wrap_content"
+            		android:textSize="20sp"/>
+        	</LinearLayout>
+        
+        	<LinearLayout
+            	android:layout_width="match_parent"
+            	android:layout_height="wrap_content"
+            	android:orientation="horizontal"
+            	android:paddingTop="5dp">
+        		<TextView 
+            		android:layout_width="0dp"
+            		android:layout_height="wrap_content"
+            		android:layout_weight="0.5"
+            		android:textSize="20sp"
+            		android:text="@string/statistics_average_speed"/>
+        		<TextView 
+        	    	android:id="@+id/statistics_average_speed"
+            		android:layout_width="match_parent"
+            		android:layout_height="wrap_content"
+            		android:textSize="20sp"/>
+        	</LinearLayout>
+        	
+        	<LinearLayout
+            	android:layout_width="match_parent"
+            	android:layout_height="wrap_content"
+            	android:orientation="horizontal"
+            	android:paddingTop="5dp">
+        		<TextView 
+            		android:layout_width="0dp"
+            		android:layout_height="wrap_content"
+            		android:layout_weight="0.5"
+            		android:textSize="20sp"
+            		android:text="@string/statistics_longest_tour"/>
+        		<TextView 
+        	    	android:id="@+id/statistics_longest_tour"
+            		android:layout_width="match_parent"
+            		android:layout_height="wrap_content"
+            		android:textSize="20sp"/>
+        	</LinearLayout>
+        	
+        </LinearLayout>
+    </ScrollView>
+    
+    
+</LinearLayout>

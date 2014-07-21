@@ -65,7 +65,6 @@ public class VideoRecorderView extends SurfaceView
 		camera = Camera.open(cameraId);
 		try{
 			recorder.setPreviewDisplay(surfaceHolder.getSurface());
-			recorder.setCamera(camera);
 			camera.setPreviewDisplay(surfaceHolder);
 			camera.startPreview();
 		}catch(Exception e){

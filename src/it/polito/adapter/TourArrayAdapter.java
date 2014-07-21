@@ -24,12 +24,13 @@ public class TourArrayAdapter extends ArrayAdapter<Tour>{
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
+		View rowView = convertView;
 		LayoutInflater inflater = (LayoutInflater) context
-			.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
- 
-		View rowView = inflater.inflate(R.layout.tour_list_layout, parent, false);
-		TextView tourName = (TextView) rowView.findViewById(R.id.tour_name);
-		tourName.setText(String.valueOf(values.get(position).getTourDate()));
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		if(rowView == null)
+			rowView = inflater.inflate(R.layout.tour_list_layout, parent, false);
+		TextView routeName = (TextView) rowView.findViewById(R.id.tour_name);
+		routeName.setText(String.valueOf(values.get(position).getTourDate()));
 		
 		return rowView;
 	}

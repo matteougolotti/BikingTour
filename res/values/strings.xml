@@ -59,5 +59,17 @@
     <string name="places_hospital">Hospitals</string>
     <string name="places_pharmacy">Pharmacies</string>
     <string name="places_police">Police</string>
+    <string name="statistics">Statistics</string>
+    <string name="statistics_number_of_tours">Number of tours:</string>
+    <string name="statistics_total_distance_covered">Distance covered:</string>
+    <string name="statistics_biking_time">Biking time:</string>
+    <string name="statistics_average_speed">Average speed:</string>
+    <string name="statistics_longest_tour">Longest tour:</string>
+    <string name="tour_origin">Tour origin:</string>
+    <string name="tour_destination">Tour destination:</string>
+    <string name="tour_date">Tour date:</string>
+    <string name="tour_duration">Tour duration:</string>
+    <string name="tour_length">Tour length:</string>
+    <string name="tour_picture">Tour picture</string>
     
 </resources>

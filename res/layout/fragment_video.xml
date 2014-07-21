@@ -7,8 +7,8 @@
     <it.polito.bikingtour.VideoRecorderView
         android:id="@+id/video_camera_preview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
+        android:layout_height="0dp"
+        android:layout_weight="0.7"/>
     
     <LinearLayout 
         android:layout_width="match_parent"
@@ -23,7 +23,7 @@
             android:contentDescription="@string/record_video_button"/>
         
         <ImageButton 
-            android:id="@+id/close_fragment_picture"
+            android:id="@+id/close_fragment_video"
             android:layout_width="60dp"
             android:layout_height="40dp"
             android:contentDescription="@string/close_fragment_video_button"/>
