@@ -71,5 +71,7 @@
     <string name="tour_duration">Tour duration:</string>
     <string name="tour_length">Tour length:</string>
     <string name="tour_picture">Tour picture</string>
+    <string name="no_pictures">There are no pictures</string>
+    <string name="no_videos">There are no videos</string>
     
 </resources>

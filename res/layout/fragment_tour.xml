@@ -38,9 +38,7 @@
     	   		        <ListView 
     	   		            android:id="@+id/tour_pictures_listview"
     	   		            android:layout_width="match_parent"
-    	   		            android:layout_height="wrap_content">
-    	   		            
-    	   		        </ListView>
+    	   		            android:layout_height="wrap_content"/>
     	   		        
     	   		 	</LinearLayout>
     	   		 
@@ -49,6 +47,11 @@
     	   		        android:layout_width="match_parent"
     	   		        android:layout_height="wrap_content"
     	   		        android:orientation="vertical">
+    	   		        
+    	   		        <ListView 
+    	   		            android:id="@+id/tour_videos_listview"
+    	   		            android:layout_width="match_parent"
+    	   		            android:layout_height="wrap_content"/>
     	   		        
     	   		    </LinearLayout>
     	   		    
