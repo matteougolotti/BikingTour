@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+    <ImageView
+    	android:id="@+id/picture_details_image"
+    	android:layout_width="268dp"
+    	android:layout_height="268dp"
+    	android:contentDescription="@string/tour_picture"/>
+    
+    <Button 
+        android:id="@+id/picture_details_share"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:text="@string/share_picture"
+    	style="@style/btnStyleArsenic"/>
+    
+    <Button
+        android:id="@+id/picture_details_delete"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:text="@string/delete_picture"
+        style="@style/btnStyleArsenic"/>
+
+</LinearLayout>

@@ -74,5 +74,7 @@
     <string name="no_pictures">There are no pictures</string>
     <string name="no_videos">There are no videos</string>
     <string name="delete_tour">Delete tour</string>
+    <string name="share_picture">Share picture</string>
+    <string name="delete_picture">Delete picture</string>
     
 </resources>

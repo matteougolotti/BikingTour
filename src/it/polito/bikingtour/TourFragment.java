@@ -1,8 +1,6 @@
 package it.polito.bikingtour;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 
 import it.polito.bikingtour.R;
@@ -12,10 +10,8 @@ import it.polito.model.ToursContainer;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -71,12 +67,7 @@ public class TourFragment extends Fragment{
         tabHost.addTab(specInfo);
         
         ListView picturesListView = (ListView) rootView.findViewById(R.id.tour_pictures_listview);
-        ArrayList<Bitmap> pictures = new ArrayList<Bitmap>();
-        for(String picture : tour.getPictures()){
-        	Bitmap newPicture = getBitmapByName(picture);
-        	if(newPicture != null)
-        		pictures.add(newPicture);
-        }
+        ArrayList<Bitmap> pictures = tour.getPicturesImages();
         if(pictures.size() > 0){
         	picturesListView.setAdapter(new TourMediaAdapter(getActivity(), pictures));
         }else{
@@ -115,37 +106,6 @@ public class TourFragment extends Fragment{
         });
         
         return rootView;
-    }
-	
-	private Bitmap getBitmapByName(String fileName){
-        InputStream is = null;
-        Bitmap bitmap = null;
-        int scaled_size = getScaledSize();
-        try{
-        	is = getActivity().openFileInput(fileName);
-        	bitmap = BitmapFactory.decodeStream(is);
-            bitmap = Bitmap.createScaledBitmap(bitmap,  (int)(scaled_size), (int)(scaled_size), false);
-        }catch(IOException e){
-            Log.d("TourFragment.getBitmapByName", e.getMessage());
-        }
-        
-        return bitmap;
-    }
-
-    private int getScaledSize(){
-    	DisplayMetrics metrics = new DisplayMetrics();
-	    getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        if(metrics.densityDpi == DisplayMetrics.DENSITY_LOW)
-            return (int)96;
-        else if(metrics.densityDpi == DisplayMetrics.DENSITY_MEDIUM)
-            return (int)192;
-        else if(metrics.densityDpi == DisplayMetrics.DENSITY_HIGH)
-            return (int)288;
-        else if(metrics.densityDpi == DisplayMetrics.DENSITY_XHIGH)
-            return (int)384;
-        else if(metrics.densityDpi == DisplayMetrics.DENSITY_XXHIGH)
-            return (int)576;
-        return 0;
     }
 	
     private Bitmap getVideoPreviewByName(String fileName){

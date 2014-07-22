@@ -105,6 +105,12 @@ public class ToursContainer extends JSONDataContainer {
 		return this.currentTour;
 	}
 	
+	public void setCurrentTour(int index){
+		if(index >= tours.size() || index < 0)
+			index = 0;
+		this.currentTour = tours.get(index);
+	}
+	
 	public void addPictureToCurrentTour(byte[] data){
 		if(this.currentTour != null){
 			this.currentTour.addPicture(data,  context);

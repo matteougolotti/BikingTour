@@ -1,6 +1,8 @@
 package it.polito.model;
 
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -9,6 +11,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 /**
@@ -30,9 +34,11 @@ public class Tour {
 	private ArrayList<String> pictures;
 	private long tourDateInMillis = 0;
 	private long tourDurationInMillis = 0;
+	private Context context;
 	
 	public Tour(Route route, Context context){
 		Date date = new Date();
+		this.context = context;
 		this.tourDateInMillis = date.getTime();
 		this.route = route;
 		this.routesContainer = RoutesContainer.newInstance(context);
@@ -42,6 +48,7 @@ public class Tour {
 	
 	public Tour(JSONObject jobject, Context context){
 		try{
+			this.context = context;
 			this.routesContainer = RoutesContainer.newInstance(context);
 			this.route = routesContainer.getRoute(jobject.getLong("route"));
 			
@@ -142,5 +149,28 @@ public class Tour {
 			Log.d("Tour.addPicture", e.getMessage());
 		}
 	}
+	
+	public ArrayList<Bitmap> getPicturesImages(){
+		ArrayList<Bitmap> pictureImages = new ArrayList<Bitmap>();
+        for(String picture : pictures){
+        	Bitmap newPicture = getBitmapByName(picture);
+        	if(newPicture != null)
+        		pictureImages.add(newPicture);
+        }
+        return pictureImages;
+	}
+	
+	private Bitmap getBitmapByName(String fileName){
+        InputStream is = null;
+        Bitmap bitmap = null;
+        try{
+        	is = context.openFileInput(fileName);
+        	bitmap = BitmapFactory.decodeStream(is);
+        }catch(IOException e){
+            Log.d("Tour.getBitmapByName", e.getMessage());
+        }
+        
+        return bitmap;
+    }
 	
 }
