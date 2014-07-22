@@ -1,6 +1,5 @@
 package it.polito.model;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -79,15 +78,12 @@ public class ToursContainer extends JSONDataContainer {
 	}
 	
 	public void removeTour(int index){
-		for(String picName : tours.get(index).getPictures()){
-			File file = new File(picName);
-			if(file.exists())
-			  file.delete();
+		Tour tour = tours.get(index);
+		for(int i = 0; i<tour.getPictures().size(); i++){
+			tour.removePicture(i);
 		}
-		for(String vidName : tours.get(index).getVideos()){
-			File file = new File(vidName);
-			if(file.exists())
-			  file.delete();
+		for(int i=0; i<tour.getVideos().size(); i++){
+			tour.removeVideo(i);
 		}
 		this.tours.remove(index);
 		this.save();
@@ -116,6 +112,11 @@ public class ToursContainer extends JSONDataContainer {
 			this.currentTour.addPicture(data,  context);
 			this.save();
 		}
+	}
+	
+	public void removePictureFromCurrentTour(int index){
+		currentTour.removePicture(index);
+		save();
 	}
 	
 }

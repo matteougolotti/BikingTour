@@ -2,8 +2,8 @@ package it.polito.bikingtour;
 
 import it.polito.model.ToursContainer;
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,13 +16,14 @@ public class PictureDetailsFragment extends Fragment{
 	private View rootView;
 	private ToursContainer toursContainer;
 	private Button deleteButton, shareButton;
-	private int pictureIndex = 0;
+	private int pictureIndex;
+	private int tourIndex;
 	
 	public void onCreate(Bundle savedInstanceState) { 
 	    super.onCreate(savedInstanceState);
 	    this.toursContainer = ToursContainer.newInstance(getActivity());
-	    int tourIndex = this.getArguments().getInt("tourIndex");
-	    this.pictureIndex = this.getArguments().getInt("pictureId");
+	    this.tourIndex = this.getArguments().getInt("tourIndex");
+	    this.pictureIndex = this.getArguments().getInt("pictureIndex");
 	    toursContainer.setCurrentTour(tourIndex);
 	}
 	
@@ -35,9 +36,25 @@ public class PictureDetailsFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_picture_details, container, false);
         ImageView image = (ImageView) rootView.findViewById(R.id.picture_details_image);
-        image.setImageBitmap(toursContainer.getCurrentTour().getPicturesImages().get(pictureIndex));
+        
+        Bitmap pictureImage = toursContainer.getCurrentTour().getPicturesImages().get(pictureIndex);
+        if(pictureImage != null)
+        	image.setImageBitmap(pictureImage);
         
         deleteButton = (Button) rootView.findViewById(R.id.picture_details_delete);
+        deleteButton.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				toursContainer.removePictureFromCurrentTour(pictureIndex);
+				Bundle bundle = new Bundle();
+				bundle.putInt("tourId", tourIndex);
+				Fragment newFragment = new TourFragment();
+				newFragment.setArguments(bundle);
+				FragmentTransaction transaction = getFragmentManager().beginTransaction();
+				transaction.replace(R.id.frame_container, newFragment);
+				transaction.commit();
+			}
+        });
         
         return rootView;
     }

@@ -9,6 +9,7 @@ import it.polito.model.Tour;
 import it.polito.model.ToursContainer;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
@@ -17,6 +18,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -70,6 +73,21 @@ public class TourFragment extends Fragment{
         ArrayList<Bitmap> pictures = tour.getPicturesImages();
         if(pictures.size() > 0){
         	picturesListView.setAdapter(new TourMediaAdapter(getActivity(), pictures));
+        	picturesListView.setOnItemClickListener(new OnItemClickListener(){
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view,
+						int position, long id) {
+					Bundle bundle = new Bundle();
+					bundle.putInt("tourIndex", tourIndex);
+					bundle.putInt("pictureIndex", position);
+					Fragment newFragment = new PictureDetailsFragment();
+					newFragment.setArguments(bundle);
+					FragmentTransaction transaction = getFragmentManager().beginTransaction();
+					transaction.replace(R.id.frame_container, newFragment);
+					transaction.addToBackStack(null);
+					transaction.commit();	
+				}
+        	});
         }else{
         	TextView picturesText = new TextView(getActivity());
         	picturesText.setText(getActivity().getString(R.string.no_pictures));
