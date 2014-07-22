@@ -25,7 +25,6 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.SnapshotReadyCallback;
-import com.google.android.gms.common.data.d;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -666,30 +665,24 @@ public class InfoFragment extends Fragment implements
 							SnapshotReadyCallback callback = new SnapshotReadyCallback() {
 					            @Override
 					            public void onSnapshotReady(Bitmap snapshot) {
-					            	Log.d("InfoFragment.buttonAccept.onClick", "Accept button clicked");
 					            	try{
-					            	routesContainer.CreateNewRoute(locOrigin,
+					            		//TODO adjust route length in this constructor
+					            		routesContainer.CreateNewRoute(locOrigin,
 			        						locDestination,
 			        						places,
 			        						snapshot,
 			        						textDifficulty,
-			        						Integer.getInteger(textDistance));
+			        						(int)10);
+					            		FragmentManager fragmentManager = getFragmentManager();
+					            		fragmentManager.beginTransaction()
+					    					.replace(R.id.frame_container, new HomeFragment()).commit();
 					            	}catch(Exception e){
 					            		Log.d("InfoFragment.buttonAccept.onClick", e.getMessage());
 					            	}
-					            	Log.d("InfoFragment.buttonAccept.onClick", "Route created");
 					            }
 					        };
 					        
 					        map.snapshot(callback);
-							/*routesContainer.CreateNewRoute(locOrigin,
-	        						locDestination,
-	        						places,
-	        						textDifficulty,
-	        						textDistance);*/
-							FragmentManager fragmentManager = getFragmentManager();
-							fragmentManager.beginTransaction()
-									.replace(R.id.frame_container, new HomeFragment()).commit();
 						}
 					});
 				}

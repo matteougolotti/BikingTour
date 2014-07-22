@@ -12,7 +12,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
-import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
@@ -35,6 +34,7 @@ public class Route {
 	private String difficulty;
 	private int lengthInMeters; // It's better use the distance of the tour in km, because probably will be large tours. I made another constructor, with the basic informations
 	private String distance; 
+	private Context context;
 	
 	//This constructor should not be used.
 	protected Route(){
@@ -48,6 +48,7 @@ public class Route {
 			int lengthInMeters,
 			Context context){
 		
+		this.context = context;
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy_HHmm");
 		Date date = new Date();
         String currentDateandTime = sdf.format(date);
@@ -63,7 +64,7 @@ public class Route {
 	    File file = new File (file_name);
 	    if (file.exists ()) file.delete (); 
 	    try {
-	           FileOutputStream out = new FileOutputStream(file);
+	           FileOutputStream out = context.openFileOutput(file_name, Context.MODE_PRIVATE);
 	           mapImage.compress(Bitmap.CompressFormat.PNG, 90, out);
 	           out.flush();
 	           out.close();
@@ -81,6 +82,7 @@ public class Route {
 			String distance,
 			Context context){
 		
+		this.context = context;
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy_HHmm");
 		Date date = new Date();
         String currentDateandTime = sdf.format(date);
@@ -176,7 +178,7 @@ public class Route {
 	    File file = new File (file_name);
 	    if (file.exists ()) file.delete (); 
 	    try {
-	           FileOutputStream out = new FileOutputStream(file);
+	           FileOutputStream out = context.openFileOutput(file_name, Context.MODE_PRIVATE);
 	           mapImage.compress(Bitmap.CompressFormat.PNG, 90, out);
 	           out.flush();
 	           out.close();
@@ -216,10 +218,9 @@ public class Route {
 	
 	public Bitmap getMapImage(Context context){
 		String file_name = new String(String.valueOf(id) + ".png");
-    	AssetManager assetManager = context.getAssets();
 		InputStream is = null;
 		try{
-			is = assetManager.open(file_name);
+			is = context.openFileInput(file_name);
 			Bitmap bitmap = BitmapFactory.decodeStream(is);
 			return bitmap;
 		}catch(Exception e){
