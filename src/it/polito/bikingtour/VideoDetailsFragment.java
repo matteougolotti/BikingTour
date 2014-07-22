@@ -3,28 +3,33 @@ package it.polito.bikingtour;
 import it.polito.model.ToursContainer;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.ImageView;
+import android.widget.MediaController;
+import android.widget.VideoView;
 
-public class PictureDetailsFragment extends Fragment{
+public class VideoDetailsFragment extends Fragment {
 	private View rootView;
 	private ToursContainer toursContainer;
 	private Button deleteButton, shareButton;
-	private int pictureIndex;
+	private int videoIndex;
 	private int tourIndex;
+	private MediaController mediaController;
+	private Uri video;
 	
 	public void onCreate(Bundle savedInstanceState) { 
 	    super.onCreate(savedInstanceState);
+	    this.mediaController = new MediaController(getActivity());
 	    this.toursContainer = ToursContainer.newInstance(getActivity());
 	    this.tourIndex = this.getArguments().getInt("tourIndex");
-	    this.pictureIndex = this.getArguments().getInt("pictureIndex");
+	    this.videoIndex = this.getArguments().getInt("videoIndex");
 	    toursContainer.setCurrentTour(tourIndex);
+	    this.video = Uri.parse(toursContainer.getCurrentTour().getVideos().get(videoIndex));
 	}
 	
 	@Override
@@ -34,18 +39,17 @@ public class PictureDetailsFragment extends Fragment{
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_picture_details, container, false);
-        ImageView image = (ImageView) rootView.findViewById(R.id.picture_details_image);
+        //TODO this code is untested
+		rootView = inflater.inflate(R.layout.fragment_video_details, container, false);
+        VideoView videoView = (VideoView) rootView.findViewById(R.id.video_details_videoview);
+        videoView.setMediaController(this.mediaController);
+        videoView.setVideoURI(this.video);
         
-        Bitmap pictureImage = toursContainer.getCurrentTour().getPicturesImages().get(pictureIndex);
-        if(pictureImage != null)
-        	image.setImageBitmap(pictureImage);
-        
-        deleteButton = (Button) rootView.findViewById(R.id.picture_details_delete);
+        deleteButton = (Button) rootView.findViewById(R.id.video_details_delete);
         deleteButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				toursContainer.removePictureFromCurrentTour(pictureIndex);
+				//TODO write code to delete the video
 				Bundle bundle = new Bundle();
 				bundle.putInt("tourId", tourIndex);
 				Fragment newFragment = new TourFragment();
@@ -56,11 +60,11 @@ public class PictureDetailsFragment extends Fragment{
 			}
         });
         
-        shareButton = (Button) rootView.findViewById(R.id.picture_details_share);
+        shareButton = (Button) rootView.findViewById(R.id.video_details_share);
         shareButton.setOnClickListener(new OnClickListener(){
         	@Override
         	public void onClick(View v){
-        		//TODO add code to manage picture sharing
+        		//TODO add code to manage video sharing
         	}
         });
         
