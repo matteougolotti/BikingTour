@@ -96,6 +96,13 @@
     	   		    	     android:textAppearance="?android:attr/textAppearanceMedium"
     	   		    	     android:text="@string/tour_duration"/>
     	   		    	 
+    	   		    	 <Button 
+    	   		    	     android:id="@+id/tour_delete_button"
+    	   		    	     android:layout_width="match_parent"
+    	   		    	     android:layout_height="wrap_content"
+    	   		    	     android:text="@string/delete_tour"
+    	   		    	     style="@style/btnStyleArsenic"/>
+    	   		    	 
 					</LinearLayout>
     	   		</FrameLayout>
     	    </LinearLayout>

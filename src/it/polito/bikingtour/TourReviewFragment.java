@@ -32,7 +32,7 @@ public class TourReviewFragment extends Fragment {
 			public void onItemClick(AdapterView<?> parent, View view, int position,
 					long id) {
 				Bundle bundle = new Bundle();
-				bundle.putLong("tourId", position);
+				bundle.putInt("tourId", position);
 				Fragment newFragment = new TourFragment();
 				newFragment.setArguments(bundle);
 				FragmentTransaction transaction = getFragmentManager().beginTransaction();

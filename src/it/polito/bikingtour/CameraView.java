@@ -1,6 +1,5 @@
 package it.polito.bikingtour;
 
-import it.polito.model.Tour;
 import it.polito.model.ToursContainer;
 
 import android.content.Context;
@@ -17,8 +16,7 @@ public class CameraView extends SurfaceView
 						Camera.PictureCallback {
 	private Camera camera;
 	private SurfaceHolder surfaceHolder;
-	private Context context;
-	private Tour currentTour;
+	private ToursContainer toursContainer;
 	private int cameraId = 0;
 	
 	public CameraView(Context context) {
@@ -32,8 +30,7 @@ public class CameraView extends SurfaceView
 	}
 
 	private void init(Context context){
-		this.currentTour = ToursContainer.newInstance(context).getCurrentTour();
-		this.context = context;
+		this.toursContainer = ToursContainer.newInstance(context);
 		camera = null;
 		surfaceHolder = getHolder();
 		surfaceHolder.addCallback(this);
@@ -93,7 +90,7 @@ public class CameraView extends SurfaceView
 	
 	@Override
 	public void onPictureTaken(byte[] data, Camera c) {
-		currentTour.addPicture(data,  context);
+		toursContainer.addPictureToCurrentTour(data);
 		camera.startPreview();
 	}
 	

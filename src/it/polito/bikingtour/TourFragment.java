@@ -10,6 +10,7 @@ import it.polito.adapter.TourMediaAdapter;
 import it.polito.model.Tour;
 import it.polito.model.ToursContainer;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
@@ -18,7 +19,9 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TabHost;
@@ -30,12 +33,14 @@ public class TourFragment extends Fragment{
 	private TabHost tabHost;
 	private TabSpec specPictures, specVideos, specInfo;
 	private Tour tour;
+	private int tourIndex;
 	private ToursContainer toursContainer;
 	
 	public void onCreate(Bundle savedInstanceState) { 
 	    super.onCreate(savedInstanceState);   
 	    this.toursContainer = ToursContainer.newInstance(getActivity());
-	    this.tour = toursContainer.getTour(this.getArguments().getInt("tourId"));
+	    this.tourIndex = this.getArguments().getInt("tourId");
+	    this.tour = toursContainer.getTour(this.tourIndex);
 	}
 	
 	@Override
@@ -96,6 +101,18 @@ public class TourFragment extends Fragment{
         	LinearLayout tourTabVideos = (LinearLayout) rootView.findViewById(R.id.tour_tab_videos);
         	tourTabVideos.addView(videosText);
         }
+        
+        Button deleteButton = (Button) rootView.findViewById(R.id.tour_delete_button);
+        deleteButton.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				toursContainer.removeTour(tourIndex);	
+				FragmentManager fragmentManager = getFragmentManager();
+				TourReviewFragment fragment = new TourReviewFragment();
+				fragmentManager.beginTransaction()
+						.replace(R.id.frame_container, fragment).commit();
+			}
+        });
         
         return rootView;
     }

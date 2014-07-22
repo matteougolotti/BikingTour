@@ -339,9 +339,9 @@ GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnect
 		DisplayMetrics metrics = new DisplayMetrics();
 	    getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
 		if(metrics.densityDpi == DisplayMetrics.DENSITY_LOW)
-			return 3;
+			return 5;
 		else if(metrics.densityDpi == DisplayMetrics.DENSITY_MEDIUM)
-			return 6;
+			return 8;
 		else if(metrics.densityDpi == DisplayMetrics.DENSITY_HIGH)
 			return 10;
 		else if(metrics.densityDpi == DisplayMetrics.DENSITY_XHIGH)
