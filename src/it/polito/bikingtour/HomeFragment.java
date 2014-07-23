@@ -32,12 +32,6 @@ public class HomeFragment extends Fragment {
         myRoutes = (ListView) rootView.findViewById(R.id.myRoutesListView);
         routesArray = new ArrayList<Route>();
         
-        return rootView;
-    }
-	
-	@Override
-	public void onResume(){
-		super.onResume();
         routes = RoutesContainer.newInstance(getActivity());
         routesArray.addAll(routes.getRoutes());
 		
@@ -62,7 +56,8 @@ public class HomeFragment extends Fragment {
 	        	
 	        });
 		}
-	}
+        return rootView;
+    }
 	
 	public void addRouteOnListView(Route route) {
 		routesArray.add(route);

@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -228,5 +229,34 @@ public class MainActivity extends Activity {
 		super.onConfigurationChanged(newConfig);
 		// Pass any configuration change to the drawer toggls
 		mDrawerToggle.onConfigurationChanged(newConfig);
+	}
+	
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+	    if (keyCode == KeyEvent.KEYCODE_BACK) {
+	        if (getFragmentManager().getBackStackEntryCount() == 0) {
+	            this.finish();
+	            return false;
+	        }
+	        else {
+	            getFragmentManager().popBackStack();
+	            removeCurrentFragment();
+	            return false;
+	        }
+	    }
+
+	    return super.onKeyDown(keyCode, event);
+	}
+
+
+	public void removeCurrentFragment() {
+	    FragmentTransaction transaction = getFragmentManager().beginTransaction();
+	    Fragment currentFrag =  getFragmentManager().findFragmentById(R.id.frame_container);
+	    
+	    if (currentFrag != null) 
+	        transaction.remove(currentFrag);
+	    
+	    transaction.commit();
 	}
 }

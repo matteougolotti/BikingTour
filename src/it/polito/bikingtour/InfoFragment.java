@@ -63,7 +63,7 @@ import android.widget.TabHost.TabSpec;
 
 public class InfoFragment extends Fragment implements
 	GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnectionFailedListener {
-	
+
 	private MapFragment mapFragment;
     private GoogleMap map;
     private LocationClient mLocationClient;
@@ -84,15 +84,15 @@ public class InfoFragment extends Fragment implements
 	Bitmap mapImage;
     
 	public InfoFragment() {
-		
+
 	}
-	
+
 	public void onCreate(Bundle savedInstanceState) {
 	    setRetainInstance(true); 
 	    super.onCreate(savedInstanceState); 
 	    routesContainer = RoutesContainer.newInstance(getActivity());
 	}
-	
+
 	@Override
 	public void onDestroyView() {
 	    super.onDestroyView();
@@ -103,7 +103,7 @@ public class InfoFragment extends Fragment implements
 	    } catch (IllegalStateException e) {
 	    }
 	}
-	
+
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_info, container, false);
@@ -151,19 +151,19 @@ public class InfoFragment extends Fragment implements
         
         return rootView;
     }
-	
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 	    super.onActivityCreated(savedInstanceState);
 	    final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
 	    imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);      
-	    
+
 	    Bundle bundle = this.getArguments();
 	    if (bundle != null) {
 	    	origin = bundle.getString("origin");
             destination = bundle.getString("destination");
 	    }
-	    
+
 	    locOrigin = new it.polito.model.Location(origin);
         locDestination = new it.polito.model.Location(destination);
         mLocationClient = new LocationClient(getActivity(), this, this);
@@ -209,7 +209,7 @@ public class InfoFragment extends Fragment implements
         
         JSONThread jsonThread = new JSONThread(requestOrigin);
         jsonThread.setRequestListener(new RequestListener() {
-			
+
 			@Override
 			public void postResponse(String result) {
 				setLatLng(result, "origin");
@@ -218,13 +218,13 @@ public class InfoFragment extends Fragment implements
 		});
         jsonThread.execute();
     }
-	
+
 	public void requestGeocodingDest() {
 		String requestDestination = makeURLGeocodingRequest(locDestination.getName());
         
         JSONThread jsonThread = new JSONThread(requestDestination);
         jsonThread.setRequestListener(new RequestListener() {
-			
+
 			@Override
 			public void postResponse(String result) {
 				setLatLng(result, "destination");
@@ -235,7 +235,7 @@ public class InfoFragment extends Fragment implements
 		});
         jsonThread.execute();
 	}
-	
+
 	public void addingMarkers() {
 		LatLng latLng = new LatLng(locOrigin.getLat(), locOrigin.getLon());
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 13);
@@ -262,7 +262,7 @@ public class InfoFragment extends Fragment implements
         
         JSONThread jsonThread = new JSONThread(request);
         jsonThread.setRequestListener(new RequestListener() {
-			
+
 			@Override
 			public void postResponse(String result) {
 				drawDirections(result); // Drawing route
@@ -276,7 +276,7 @@ public class InfoFragment extends Fragment implements
 		});
         jsonThread.execute();
 	}
-	
+
 	public void requestElevation() {
 		String requestElevation;
 		try {
@@ -284,7 +284,7 @@ public class InfoFragment extends Fragment implements
 					Double.toString(locOrigin.getLon()), 
 					Double.toString(locDestination.getLat()), 
 					Double.toString(locDestination.getLon()));
-			
+
 			JSONThread elevationJsonThread = new JSONThread(requestElevation);
 	        elevationJsonThread.setRequestListener(new RequestListener() {
 				@Override
@@ -301,7 +301,7 @@ public class InfoFragment extends Fragment implements
 			e.printStackTrace();
 		}
 	}
-	
+
 	private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
 	    ImageView bmImage;
 
@@ -327,7 +327,7 @@ public class InfoFragment extends Fragment implements
 	        bmImage.setImageBitmap(result);
 	    }
 	}
-	
+
 	public void setLatLng(String result, String type) {
 		try {
 			JSONObject json = new JSONObject(result);
@@ -346,7 +346,7 @@ public class InfoFragment extends Fragment implements
 			e.printStackTrace();
 		}
 	}
-	
+
 	public String makeURLGeocodingRequest(String address) {
 		StringBuilder url = null;
         try {
@@ -358,10 +358,10 @@ public class InfoFragment extends Fragment implements
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
         return url.toString();
     }
-	
+
 	public String makeURLElevationsRequest(String srclat, String srclng, String destlat, String destlng) throws UnsupportedEncodingException {
 		StringBuilder url =  new StringBuilder();
 		String specialCharacter = URLEncoder.encode("|", "UTF-8");
@@ -377,7 +377,7 @@ public class InfoFragment extends Fragment implements
         url.append("&samples=7&sensor=true_or_false");
         return url.toString();
 	}
-	
+
 	public String makeURLRequest(String srclat, String srclng, String destlat, String destlng) {
         StringBuilder url =  new StringBuilder();
         url.append("http://maps.googleapis.com/maps/api/directions/json");
@@ -409,13 +409,13 @@ public class InfoFragment extends Fragment implements
         url.append("&sensor=false&key=AIzaSyCm3iIOz7qAvsC0MmdBtItspW6WH74Mcqc"); // browser key
         return url.toString();
 	}
-	
+
 	@Override
 	public void onDisconnected() {
 		Toast.makeText(getActivity(), "Disconnected. Please re-connect.",
                 Toast.LENGTH_SHORT).show();
 	}
-	
+
 	private boolean isGooglePlayServicesAvailable() {
         int resultCode =  GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity());
         if (ConnectionResult.SUCCESS == resultCode) {
@@ -435,7 +435,7 @@ public class InfoFragment extends Fragment implements
             return false;
         }
     }
-	
+
 	public static class ErrorDialogFragment extends DialogFragment {
         private Dialog mDialog;
 
@@ -453,34 +453,34 @@ public class InfoFragment extends Fragment implements
             return mDialog;
         }
     }
-	
+
 	public void createGraphAndSetDifficulty(String result) throws UnsupportedEncodingException {
 		try {
 			JSONObject json = new JSONObject(result);
 			JSONArray elevationArray = json.getJSONArray("results");
 			ArrayList<String> elevations = new ArrayList<String>();
 			Double sum = 0.0;
-			
+
 			for (int i = 0; i < elevationArray.length(); i++) {
 				JSONObject jsonObject = elevationArray.getJSONObject(i);
 				String elevation = jsonObject.getString("elevation");
 				sum = sum + Double.parseDouble(elevation);
 				elevations.add(elevation);
 			}
-			
+
 			Double elevationsAverage = sum/(elevations.size() - 1);
 			setDifficulty(elevationsAverage);
-			
+
 			String start = String.valueOf(searchMinValue(elevations));
 			String end = String.valueOf(searchMaxValue(elevations));
 			String url = makeUrlChart(elevations, start, end);
-			
+
 			new DownloadImageTask(chart).execute(url);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void setDifficulty(Double average) {
 		if (average < 300) {
 			textDifficulty = "Easy";
@@ -493,7 +493,7 @@ public class InfoFragment extends Fragment implements
 			difficulty.setText("Difficulty of the tour: " + textDifficulty);
 		}
 	}
-	
+
 	public String makeUrlChart(ArrayList<String> elevations, String start, String end) throws UnsupportedEncodingException {
 		StringBuilder url =  new StringBuilder();
 		String specialCharacter = URLEncoder.encode("|", "UTF-8");
@@ -521,12 +521,12 @@ public class InfoFragment extends Fragment implements
         url.append("0");
         return url.toString();
 	}
-	
+
 	public ArrayList<String> getParametrizedArray(ArrayList<String> elevations) {
 		ArrayList<String> parametrizedArray = new ArrayList<String>();
 		Double minValue = searchMinValue(elevations);
 		Double maxValue = searchMaxValue(elevations);
-		
+
 		for (String elevation : elevations) {
 			Double parametrizedValue = (100 * 
 					(Double.parseDouble(elevation) - minValue))/(maxValue - minValue);
@@ -534,7 +534,7 @@ public class InfoFragment extends Fragment implements
 		}
 		return parametrizedArray;
 	}
-	
+
 	public Double searchMaxValue(ArrayList<String> elevations) {
 		Double bigger = Double.parseDouble(elevations.get(0));
 		for (String elevation : elevations) {
@@ -542,10 +542,10 @@ public class InfoFragment extends Fragment implements
 				bigger = Double.parseDouble(elevation);
 			}
 		}
-		
+
 		return bigger;
 	}
-	
+
 	public Double searchMinValue(ArrayList<String> elevations) {
 		Double smaller = Double.parseDouble(elevations.get(0));
 		for (String elevation : elevations) {
@@ -553,10 +553,10 @@ public class InfoFragment extends Fragment implements
 				smaller = Double.parseDouble(elevation);
 			}
 		}
-		
+
 		return smaller;
 	}
-	
+
 	public void setPlaces(String result) throws UnsupportedEncodingException {
 		try {
 			JSONObject json = new JSONObject(result);
@@ -564,31 +564,31 @@ public class InfoFragment extends Fragment implements
 			JSONObject routes = routeArray.getJSONObject(0);
 			JSONObject legs = routes.getJSONArray("legs").getJSONObject(0);
 			JSONArray steps = legs.getJSONArray("steps");
-			
+
 			String location1_start = steps.getJSONObject(0).getString("start_location");
 			String location2_end = steps.getJSONObject(steps.length()/3).getString("end_location");
 			String location3_start = steps.getJSONObject(2*(steps.length())/3).getString("start_location");
 			String location4_end = steps.getJSONObject(steps.length() - 1).getString("end_location");
-			
+
 			locationsPlaces = new ArrayList<String>();
 			places = new ArrayList<Location>();
-			
+
 			location1_start = location1_start.replaceAll("[^0-9.,]+","");
 			locationsPlaces.addAll(Arrays.asList(location1_start.split(",")));
-			
+
 			location2_end = location2_end.replaceAll("[^0-9.,]+","");
 			locationsPlaces.addAll(Arrays.asList(location2_end.split(",")));
-			
+
 			location3_start = location3_start.replaceAll("[^0-9.,]+","");
 			locationsPlaces.addAll(Arrays.asList(location3_start.split(",")));
-			
+
 			location4_end = location4_end.replaceAll("[^0-9.,]+","");
 			locationsPlaces.addAll(Arrays.asList(location4_end.split(",")));
-			
+
 			String request1 = makeURLPlacesRequest(locationsPlaces.get(1), locationsPlaces.get(0));
 			JSONThread placesJsonThread1 = new JSONThread(request1);
 			placesJsonThread1.setRequestListener(new RequestListener() {
-				
+
 				@Override
 				public void postResponse(String result) { 
 					setLogisticalSupport(result);
@@ -596,18 +596,18 @@ public class InfoFragment extends Fragment implements
 				}
 			});
 	        placesJsonThread1.execute();
-	        
+
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void requestPoint2() {
 		try {
 			String request2 = makeURLPlacesRequest(locationsPlaces.get(3), locationsPlaces.get(2));
 			JSONThread placesJsonThread2 = new JSONThread(request2);
 			placesJsonThread2.setRequestListener(new RequestListener() {
-				
+
 				@Override
 				public void postResponse(String result) { 
 					setLogisticalSupport(result);
@@ -618,13 +618,13 @@ public class InfoFragment extends Fragment implements
 		} catch (Exception e) {
 		}
 	}
-	
+
 	public void requestPoint3() {
 		try {
 			String request3 = makeURLPlacesRequest(locationsPlaces.get(5), locationsPlaces.get(4));
 			JSONThread placesJsonThread3 = new JSONThread(request3);
 			placesJsonThread3.setRequestListener(new RequestListener() {
-				
+
 				@Override
 				public void postResponse(String result) { 
 					setLogisticalSupport(result);
@@ -635,20 +635,20 @@ public class InfoFragment extends Fragment implements
 		} catch (Exception e) {
 		}
 	}
-	
+
 	public void requestPoint4() {
 		try {
 			String request4 = makeURLPlacesRequest(locationsPlaces.get(7), locationsPlaces.get(6));
 			JSONThread placesJsonThread4 = new JSONThread(request4);
 			placesJsonThread4.setRequestListener(new RequestListener() {
-				
+
 				@Override
 				public void postResponse(String result) { 
 					setLogisticalSupport(result);
 					listPlaces.setAdapter(new LazyAdapter(getActivity(), places));
 					mProgressList.setVisibility(View.GONE);
 			        listPlaces.setOnItemClickListener(new OnItemClickListener() {
-			        	 
+
 						@Override
 						public void onItemClick(AdapterView<?> a, View v, int position, long id) {
 							Object o = listPlaces.getItemAtPosition(position);
@@ -657,9 +657,9 @@ public class InfoFragment extends Fragment implements
 									Toast.LENGTH_LONG).show();
 						}
 					});
-			        
+
 			        buttonAccept.setOnClickListener(new View.OnClickListener() {
-						
+
 						@Override
 						public void onClick(View v) {
 							SnapshotReadyCallback callback = new SnapshotReadyCallback() {
@@ -681,7 +681,7 @@ public class InfoFragment extends Fragment implements
 					            	}
 					            }
 					        };
-					        
+
 					        map.snapshot(callback);
 						}
 					});
@@ -691,12 +691,12 @@ public class InfoFragment extends Fragment implements
 		} catch (Exception e) {
 		}
 	}
-	
+
 	public void setLogisticalSupport(String result) {
 		try {
 			JSONObject json = new JSONObject(result);
 			JSONArray resultsArray = json.getJSONArray("results");
-			
+
 			for (int i = 0; i <= resultsArray.length()/2; i++) {
 				JSONObject object = resultsArray.getJSONObject(i);
 				Location place = new Location(object.getString("name"));
@@ -712,7 +712,7 @@ public class InfoFragment extends Fragment implements
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void setDurationAndDistance(String result) { 
 		try {
 			JSONObject json = new JSONObject(result);
@@ -723,15 +723,15 @@ public class InfoFragment extends Fragment implements
 			textDistance = distanceObject.getString("text");
 			JSONObject duration = legs.getJSONObject("duration");
 			String text = duration.getString("text");
-			
+
 			textDuration.setText("Estimated duration of the tour: " + text);
 			distance.setText("Total distance of the tour: " + textDistance);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
-	
+
     public void drawDirections(String result) {
         try {
             final JSONObject json = new JSONObject(result);
