@@ -115,8 +115,24 @@ public class ToursContainer extends JSONDataContainer {
 	}
 	
 	public void removePictureFromCurrentTour(int index){
-		currentTour.removePicture(index);
-		save();
+		if(currentTour != null){
+			currentTour.removePicture(index);
+			save();
+		}
+	}
+	
+	public void addVideoToCurrentTour(String videoName){
+		if(this.currentTour != null){
+			this.currentTour.addVideo(videoName);
+			this.save();
+		}
+	}
+	
+	public void removeVideoFromCurrentTour(int index){
+		if(currentTour != null){
+			currentTour.removeVideo(index);
+			save();
+		}
 	}
 	
 }

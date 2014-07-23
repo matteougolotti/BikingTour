@@ -128,11 +128,12 @@ public class TourFragment extends Fragment{
 	
     private Bitmap getVideoPreviewByName(String fileName){
     	Bitmap videoPreview = null;
+    	String path = getActivity().getFilesDir().getAbsolutePath();
     	try{
     		MediaMetadataRetriever mRetriever = new MediaMetadataRetriever();
-    		File file = new File(fileName);
+    		File file = new File(path + "/" + fileName);
     		if(file.exists()){
-    			mRetriever.setDataSource(fileName);
+    			mRetriever.setDataSource(path + "/" + fileName);
     			videoPreview = mRetriever.getFrameAtTime((long)1000);
     		}
     	}catch(Exception e){

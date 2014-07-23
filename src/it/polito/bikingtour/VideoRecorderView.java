@@ -1,8 +1,8 @@
 package it.polito.bikingtour;
 
+import java.io.File;
 import java.io.IOException;
 
-import it.polito.model.Tour;
 import it.polito.model.ToursContainer;
 import android.content.Context;
 import android.hardware.Camera;
@@ -21,8 +21,9 @@ public class VideoRecorderView extends SurfaceView
 	private int cameraId = 0;
 	private SurfaceHolder surfaceHolder;
 	private boolean isRecording = false;
-	private Tour currentTour;
 	private String videoName;
+	private ToursContainer toursContainer;
+	private Context context;
 	
 	public VideoRecorderView(Context context) {
 		super(context);
@@ -35,16 +36,16 @@ public class VideoRecorderView extends SurfaceView
 	}
 
 	private void init(Context context){
-		recorder = new MediaRecorder();
-	    recorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
-	    recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-	    recorder.setVideoEncoder(MediaRecorder.VideoEncoder.MPEG_4_SP);
-	    this.currentTour = ToursContainer.newInstance(context).getCurrentTour();
-	    this.videoName = currentTour.getNewVideoName();
-	    recorder.setOutputFile(this.videoName);
-		
+		//recorder = new MediaRecorder();
+	    //recorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
+	    //recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+	    //recorder.setVideoEncoder(MediaRecorder.VideoEncoder.MPEG_4_SP);
+	    this.toursContainer = ToursContainer.newInstance(context);
+		this.context = context;
+	    
 		surfaceHolder = getHolder();
 		surfaceHolder.addCallback(this);
+		surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 	}
 	
 	@Override
@@ -64,7 +65,7 @@ public class VideoRecorderView extends SurfaceView
 	public void surfaceCreated(SurfaceHolder holder) {
 		camera = Camera.open(cameraId);
 		try{
-			recorder.setPreviewDisplay(surfaceHolder.getSurface());
+			//recorder.setPreviewDisplay(surfaceHolder.getSurface());
 			camera.setPreviewDisplay(surfaceHolder);
 			camera.startPreview();
 		}catch(Exception e){
@@ -74,27 +75,51 @@ public class VideoRecorderView extends SurfaceView
 	}
 
 	@Override
-	public void surfaceDestroyed(SurfaceHolder arg0) {
+	public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
 		closeRecorder();
 	}
 
 	private void closeRecorder(){
 		if(recorder != null){
-			if(isRecording)
+			if(isRecording){
 				recorder.stop();
-			else
+				recorder.reset();
+			}
+			else{
 				camera.stopPreview();
+			}
 			camera.release();
 			recorder.release();
 		}
-		currentTour.addVideo(videoName);
 	}
 	
 	public void startRecording(){
 		if(!isRecording){
-			camera.stopPreview();
-			camera.unlock();
-			recorder.start();
+			try{
+				camera.stopPreview();
+				camera.unlock();
+		        
+		        String path = context.getFilesDir().getAbsolutePath();
+		        this.videoName = toursContainer.getCurrentTour().getNewVideoName();
+		         
+		        File file = new File(path, videoName);
+		         
+		        recorder = new MediaRecorder(); 
+
+		        recorder.setCamera(camera);    
+		        recorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
+		        recorder.setAudioSource(MediaRecorder.AudioSource.MIC);     
+		        recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+		        recorder.setVideoEncoder(MediaRecorder.VideoEncoder.MPEG_4_SP);
+		        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+		        recorder.setPreviewDisplay(surfaceHolder.getSurface());
+		        recorder.setOutputFile(path + "/" + videoName);
+		        recorder.prepare();
+		        recorder.start();
+
+			}catch(IOException e){
+				Log.d("VideoRecorderView.startRecording", e.getMessage());
+			}
 		}
 		isRecording = true;
 	}
@@ -102,6 +127,9 @@ public class VideoRecorderView extends SurfaceView
 	public void stopRecording(){
 		if(isRecording){
 			recorder.stop();
+			recorder.release();
+			//camera.release();
+			toursContainer.addVideoToCurrentTour(videoName);
 			try{
 				camera.reconnect();
 			}catch(IOException e){

@@ -24,9 +24,9 @@ public class VideoFragment extends Fragment{
 			public void onClick(View v) {
 				if(v.getId() == R.id.record_video_button){
 					if(recorderView.isRecording()){
-						recorderView.startRecording();
-					}else{
 						recorderView.stopRecording();
+					}else{
+						recorderView.startRecording();
 					}
 				}
 			}
@@ -39,7 +39,6 @@ public class VideoFragment extends Fragment{
 				Fragment newFragment = new NavigationFragment();
 				FragmentTransaction transaction = getFragmentManager().beginTransaction();
 				transaction.replace(R.id.frame_container, newFragment);
-				transaction.addToBackStack(null);
 				transaction.commit();
 			}
 	    });

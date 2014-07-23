@@ -61,6 +61,7 @@ GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnect
 	private ImageButton buttonPicture, buttonVideo, buttonHelp;
 	private Chronometer chronometer;
 	private Date date;
+	private float scaledSize;
 	
 	public void onCreate(Bundle savedInstanceState) {
 	    setRetainInstance(true); 
@@ -87,6 +88,7 @@ GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnect
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_navigation, container, false);
+        this.scaledSize = this.getScaledPolylineWidth();
         buttonPicture = (ImageButton) rootView.findViewById(R.id.navigation_button_picture);
         buttonPicture.setOnClickListener(new OnClickListener(){
 			@Override
@@ -268,7 +270,7 @@ GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnect
                 LatLng dest = list.get(z+1);
                 map.addPolyline(new PolylineOptions()
                         .add(new LatLng(src.latitude, src.longitude), new LatLng(dest.latitude, dest.longitude))
-                        .width(getScaledPolylineWidth())
+                        .width(this.scaledSize)
                         .visible(true)
                         .color(Color.BLUE).geodesic(true));
             }
