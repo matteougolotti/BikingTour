@@ -186,16 +186,27 @@ GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnect
 		crta.setBearingRequired(false); 
 		crta.setCostAllowed(true); 
 		crta.setPowerRequirement(Criteria.POWER_LOW); 
-		String provider = locationManager.getBestProvider(crta, true);
+		String bestProvider = locationManager.getBestProvider(crta, true);
+		String selectedProvider = bestProvider;
 		
 		CircleOptions circleOptions = new CircleOptions();
 		circleOptions.fillColor(Color.RED);
+		circleOptions.strokeColor(Color.RED);
 		circleOptions.radius(2 * this.getScaledPolylineWidth());
  
-		Location location = locationManager.getLastKnownLocation(provider);
+		Location location = locationManager.getLastKnownLocation(bestProvider);
+		if(location == null){
+			for(String provider : locationManager.getAllProviders()){
+				location = locationManager.getLastKnownLocation(provider);
+				if(location != null){
+					selectedProvider = provider;
+					break;
+				}
+			}
+		}
 		circleOptions.center(new LatLng(location.getLatitude(), location.getLongitude()));
 		this.userIcon = map.addCircle(circleOptions);
-		locationManager.requestLocationUpdates(provider, 1000, 0, locationListener); 
+		locationManager.requestLocationUpdates(selectedProvider, 1000, 0, locationListener); 
     }
 
 	@Override
