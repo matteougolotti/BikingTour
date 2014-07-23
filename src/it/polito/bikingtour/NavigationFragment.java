@@ -20,6 +20,10 @@ import android.content.Context;
 import android.content.IntentSender;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.text.SpannableString;
@@ -45,6 +49,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -61,6 +67,8 @@ GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnect
 	private ImageButton buttonPicture, buttonVideo, buttonHelp;
 	private Chronometer chronometer;
 	private Date date;
+	private LocationManager locationManager;
+	private Circle userIcon;
 	
 	public void onCreate(Bundle savedInstanceState) {
 	    setRetainInstance(true); 
@@ -68,6 +76,8 @@ GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnect
 	    ToursContainer toursContainer = ToursContainer.newInstance(getActivity());
 	    this.currentTour = toursContainer.getCurrentTour();
 	    this.date = new Date();
+	    String context = Context.LOCATION_SERVICE; 
+	    this.locationManager = (LocationManager)getActivity().getSystemService(context); 
 	}
 	
 	@Override
@@ -169,6 +179,23 @@ GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnect
         
         addingMarkers();
 		requestDirections();
+		
+		Criteria crta = new Criteria(); 
+		crta.setAccuracy(Criteria.ACCURACY_FINE); 
+		crta.setAltitudeRequired(false); 
+		crta.setBearingRequired(false); 
+		crta.setCostAllowed(true); 
+		crta.setPowerRequirement(Criteria.POWER_LOW); 
+		String provider = locationManager.getBestProvider(crta, true);
+		
+		CircleOptions circleOptions = new CircleOptions();
+		circleOptions.fillColor(Color.RED);
+		circleOptions.radius(2 * this.getScaledPolylineWidth());
+ 
+		Location location = locationManager.getLastKnownLocation(provider);
+		circleOptions.center(new LatLng(location.getLatitude(), location.getLongitude()));
+		this.userIcon = map.addCircle(circleOptions);
+		locationManager.requestLocationUpdates(provider, 1000, 0, locationListener); 
     }
 
 	@Override
@@ -351,5 +378,33 @@ GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnect
 		else
 			return 5;
 	}
+	
+	private void updateUserPositionWithNewLocation(Location location){
+		LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+		this.userIcon.setCenter(latLng);
+	}
+	
+	private final LocationListener locationListener = new LocationListener(){ 
+
+		@Override 
+		public void onLocationChanged(Location location) { 
+			updateUserPositionWithNewLocation(location); 
+		} 
+
+		@Override 
+		public void onProviderDisabled(String provider) { 
+			updateUserPositionWithNewLocation(null); 
+		} 
+
+		@Override 
+		public void onProviderEnabled(String provider) { 
+		} 
+
+		@Override 
+		public void onStatusChanged(String provider, int status, Bundle extras) { 
+		} 
+
+	}; 
+
 	
 }
