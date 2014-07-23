@@ -1,10 +1,16 @@
 package it.polito.bikingtour;
 
+import java.io.ByteArrayOutputStream;
+
 import it.polito.model.ToursContainer;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore.Images;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +24,7 @@ public class PictureDetailsFragment extends Fragment{
 	private Button deleteButton, shareButton;
 	private int pictureIndex;
 	private int tourIndex;
+	private Bitmap pictureImage;
 	
 	public void onCreate(Bundle savedInstanceState) { 
 	    super.onCreate(savedInstanceState);
@@ -37,7 +44,7 @@ public class PictureDetailsFragment extends Fragment{
         rootView = inflater.inflate(R.layout.fragment_picture_details, container, false);
         ImageView image = (ImageView) rootView.findViewById(R.id.picture_details_image);
         
-        Bitmap pictureImage = toursContainer.getCurrentTour().getPicturesImages().get(pictureIndex);
+        pictureImage = toursContainer.getCurrentTour().getPicturesImages().get(pictureIndex);
         if(pictureImage != null)
         	image.setImageBitmap(pictureImage);
         
@@ -59,11 +66,22 @@ public class PictureDetailsFragment extends Fragment{
         shareButton = (Button) rootView.findViewById(R.id.picture_details_share);
         shareButton.setOnClickListener(new OnClickListener(){
         	@Override
-        	public void onClick(View v){
-        		//TODO add code to manage picture sharing
+        	public void onClick(View v) {
+        		Uri imageUri = getImageUri(getActivity(), pictureImage);
+        		Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND); 
+        	    sharingIntent.setType("image/jpeg");
+        	    sharingIntent.putExtra(android.content.Intent.EXTRA_STREAM, imageUri);
+        	    startActivity(Intent.createChooser(sharingIntent, "Share via"));
         	}
         });
         
         return rootView;
     }
+	
+	public Uri getImageUri(Context inContext, Bitmap inImage) {
+		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+		inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+		String path = Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+		return Uri.parse(path);
+	} 
 }

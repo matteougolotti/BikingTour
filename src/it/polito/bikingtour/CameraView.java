@@ -82,7 +82,7 @@ public class CameraView extends SurfaceView
 		   } else {
 		      return false;
 		   }
-		}
+	}
 
 	public void takePicture() { 
 		   camera.takePicture(null, null, this);
@@ -96,7 +96,7 @@ public class CameraView extends SurfaceView
 	
 	private void setCameraDisplayOrientation(){
 	    CameraInfo info = new CameraInfo();
-	    Camera.getCameraInfo(cameraId, info);
+	    Camera.getCameraInfo(cameraId, info);	
 	    int rotation = info.orientation;
 	    int degrees = 0;
 	    switch (rotation)

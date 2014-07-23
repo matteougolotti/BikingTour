@@ -62,15 +62,16 @@ import android.widget.Toast;
 import android.widget.TabHost.TabSpec;
 
 public class InfoFragment extends Fragment implements
-	GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnectionFailedListener {
+		GooglePlayServicesClient.ConnectionCallbacks,
+		GooglePlayServicesClient.OnConnectionFailedListener {
 
 	private MapFragment mapFragment;
-    private GoogleMap map;
-    private LocationClient mLocationClient;
-    private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
-    private it.polito.model.Location locOrigin, locDestination;
-    private View rootView;
-    private TabHost tabHost;
+	private GoogleMap map;
+	private LocationClient mLocationClient;
+	private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
+	private it.polito.model.Location locOrigin, locDestination;
+	private View rootView;
+	private TabHost tabHost;
 	private TabSpec specMap, specSupport, specInfo;
 	private ArrayList<Location> places;
 	private ImageView chart;
@@ -82,133 +83,143 @@ public class InfoFragment extends Fragment implements
 	private Button buttonAccept, buttonDeny;
 	private RoutesContainer routesContainer;
 	Bitmap mapImage;
-    
+
 	public InfoFragment() {
 
 	}
 
 	public void onCreate(Bundle savedInstanceState) {
-	    setRetainInstance(true); 
-	    super.onCreate(savedInstanceState); 
-	    routesContainer = RoutesContainer.newInstance(getActivity());
+		setRetainInstance(true);
+		super.onCreate(savedInstanceState);
+		routesContainer = RoutesContainer.newInstance(getActivity());
 	}
 
 	@Override
 	public void onDestroyView() {
-	    super.onDestroyView();
-	    try {
-	        MapFragment fragment = (MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.mapfragment);
-	        if (fragment != null) getFragmentManager().beginTransaction().remove(fragment).commit();
+		super.onDestroyView();
+		try {
+			MapFragment fragment = (MapFragment) getActivity()
+					.getFragmentManager().findFragmentById(R.id.mapfragment);
+			if (fragment != null)
+				getFragmentManager().beginTransaction().remove(fragment)
+						.commit();
 
-	    } catch (IllegalStateException e) {
-	    }
+		} catch (IllegalStateException e) {
+		}
 	}
 
 	@Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_info, container, false);
-        tabHost = (TabHost) rootView.findViewById(R.id.tabhostinfo);
-        tabHost.setup();
-        
-        specMap = tabHost.newTabSpec("Map");
-        specMap.setContent(R.id.tabmap);
-        specMap.setIndicator("Map");
-        
-        specInfo = tabHost.newTabSpec("Info");
-        specInfo.setContent(R.id.tabInfo);
-        specInfo.setIndicator("Info");
-        
-        specSupport = tabHost.newTabSpec("Support");
-        specSupport.setContent(R.id.tabSupport);
-        specSupport.setIndicator("Support");
-        
-        tabHost.addTab(specMap);
-        tabHost.addTab(specInfo);
-        tabHost.addTab(specSupport);
-        
-        listPlaces = (ListView) rootView.findViewById(R.id.listviewPlaces);
-        chart = (ImageView) rootView.findViewById(R.id.iv_chart);
-        difficulty = (TextView) rootView.findViewById(R.id.textdifficulty);
-        textDuration = (TextView) rootView.findViewById(R.id.textduration);
-        distance = (TextView) rootView.findViewById(R.id.textdistance);
-        mProgressChart = (ProgressBar) rootView.findViewById(R.id.progressBar_chart);
-        mProgressList = (ProgressBar) rootView.findViewById(R.id.progressBar_listView);
-        buttonAccept = (Button) rootView.findViewById(R.id.buttonAccept);
-        buttonDeny = (Button) rootView.findViewById(R.id.buttonDeny);
-        mProgressChart.setVisibility(View.VISIBLE);
-        mProgressList.setVisibility(View.VISIBLE);
-        
-        buttonDeny.setOnClickListener(new View.OnClickListener() {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		rootView = inflater.inflate(R.layout.fragment_info, container, false);
+		tabHost = (TabHost) rootView.findViewById(R.id.tabhostinfo);
+		tabHost.setup();
+
+		specMap = tabHost.newTabSpec("Map");
+		specMap.setContent(R.id.tabmap);
+		specMap.setIndicator("Map");
+
+		specInfo = tabHost.newTabSpec("Info");
+		specInfo.setContent(R.id.tabInfo);
+		specInfo.setIndicator("Info");
+
+		specSupport = tabHost.newTabSpec("Support");
+		specSupport.setContent(R.id.tabSupport);
+		specSupport.setIndicator("Support");
+
+		tabHost.addTab(specMap);
+		tabHost.addTab(specInfo);
+		tabHost.addTab(specSupport);
+
+		listPlaces = (ListView) rootView.findViewById(R.id.listviewPlaces);
+		chart = (ImageView) rootView.findViewById(R.id.iv_chart);
+		difficulty = (TextView) rootView.findViewById(R.id.textdifficulty);
+		textDuration = (TextView) rootView.findViewById(R.id.textduration);
+		distance = (TextView) rootView.findViewById(R.id.textdistance);
+		mProgressChart = (ProgressBar) rootView
+				.findViewById(R.id.progressBar_chart);
+		mProgressList = (ProgressBar) rootView
+				.findViewById(R.id.progressBar_listView);
+		buttonAccept = (Button) rootView.findViewById(R.id.buttonAccept);
+		buttonDeny = (Button) rootView.findViewById(R.id.buttonDeny);
+		mProgressChart.setVisibility(View.VISIBLE);
+		mProgressList.setVisibility(View.VISIBLE);
+
+		buttonDeny.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				Fragment newFragment = new HomeFragment();
-				FragmentTransaction transaction = getFragmentManager().beginTransaction();
+				FragmentTransaction transaction = getFragmentManager()
+						.beginTransaction();
 				transaction.replace(R.id.frame_container, newFragment);
 				transaction.addToBackStack(null);
 				transaction.commit();
 			}
-        });
-        
-        return rootView;
-    }
+		});
+
+		return rootView;
+	}
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
-	    super.onActivityCreated(savedInstanceState);
-	    final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-	    imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);      
+		super.onActivityCreated(savedInstanceState);
+		final InputMethodManager imm = (InputMethodManager) getActivity()
+				.getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
 
-	    Bundle bundle = this.getArguments();
-	    if (bundle != null) {
-	    	origin = bundle.getString("origin");
-            destination = bundle.getString("destination");
-	    }
+		Bundle bundle = this.getArguments();
+		if (bundle != null) {
+			origin = bundle.getString("origin");
+			destination = bundle.getString("destination");
+		}
 
-	    locOrigin = new it.polito.model.Location(origin);
-        locDestination = new it.polito.model.Location(destination);
-        mLocationClient = new LocationClient(getActivity(), this, this);
-        mapFragment = ((MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.mapfragment));
-        map = mapFragment.getMap();
+		locOrigin = new it.polito.model.Location(origin);
+		locDestination = new it.polito.model.Location(destination);
+		mLocationClient = new LocationClient(getActivity(), this, this);
+		mapFragment = ((MapFragment) getActivity().getFragmentManager()
+				.findFragmentById(R.id.mapfragment));
+		map = mapFragment.getMap();
 	}
 
 	@Override
-    public void onStart() {
-        super.onStart();
-        if(isGooglePlayServicesAvailable()){
-            mLocationClient.connect();
-        }
-    }
+	public void onStart() {
+		super.onStart();
+		if (isGooglePlayServicesAvailable()) {
+			mLocationClient.connect();
+		}
+	}
 
-    @Override
-    public void onStop() {
-        mLocationClient.disconnect();
-        super.onStop();
-    }
-    
+	@Override
+	public void onStop() {
+		mLocationClient.disconnect();
+		super.onStop();
+	}
+
 	@Override
 	public void onConnectionFailed(ConnectionResult connectionResult) {
 		if (connectionResult.hasResolution()) {
-            try {
-                connectionResult.startResolutionForResult(
-                        getActivity(),
-                        CONNECTION_FAILURE_RESOLUTION_REQUEST);
-            } catch (IntentSender.SendIntentException e) {
-                e.printStackTrace();
-            }
-        } else {
-            Toast.makeText(getActivity(), "Sorry. Location services are not available to you", Toast.LENGTH_LONG).show();
-        }
+			try {
+				connectionResult.startResolutionForResult(getActivity(),
+						CONNECTION_FAILURE_RESOLUTION_REQUEST);
+			} catch (IntentSender.SendIntentException e) {
+				e.printStackTrace();
+			}
+		} else {
+			Toast.makeText(getActivity(),
+					"Sorry. Location services are not available to you",
+					Toast.LENGTH_LONG).show();
+		}
 	}
 
 	@Override
-    public void onConnected(Bundle dataBundle) {
-        Toast.makeText(getActivity(), "Connected", Toast.LENGTH_SHORT).show();
-        
-        // Making the request to the geocoding api
-        String requestOrigin = makeURLGeocodingRequest(locOrigin.getName()); // Request to the origin point
-        
-        JSONThread jsonThread = new JSONThread(requestOrigin);
-        jsonThread.setRequestListener(new RequestListener() {
+	public void onConnected(Bundle dataBundle) {
+		Toast.makeText(getActivity(), "Connected", Toast.LENGTH_SHORT).show();
+
+		// Making the request to the geocoding api
+		String requestOrigin = makeURLGeocodingRequest(locOrigin.getName()); // Request to the origin point
+
+		JSONThread jsonThread = new JSONThread(requestOrigin);
+		jsonThread.setRequestListener(new RequestListener() {
 
 			@Override
 			public void postResponse(String result) {
@@ -216,77 +227,84 @@ public class InfoFragment extends Fragment implements
 				requestGeocodingDest(); // Request to the destination point
 			}
 		});
-        jsonThread.execute();
-    }
+		jsonThread.execute();
+	}
 
 	public void requestGeocodingDest() {
-		String requestDestination = makeURLGeocodingRequest(locDestination.getName());
-        
-        JSONThread jsonThread = new JSONThread(requestDestination);
-        jsonThread.setRequestListener(new RequestListener() {
+		String requestDestination = makeURLGeocodingRequest(locDestination
+				.getName());
+
+		JSONThread jsonThread = new JSONThread(requestDestination);
+		jsonThread.setRequestListener(new RequestListener() {
 
 			@Override
 			public void postResponse(String result) {
 				setLatLng(result, "destination");
 				addingMarkers(); // Adding markers and updating camera
-				requestDirections();  // Drawing route
-				requestElevation(); // Creating elevation graph and setting difficulty of the tour
+				requestDirections(); // Drawing route
+				requestElevation(); // Creating elevation graph and setting
+									// difficulty of the tour
 			}
 		});
-        jsonThread.execute();
+		jsonThread.execute();
 	}
 
 	public void addingMarkers() {
 		LatLng latLng = new LatLng(locOrigin.getLat(), locOrigin.getLon());
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 13);
-        map.animateCamera(cameraUpdate);
-        
-        BitmapDescriptor srcIcon = BitmapDescriptorFactory.fromResource(R.drawable.srcmarker);
-        map.addMarker(new MarkerOptions()
-                .position(new LatLng(locOrigin.getLat(), locOrigin.getLon()))
-                .title(locOrigin.getName())
-                .icon(srcIcon));
-        
-        BitmapDescriptor destIcon = BitmapDescriptorFactory.fromResource(R.drawable.destmarker);
-        map.addMarker(new MarkerOptions()
-                .position(new LatLng(locDestination.getLat(), locDestination.getLon()))
-                .title(locDestination.getName())
-                .icon(destIcon));
+		CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng,13);
+		map.animateCamera(cameraUpdate);
+
+		BitmapDescriptor srcIcon = BitmapDescriptorFactory
+				.fromResource(R.drawable.srcmarker);
+		map.addMarker(new MarkerOptions()
+				.position(new LatLng(locOrigin.getLat(), locOrigin.getLon()))
+				.title(locOrigin.getName()).icon(srcIcon));
+
+		BitmapDescriptor destIcon = BitmapDescriptorFactory
+				.fromResource(R.drawable.destmarker);
+		map.addMarker(new MarkerOptions()
+				.position(
+						new LatLng(locDestination.getLat(), locDestination
+								.getLon())).title(locDestination.getName())
+				.icon(destIcon));
 	}
 
 	public void requestDirections() {
 		String request = makeURLRequest(Double.toString(locOrigin.getLat()),
-                Double.toString(locOrigin.getLon()), 
-                Double.toString(locDestination.getLat()), 
-                Double.toString(locDestination.getLon()));
-        
-        JSONThread jsonThread = new JSONThread(request);
-        jsonThread.setRequestListener(new RequestListener() {
+				Double.toString(locOrigin.getLon()),
+				Double.toString(locDestination.getLat()),
+				Double.toString(locDestination.getLon()));
+
+		JSONThread jsonThread = new JSONThread(request);
+		jsonThread.setRequestListener(new RequestListener() {
 
 			@Override
 			public void postResponse(String result) {
 				drawDirections(result); // Drawing route
-				setDurationAndDistance(result); // Setting the duration and total distance of the tour
+				setDurationAndDistance(result); // Setting the duration and
+												// total distance of the tour
 				try {
-					setPlaces(result); // Setting the places that will be part of the logistical support
+					setPlaces(result); // Setting the places that will be part
+										// of the logistical support
 				} catch (UnsupportedEncodingException e) {
 					e.printStackTrace();
 				}
 			}
 		});
-        jsonThread.execute();
+		jsonThread.execute();
 	}
 
 	public void requestElevation() {
 		String requestElevation;
 		try {
-			requestElevation = makeURLElevationsRequest(Double.toString(locOrigin.getLat()), 
-					Double.toString(locOrigin.getLon()), 
-					Double.toString(locDestination.getLat()), 
+			requestElevation = makeURLElevationsRequest(
+					Double.toString(locOrigin.getLat()),
+					Double.toString(locOrigin.getLon()),
+					Double.toString(locDestination.getLat()),
 					Double.toString(locDestination.getLon()));
 
 			JSONThread elevationJsonThread = new JSONThread(requestElevation);
-	        elevationJsonThread.setRequestListener(new RequestListener() {
+			elevationJsonThread.setRequestListener(new RequestListener() {
 				@Override
 				public void postResponse(String result) {
 					try {
@@ -296,36 +314,36 @@ public class InfoFragment extends Fragment implements
 					}
 				}
 			});
-	        elevationJsonThread.execute();
+			elevationJsonThread.execute();
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
 	}
 
 	private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-	    ImageView bmImage;
+		ImageView bmImage;
 
-	    public DownloadImageTask(ImageView bmImage) {
-	        this.bmImage = bmImage;
-	    }
+		public DownloadImageTask(ImageView bmImage) {
+			this.bmImage = bmImage;
+		}
 
-	    protected Bitmap doInBackground(String... urls) {
-	        String urldisplay = urls[0];
-	        Bitmap mIcon11 = null;
-	        try {
-	            InputStream in = new java.net.URL(urldisplay).openStream();
-	            mIcon11 = BitmapFactory.decodeStream(in);
-	        } catch (Exception e) {
-	            Log.e("Error", e.getMessage());
-	            e.printStackTrace();
-	        }
-	        return mIcon11;
-	    }
+		protected Bitmap doInBackground(String... urls) {
+			String urldisplay = urls[0];
+			Bitmap mIcon11 = null;
+			try {
+				InputStream in = new java.net.URL(urldisplay).openStream();
+				mIcon11 = BitmapFactory.decodeStream(in);
+			} catch (Exception e) {
+				Log.e("Error", e.getMessage());
+				e.printStackTrace();
+			}
+			return mIcon11;
+		}
 
-	    protected void onPostExecute(Bitmap result) {
-	    	mProgressChart.setVisibility(View.GONE);
-	        bmImage.setImageBitmap(result);
-	    }
+		protected void onPostExecute(Bitmap result) {
+			mProgressChart.setVisibility(View.GONE);
+			bmImage.setImageBitmap(result);
+		}
 	}
 
 	public void setLatLng(String result, String type) {
@@ -349,112 +367,120 @@ public class InfoFragment extends Fragment implements
 
 	public String makeURLGeocodingRequest(String address) {
 		StringBuilder url = null;
-        try {
-        	url =  new StringBuilder();
-            url.append("http://maps.googleapis.com/maps/api/geocode/json");
-            url.append("?address=");
-            url.append(URLEncoder.encode(address, "utf8"));
-            url.append("&sensor=false");
+		try {
+			url = new StringBuilder();
+			url.append("http://maps.googleapis.com/maps/api/geocode/json");
+			url.append("?address=");
+			url.append(URLEncoder.encode(address, "utf8"));
+			url.append("&sensor=false");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-        return url.toString();
-    }
-
-	public String makeURLElevationsRequest(String srclat, String srclng, String destlat, String destlng) throws UnsupportedEncodingException {
-		StringBuilder url =  new StringBuilder();
-		String specialCharacter = URLEncoder.encode("|", "UTF-8");
-        url.append("http://maps.googleapis.com/maps/api/elevation/json");
-        url.append("?path=");
-        url.append(srclat);
-        url.append(",");
-        url.append(srclng);
-        url.append(specialCharacter);
-        url.append(destlat);
-        url.append(",");
-        url.append(destlng);
-        url.append("&samples=7&sensor=true_or_false");
-        return url.toString();
+		return url.toString();
 	}
 
-	public String makeURLRequest(String srclat, String srclng, String destlat, String destlng) {
-        StringBuilder url =  new StringBuilder();
-        url.append("http://maps.googleapis.com/maps/api/directions/json");
-        url.append("?origin=");
-        url.append(srclat);
-        url.append(",");
-        url.append(srclng);
-        url.append("&destination=");
-        url.append(destlat);
-        url.append(",");
-        url.append(destlng);
-        url.append("&sensor=false&mode=walking&alternatives=true");
-        return url.toString();
-    }
-
-	public String makeURLPlacesRequest(String srclat, String srclng) throws UnsupportedEncodingException {
-		StringBuilder url =  new StringBuilder();
+	public String makeURLElevationsRequest(String srclat, String srclng,
+			String destlat, String destlng) throws UnsupportedEncodingException {
+		StringBuilder url = new StringBuilder();
 		String specialCharacter = URLEncoder.encode("|", "UTF-8");
-        url.append("https://maps.googleapis.com/maps/api/place/search/json");
-        url.append("?location=");
-        url.append(srclat);
-        url.append(",");
-        url.append(srclng);
-        url.append("&radius=300");
-        url.append("&rankby=prominence");
-        url.append("&types=food" + specialCharacter + "bank" + specialCharacter + "atm" + specialCharacter +
-        		"bicycle_store" + specialCharacter + "campground" + specialCharacter + "hospital" + specialCharacter +
-        		"pharmacy" + specialCharacter + "police" + specialCharacter + "restaurant");
-        url.append("&sensor=false&key=AIzaSyCm3iIOz7qAvsC0MmdBtItspW6WH74Mcqc"); // browser key
-        return url.toString();
+		url.append("http://maps.googleapis.com/maps/api/elevation/json");
+		url.append("?path=");
+		url.append(srclat);
+		url.append(",");
+		url.append(srclng);
+		url.append(specialCharacter);
+		url.append(destlat);
+		url.append(",");
+		url.append(destlng);
+		url.append("&samples=7&sensor=true_or_false");
+		return url.toString();
+	}
+
+	public String makeURLRequest(String srclat, String srclng, String destlat,
+			String destlng) {
+		StringBuilder url = new StringBuilder();
+		url.append("http://maps.googleapis.com/maps/api/directions/json");
+		url.append("?origin=");
+		url.append(srclat);
+		url.append(",");
+		url.append(srclng);
+		url.append("&destination=");
+		url.append(destlat);
+		url.append(",");
+		url.append(destlng);
+		url.append("&sensor=false&mode=walking&alternatives=true");
+		return url.toString();
+	}
+
+	public String makeURLPlacesRequest(String srclat, String srclng)
+			throws UnsupportedEncodingException {
+		StringBuilder url = new StringBuilder();
+		String specialCharacter = URLEncoder.encode("|", "UTF-8");
+		url.append("https://maps.googleapis.com/maps/api/place/search/json");
+		url.append("?location=");
+		url.append(srclat);
+		url.append(",");
+		url.append(srclng);
+		url.append("&radius=300");
+		url.append("&rankby=prominence");
+		url.append("&types=food" + specialCharacter + "bank" + specialCharacter
+				+ "atm" + specialCharacter + "bicycle_store" + specialCharacter
+				+ "campground" + specialCharacter + "hospital"
+				+ specialCharacter + "pharmacy" + specialCharacter + "police"
+				+ specialCharacter + "restaurant");
+		url.append("&sensor=false&key=AIzaSyCm3iIOz7qAvsC0MmdBtItspW6WH74Mcqc"); // browser
+																					// key
+		return url.toString();
 	}
 
 	@Override
 	public void onDisconnected() {
 		Toast.makeText(getActivity(), "Disconnected. Please re-connect.",
-                Toast.LENGTH_SHORT).show();
+				Toast.LENGTH_SHORT).show();
 	}
 
 	private boolean isGooglePlayServicesAvailable() {
-        int resultCode =  GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity());
-        if (ConnectionResult.SUCCESS == resultCode) {
-            Log.d("Location Updates", "Google Play services is available.");
-            return true;
-        } else {
-            Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(resultCode,
-                    getActivity(),
-                    CONNECTION_FAILURE_RESOLUTION_REQUEST);
+		int resultCode = GooglePlayServicesUtil
+				.isGooglePlayServicesAvailable(getActivity());
+		if (ConnectionResult.SUCCESS == resultCode) {
+			Log.d("Location Updates", "Google Play services is available.");
+			return true;
+		} else {
+			Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(
+					resultCode, getActivity(),
+					CONNECTION_FAILURE_RESOLUTION_REQUEST);
 
-            if (errorDialog != null) {
-                ErrorDialogFragment errorFragment = new ErrorDialogFragment();
-                errorFragment.setDialog(errorDialog);
-                errorFragment.show(getFragmentManager(), "Location Updates");
-            }
+			if (errorDialog != null) {
+				ErrorDialogFragment errorFragment = new ErrorDialogFragment();
+				errorFragment.setDialog(errorDialog);
+				errorFragment.show(getFragmentManager(), "Location Updates");
+			}
 
-            return false;
-        }
-    }
+			return false;
+		}
+	}
 
 	public static class ErrorDialogFragment extends DialogFragment {
-        private Dialog mDialog;
+		private Dialog mDialog;
 
-        public ErrorDialogFragment() {
-            super();
-            mDialog = null;
-        }
+		public ErrorDialogFragment() {
+			super();
+			mDialog = null;
+		}
 
-        public void setDialog(Dialog dialog) {
-            mDialog = dialog;
-        }
+		public void setDialog(Dialog dialog) {
+			mDialog = dialog;
+		}
 
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            return mDialog;
-        }
-    }
+		@Override
+		public Dialog onCreateDialog(Bundle savedInstanceState) {
+			return mDialog;
+		}
+	}
 
-	public void createGraphAndSetDifficulty(String result) throws UnsupportedEncodingException {
+	public void createGraphAndSetDifficulty(String result)
+			throws UnsupportedEncodingException {
 		try {
 			JSONObject json = new JSONObject(result);
 			JSONArray elevationArray = json.getJSONArray("results");
@@ -468,7 +494,7 @@ public class InfoFragment extends Fragment implements
 				elevations.add(elevation);
 			}
 
-			Double elevationsAverage = sum/(elevations.size() - 1);
+			Double elevationsAverage = sum / (elevations.size() - 1);
 			setDifficulty(elevationsAverage);
 
 			String start = String.valueOf(searchMinValue(elevations));
@@ -494,32 +520,33 @@ public class InfoFragment extends Fragment implements
 		}
 	}
 
-	public String makeUrlChart(ArrayList<String> elevations, String start, String end) throws UnsupportedEncodingException {
-		StringBuilder url =  new StringBuilder();
+	public String makeUrlChart(ArrayList<String> elevations, String start,
+			String end) throws UnsupportedEncodingException {
+		StringBuilder url = new StringBuilder();
 		String specialCharacter = URLEncoder.encode("|", "UTF-8");
 		ArrayList<String> parametrizedArray = getParametrizedArray(elevations);
-        url.append("http://chart.apis.google.com/chart");
-        url.append("?cht=lc");
-        url.append("&chs=400x250");
-        url.append("&chco=FF0000");
-        url.append("&chxt=y&chxr=0,");
-        url.append(start + ",");
-        url.append(end);
-        url.append("&chdl=elevation");
-        url.append("&chtt=Elevation+Chart");
-        url.append("&chts=000000,24");
-        url.append("&chd=t:");
-        for (String elev : parametrizedArray) {
+		url.append("http://chart.apis.google.com/chart");
+		url.append("?cht=lc");
+		url.append("&chs=400x250");
+		url.append("&chco=FF0000");
+		url.append("&chxt=y&chxr=0,");
+		url.append(start + ",");
+		url.append(end);
+		url.append("&chdl=elevation");
+		url.append("&chtt=Elevation+Chart");
+		url.append("&chts=000000,24");
+		url.append("&chd=t:");
+		for (String elev : parametrizedArray) {
 			url.append(elev + ",");
 		}
-        url.deleteCharAt(url.length() - 1);
-        url.append(specialCharacter);
-        url.append("0");
-        url.append(specialCharacter);
-        url.append("0");
-        url.append(specialCharacter);
-        url.append("0");
-        return url.toString();
+		url.deleteCharAt(url.length() - 1);
+		url.append(specialCharacter);
+		url.append("0");
+		url.append(specialCharacter);
+		url.append("0");
+		url.append(specialCharacter);
+		url.append("0");
+		return url.toString();
 	}
 
 	public ArrayList<String> getParametrizedArray(ArrayList<String> elevations) {
@@ -528,8 +555,8 @@ public class InfoFragment extends Fragment implements
 		Double maxValue = searchMaxValue(elevations);
 
 		for (String elevation : elevations) {
-			Double parametrizedValue = (100 * 
-					(Double.parseDouble(elevation) - minValue))/(maxValue - minValue);
+			Double parametrizedValue = (100 * (Double.parseDouble(elevation) - minValue))
+					/ (maxValue - minValue);
 			parametrizedArray.add(String.valueOf(parametrizedValue));
 		}
 		return parametrizedArray;
@@ -565,37 +592,42 @@ public class InfoFragment extends Fragment implements
 			JSONObject legs = routes.getJSONArray("legs").getJSONObject(0);
 			JSONArray steps = legs.getJSONArray("steps");
 
-			String location1_start = steps.getJSONObject(0).getString("start_location");
-			String location2_end = steps.getJSONObject(steps.length()/3).getString("end_location");
-			String location3_start = steps.getJSONObject(2*(steps.length())/3).getString("start_location");
-			String location4_end = steps.getJSONObject(steps.length() - 1).getString("end_location");
+			String location1_start = steps.getJSONObject(0).getString(
+					"start_location");
+			String location2_end = steps.getJSONObject(steps.length() / 3)
+					.getString("end_location");
+			String location3_start = steps.getJSONObject(
+					2 * (steps.length()) / 3).getString("start_location");
+			String location4_end = steps.getJSONObject(steps.length() - 1)
+					.getString("end_location");
 
 			locationsPlaces = new ArrayList<String>();
 			places = new ArrayList<Location>();
 
-			location1_start = location1_start.replaceAll("[^0-9.,]+","");
+			location1_start = location1_start.replaceAll("[^0-9.,]+", "");
 			locationsPlaces.addAll(Arrays.asList(location1_start.split(",")));
 
-			location2_end = location2_end.replaceAll("[^0-9.,]+","");
+			location2_end = location2_end.replaceAll("[^0-9.,]+", "");
 			locationsPlaces.addAll(Arrays.asList(location2_end.split(",")));
 
-			location3_start = location3_start.replaceAll("[^0-9.,]+","");
+			location3_start = location3_start.replaceAll("[^0-9.,]+", "");
 			locationsPlaces.addAll(Arrays.asList(location3_start.split(",")));
 
-			location4_end = location4_end.replaceAll("[^0-9.,]+","");
+			location4_end = location4_end.replaceAll("[^0-9.,]+", "");
 			locationsPlaces.addAll(Arrays.asList(location4_end.split(",")));
 
-			String request1 = makeURLPlacesRequest(locationsPlaces.get(1), locationsPlaces.get(0));
+			String request1 = makeURLPlacesRequest(locationsPlaces.get(1),
+					locationsPlaces.get(0));
 			JSONThread placesJsonThread1 = new JSONThread(request1);
 			placesJsonThread1.setRequestListener(new RequestListener() {
 
 				@Override
-				public void postResponse(String result) { 
+				public void postResponse(String result) {
 					setLogisticalSupport(result);
 					requestPoint2();
 				}
 			});
-	        placesJsonThread1.execute();
+			placesJsonThread1.execute();
 
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -604,12 +636,13 @@ public class InfoFragment extends Fragment implements
 
 	public void requestPoint2() {
 		try {
-			String request2 = makeURLPlacesRequest(locationsPlaces.get(3), locationsPlaces.get(2));
+			String request2 = makeURLPlacesRequest(locationsPlaces.get(3),
+					locationsPlaces.get(2));
 			JSONThread placesJsonThread2 = new JSONThread(request2);
 			placesJsonThread2.setRequestListener(new RequestListener() {
 
 				@Override
-				public void postResponse(String result) { 
+				public void postResponse(String result) {
 					setLogisticalSupport(result);
 					requestPoint3();
 				}
@@ -621,12 +654,13 @@ public class InfoFragment extends Fragment implements
 
 	public void requestPoint3() {
 		try {
-			String request3 = makeURLPlacesRequest(locationsPlaces.get(5), locationsPlaces.get(4));
+			String request3 = makeURLPlacesRequest(locationsPlaces.get(5),
+					locationsPlaces.get(4));
 			JSONThread placesJsonThread3 = new JSONThread(request3);
 			placesJsonThread3.setRequestListener(new RequestListener() {
 
 				@Override
-				public void postResponse(String result) { 
+				public void postResponse(String result) {
 					setLogisticalSupport(result);
 					requestPoint4();
 				}
@@ -638,51 +672,60 @@ public class InfoFragment extends Fragment implements
 
 	public void requestPoint4() {
 		try {
-			String request4 = makeURLPlacesRequest(locationsPlaces.get(7), locationsPlaces.get(6));
+			String request4 = makeURLPlacesRequest(locationsPlaces.get(7),
+					locationsPlaces.get(6));
 			JSONThread placesJsonThread4 = new JSONThread(request4);
 			placesJsonThread4.setRequestListener(new RequestListener() {
 
 				@Override
-				public void postResponse(String result) { 
+				public void postResponse(String result) {
 					setLogisticalSupport(result);
-					listPlaces.setAdapter(new LazyAdapter(getActivity(), places));
+					listPlaces
+							.setAdapter(new LazyAdapter(getActivity(), places));
 					mProgressList.setVisibility(View.GONE);
-			        listPlaces.setOnItemClickListener(new OnItemClickListener() {
+					listPlaces
+							.setOnItemClickListener(new OnItemClickListener() {
 
-						@Override
-						public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-							Object o = listPlaces.getItemAtPosition(position);
-							Location newsData = (Location) o;
-							Toast.makeText(getActivity(), "Selected :" + " " + newsData,
-									Toast.LENGTH_LONG).show();
-						}
-					});
+								@Override
+								public void onItemClick(AdapterView<?> a,
+										View v, int position, long id) {
+									Object o = listPlaces
+											.getItemAtPosition(position);
+									Location newsData = (Location) o;
+									Toast.makeText(getActivity(),
+											"Selected :" + " " + newsData,
+											Toast.LENGTH_LONG).show();
+								}
+							});
 
-			        buttonAccept.setOnClickListener(new View.OnClickListener() {
+					buttonAccept.setOnClickListener(new View.OnClickListener() {
 
 						@Override
 						public void onClick(View v) {
 							SnapshotReadyCallback callback = new SnapshotReadyCallback() {
-					            @Override
-					            public void onSnapshotReady(Bitmap snapshot) {
-					            	try{
-					            		//TODO adjust route length in this constructor
-					            		routesContainer.CreateNewRoute(locOrigin,
-			        						locDestination,
-			        						places,
-			        						snapshot,
-			        						textDifficulty,
-			        						(int)10);
-					            		FragmentManager fragmentManager = getFragmentManager();
-					            		fragmentManager.beginTransaction()
-					    					.replace(R.id.frame_container, new HomeFragment()).commit();
-					            	}catch(Exception e){
-					            		Log.d("InfoFragment.buttonAccept.onClick", e.getMessage());
-					            	}
-					            }
-					        };
+								@Override
+								public void onSnapshotReady(Bitmap snapshot) {
+									try {
+										// TODO adjust route length in this
+										// constructor
+										routesContainer.CreateNewRoute(
+												locOrigin, locDestination,
+												places, snapshot,
+												textDifficulty, (int) 10);
+										FragmentManager fragmentManager = getFragmentManager();
+										fragmentManager
+												.beginTransaction()
+												.replace(R.id.frame_container,
+														new HomeFragment())
+												.commit();
+									} catch (Exception e) {
+										Log.d("InfoFragment.buttonAccept.onClick",
+												e.getMessage());
+									}
+								}
+							};
 
-					        map.snapshot(callback);
+							map.snapshot(callback);
 						}
 					});
 				}
@@ -697,7 +740,7 @@ public class InfoFragment extends Fragment implements
 			JSONObject json = new JSONObject(result);
 			JSONArray resultsArray = json.getJSONArray("results");
 
-			for (int i = 0; i <= resultsArray.length()/2; i++) {
+			for (int i = 0; i <= resultsArray.length() / 2; i++) {
 				JSONObject object = resultsArray.getJSONObject(i);
 				Location place = new Location(object.getString("name"));
 				place.setAddress(object.getString("vicinity"));
@@ -713,7 +756,7 @@ public class InfoFragment extends Fragment implements
 		}
 	}
 
-	public void setDurationAndDistance(String result) { 
+	public void setDurationAndDistance(String result) {
 		try {
 			JSONObject json = new JSONObject(result);
 			JSONArray routeArray = json.getJSONArray("routes");
@@ -732,76 +775,77 @@ public class InfoFragment extends Fragment implements
 
 	}
 
-    public void drawDirections(String result) {
-        try {
-            final JSONObject json = new JSONObject(result);
-            JSONArray routeArray = json.getJSONArray("routes");
-            JSONObject routes = routeArray.getJSONObject(0);
-            JSONObject overviewPolylines = routes.getJSONObject("overview_polyline");
-            String encodedString = overviewPolylines.getString("points");
-            List<LatLng> list = decodePoly(encodedString);
-           
-            for(int z = 0; z < list.size() - 1; z++){
-                LatLng src = list.get(z);
-                LatLng dest = list.get(z+1);
-                map.addPolyline(new PolylineOptions()
-                        .add(new LatLng(src.latitude, src.longitude), new LatLng(dest.latitude, dest.longitude))
-                        .width(getScaledPolylineWidth())
-                        .visible(true)
-                        .color(Color.BLUE).geodesic(true));
-            }
+	public void drawDirections(String result) {
+		try {
+			final JSONObject json = new JSONObject(result);
+			JSONArray routeArray = json.getJSONArray("routes");
+			JSONObject routes = routeArray.getJSONObject(0);
+			JSONObject overviewPolylines = routes
+					.getJSONObject("overview_polyline");
+			String encodedString = overviewPolylines.getString("points");
+			List<LatLng> list = decodePoly(encodedString);
 
-        }
-        catch (JSONException e) {
+			for (int z = 0; z < list.size() - 1; z++) {
+				LatLng src = list.get(z);
+				LatLng dest = list.get(z + 1);
+				map.addPolyline(new PolylineOptions()
+						.add(new LatLng(src.latitude, src.longitude),
+								new LatLng(dest.latitude, dest.longitude))
+						.width(getScaledPolylineWidth()).visible(true)
+						.color(Color.BLUE).geodesic(true));
+			}
 
-        }
-    }
+		} catch (JSONException e) {
 
-    private List<LatLng> decodePoly(String encoded) {
-        List<LatLng> poly = new ArrayList<LatLng>();
-        int index = 0, len = encoded.length();
-        int lat = 0, lng = 0;
+		}
+	}
 
-        while (index < len) {
-            int b, shift = 0, result = 0;
-            do {
-                b = encoded.charAt(index++) - 63;
-                result |= (b & 0x1f) << shift;
-                shift += 5;
-            } while (b >= 0x20);
-            int dlat = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
-            lat += dlat;
+	private List<LatLng> decodePoly(String encoded) {
+		List<LatLng> poly = new ArrayList<LatLng>();
+		int index = 0, len = encoded.length();
+		int lat = 0, lng = 0;
 
-            shift = 0;
-            result = 0;
-            do {
-                b = encoded.charAt(index++) - 63;
-                result |= (b & 0x1f) << shift;
-                shift += 5;
-            } while (b >= 0x20);
-            int dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
-            lng += dlng;
+		while (index < len) {
+			int b, shift = 0, result = 0;
+			do {
+				b = encoded.charAt(index++) - 63;
+				result |= (b & 0x1f) << shift;
+				shift += 5;
+			} while (b >= 0x20);
+			int dlat = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+			lat += dlat;
 
-            LatLng p = new LatLng( (((double) lat / 1E5)),
-                    (((double) lng / 1E5) ));
-            poly.add(p);
-        }
+			shift = 0;
+			result = 0;
+			do {
+				b = encoded.charAt(index++) - 63;
+				result |= (b & 0x1f) << shift;
+				shift += 5;
+			} while (b >= 0x20);
+			int dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+			lng += dlng;
 
-        return poly;
-    }	
-    
-    private int getScaledPolylineWidth(){
+			LatLng p = new LatLng((((double) lat / 1E5)),
+					(((double) lng / 1E5)));
+			poly.add(p);
+		}
+
+		return poly;
+	}
+
+	private int getScaledPolylineWidth() {
 		DisplayMetrics metrics = new DisplayMetrics();
-	    getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
-		if(metrics.densityDpi == DisplayMetrics.DENSITY_LOW)
+		getActivity().getWindowManager().getDefaultDisplay()
+				.getMetrics(metrics);
+		if (metrics.densityDpi == DisplayMetrics.DENSITY_LOW)
 			return 3;
-		else if(metrics.densityDpi == DisplayMetrics.DENSITY_MEDIUM)
+		else if (metrics.densityDpi == DisplayMetrics.DENSITY_MEDIUM)
 			return 6;
-		else if(metrics.densityDpi == DisplayMetrics.DENSITY_HIGH)
+		else if (metrics.densityDpi == DisplayMetrics.DENSITY_HIGH)
 			return 10;
-		else if(metrics.densityDpi == DisplayMetrics.DENSITY_XHIGH)
+		else if (metrics.densityDpi == DisplayMetrics.DENSITY_XHIGH)
 			return 13;
-		else if(metrics.densityDpi == DisplayMetrics.DENSITY_XXHIGH)
+		else if (metrics.densityDpi == DisplayMetrics.DENSITY_XXHIGH)
 			return 16;
 		else
 			return 5;
