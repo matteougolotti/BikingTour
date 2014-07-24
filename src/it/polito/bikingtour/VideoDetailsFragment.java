@@ -51,7 +51,7 @@ public class VideoDetailsFragment extends Fragment {
         deleteButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				//TODO write code to delete the video
+				toursContainer.removeVideoFromCurrentTour(videoIndex);
 				Bundle bundle = new Bundle();
 				bundle.putInt("tourId", tourIndex);
 				Fragment newFragment = new TourFragment();
