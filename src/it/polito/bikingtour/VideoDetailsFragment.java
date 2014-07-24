@@ -29,7 +29,10 @@ public class VideoDetailsFragment extends Fragment {
 	    this.tourIndex = this.getArguments().getInt("tourIndex");
 	    this.videoIndex = this.getArguments().getInt("videoIndex");
 	    toursContainer.setCurrentTour(tourIndex);
-	    this.video = Uri.parse(toursContainer.getCurrentTour().getVideos().get(videoIndex));
+	    String videoName = toursContainer.getCurrentTour().getVideos().get(videoIndex);
+	    String path = getActivity().getFilesDir().getAbsolutePath();
+	    
+	    this.video = Uri.parse(path + "/" + videoName);
 	}
 	
 	@Override

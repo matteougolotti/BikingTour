@@ -104,6 +104,21 @@ public class TourFragment extends Fragment{
         }
         if(videos.size() > 0){
         	videosListView.setAdapter(new TourMediaAdapter(getActivity(), videos));
+        	videosListView.setOnItemClickListener(new OnItemClickListener(){
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view,
+						int position, long id) {
+					Bundle bundle = new Bundle();
+					bundle.putInt("tourIndex", tourIndex);
+					bundle.putInt("videoIndex", position);
+					Fragment newFragment = new VideoDetailsFragment();
+					newFragment.setArguments(bundle);
+					FragmentTransaction transaction = getFragmentManager().beginTransaction();
+					transaction.replace(R.id.frame_container, newFragment);
+					transaction.addToBackStack(null);
+					transaction.commit();	
+				}
+        	});
         }else{
         	TextView videosText = new TextView(getActivity());
         	videosText.setText(getActivity().getString(R.string.no_videos));
