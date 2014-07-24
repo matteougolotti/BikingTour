@@ -62,11 +62,12 @@ GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnect
 	private Chronometer chronometer;
 	private Date date;
 	private float scaledSize;
+	private ToursContainer toursContainer;
 	
 	public void onCreate(Bundle savedInstanceState) {
 	    setRetainInstance(true); 
 	    super.onCreate(savedInstanceState);   
-	    ToursContainer toursContainer = ToursContainer.newInstance(getActivity());
+	    this.toursContainer = ToursContainer.newInstance(getActivity());
 	    this.currentTour = toursContainer.getCurrentTour();
 	    this.date = new Date();
 	}
@@ -109,13 +110,23 @@ GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnect
         });
         
         buttonHelp = (ImageButton) rootView.findViewById(R.id.navigation_button_help);
+        //Help button temporarily used to stop the current Tour
         buttonHelp.setOnClickListener(new OnClickListener(){
+        	@Override
+        	public void onClick(View v){
+        		toursContainer.stopCurrentTour();
+        		FragmentManager fragmentManager = getFragmentManager();
+    			fragmentManager.beginTransaction()
+    					.replace(R.id.frame_container, new HomeFragment()).commit();
+        	}
+        });
+        /*buttonHelp.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
 				NavigationHelpDialog helpDialog = NavigationHelpDialog.newInstance();
 				helpDialog.show(getFragmentManager(), null);
 			}
-        });
+        });*/
         
         chronometer = (Chronometer) rootView.findViewById(R.id.navigation_chronometer);
         chronometer.setBase(SystemClock.elapsedRealtime() - date.getTime() + currentTour.getTourDate());

@@ -54,6 +54,7 @@ public class ToursContainer extends JSONDataContainer {
 			Date date = new Date();
 			currentTour.setTourDuration(date.getTime() - currentTour.getTourDate());
 			currentTour = null;
+			save();
 		}
 	}
 	

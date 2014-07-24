@@ -1,6 +1,5 @@
 package it.polito.model;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -136,9 +135,8 @@ public class Tour {
 	
 	public void removeVideo(int index){
 		if(index >= 0 && index < videos.size()){
-			File video = new File(videos.get(index));
-			if(video.exists())
-				video.delete();
+			String videoFileName = videos.get(index);
+			context.deleteFile(videoFileName);
 			videos.remove(index);
 		}
 	}
@@ -162,9 +160,8 @@ public class Tour {
 	
 	public void removePicture(int index){
 		if(index >= 0 && index < pictures.size()){
-			File picture = new File(pictures.get(index));
-			if(picture.exists())
-				picture.delete();
+			String pictureFileName = pictures.get(index);
+			context.deleteFile(pictureFileName);
 			pictures.remove(index);
 		}
 	}

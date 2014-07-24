@@ -42,7 +42,6 @@ public class VideoDetailsFragment extends Fragment {
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        //TODO this code is untested
 		rootView = inflater.inflate(R.layout.fragment_video_details, container, false);
         VideoView videoView = (VideoView) rootView.findViewById(R.id.video_details_videoview);
         videoView.setMediaController(this.mediaController);

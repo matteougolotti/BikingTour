@@ -3,7 +3,9 @@ package it.polito.adapter;
 import it.polito.bikingtour.R;
 import it.polito.model.Tour;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -30,7 +32,11 @@ public class TourArrayAdapter extends ArrayAdapter<Tour>{
 		if(rowView == null)
 			rowView = inflater.inflate(R.layout.tour_list_layout, parent, false);
 		TextView routeName = (TextView) rowView.findViewById(R.id.tour_name);
-		routeName.setText(String.valueOf(values.get(position).getTourDate()));
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy_HHmm");
+		Date date = new Date();
+		date.setTime(values.get(position).getTourDate());
+        String currentDateAndTime = sdf.format(date);
+		routeName.setText("Tour of " + currentDateAndTime);
 		
 		return rowView;
 	}
