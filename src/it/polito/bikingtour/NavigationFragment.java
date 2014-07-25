@@ -31,6 +31,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -58,7 +59,8 @@ GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnect
 	private MapFragment mapFragment;
 	private GoogleMap map;
 	private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
-	private ImageButton buttonPicture, buttonVideo, buttonHelp;
+	//private ImageButton buttonPicture, buttonVideo, buttonHelp;
+	private Button buttonPicture, buttonVideo, buttonHelp;
 	private Chronometer chronometer;
 	private Date date;
 	private float scaledSize;
@@ -90,7 +92,8 @@ GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnect
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_navigation, container, false);
         this.scaledSize = this.getScaledPolylineWidth();
-        buttonPicture = (ImageButton) rootView.findViewById(R.id.navigation_button_picture);
+        //buttonPicture = (ImageButton) rootView.findViewById(R.id.navigation_button_picture);
+        buttonPicture = (Button) rootView.findViewById(R.id.navigation_button_picture);
         buttonPicture.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
@@ -99,7 +102,8 @@ GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnect
 						.replace(R.id.frame_container, new PictureFragment()).commit();	
 			}
         });
-        buttonVideo = (ImageButton) rootView.findViewById(R.id.navigation_button_video);
+        //buttonVideo = (ImageButton) rootView.findViewById(R.id.navigation_button_video);
+        buttonVideo = (Button) rootView.findViewById(R.id.navigation_button_video);
         buttonVideo.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
@@ -109,7 +113,8 @@ GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnect
 			}
         });
         
-        buttonHelp = (ImageButton) rootView.findViewById(R.id.navigation_button_help);
+        buttonHelp = (Button) rootView.findViewById(R.id.navigation_button_help);
+        //buttonHelp = (ImageButton) rootView.findViewById(R.id.navigation_button_help);
         //Help button temporarily used to stop the current Tour
         buttonHelp.setOnClickListener(new OnClickListener(){
         	@Override

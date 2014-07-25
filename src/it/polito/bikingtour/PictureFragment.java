@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.graphics.drawable.Drawable;
 import android.hardware.Camera;
 
 public class PictureFragment extends Fragment {
@@ -22,6 +23,7 @@ public class PictureFragment extends Fragment {
 	    cameraView = (CameraView) v.findViewById(R.id.picture_camera_preview);
 	    camera = null;
 	    ImageButton takePictureButton = (ImageButton) v.findViewById(R.id.take_picture_button);
+	    takePictureButton.setImageResource(R.drawable.camera1);
 	    takePictureButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
@@ -29,6 +31,7 @@ public class PictureFragment extends Fragment {
 			}
 	    });
 	    ImageButton exitButton = (ImageButton) v.findViewById(R.id.close_fragment_picture);
+	    exitButton.setImageResource(R.drawable.close);
 	    exitButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {

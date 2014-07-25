@@ -8,6 +8,7 @@ import android.content.Context;
 import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
 import android.media.MediaRecorder;
+import android.os.Environment;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Surface;
@@ -99,11 +100,13 @@ public class VideoRecorderView extends SurfaceView
 				camera.stopPreview();
 				camera.unlock();
 		        
-		        String path = context.getFilesDir().getAbsolutePath();
+				File sdCard = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+				//String path = context.getFilesDir().getAbsolutePath();
 		        this.videoName = toursContainer.getCurrentTour().getNewVideoName();
 		         
-		        File file = new File(path, videoName);
-		         
+		        //File file = new File(path, videoName);
+		        File file = new File(sdCard.getAbsolutePath() + "/" + videoName);
+		        
 		        recorder = new MediaRecorder(); 
 
 		        recorder.setCamera(camera);    
@@ -113,7 +116,9 @@ public class VideoRecorderView extends SurfaceView
 		        recorder.setVideoEncoder(MediaRecorder.VideoEncoder.MPEG_4_SP);
 		        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
 		        recorder.setPreviewDisplay(surfaceHolder.getSurface());
-		        recorder.setOutputFile(path + "/" + videoName);
+		        //recorder.setOutputFile(path + "/" + videoName);
+		        String path = file.getAbsolutePath();
+		        recorder.setOutputFile(file.getAbsolutePath());
 		        recorder.prepare();
 		        recorder.start();
 

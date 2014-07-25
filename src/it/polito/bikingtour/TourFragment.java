@@ -13,6 +13,7 @@ import android.app.FragmentTransaction;
 import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -143,7 +144,10 @@ public class TourFragment extends Fragment{
 	
     private Bitmap getVideoPreviewByName(String fileName){
     	Bitmap videoPreview = null;
-    	String path = getActivity().getFilesDir().getAbsolutePath();
+    	//String path = getActivity().getFilesDir().getAbsolutePath();
+    	File sdCard = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+    	String path = sdCard.getAbsolutePath();
+    	
     	try{
     		MediaMetadataRetriever mRetriever = new MediaMetadataRetriever();
     		File file = new File(path + "/" + fileName);

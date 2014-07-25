@@ -1,10 +1,23 @@
 package it.polito.bikingtour;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.net.URLConnection;
+
 import it.polito.model.ToursContainer;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.provider.MediaStore.Images;
+import android.provider.MediaStore.Video;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,8 +43,9 @@ public class VideoDetailsFragment extends Fragment {
 	    this.videoIndex = this.getArguments().getInt("videoIndex");
 	    toursContainer.setCurrentTour(tourIndex);
 	    String videoName = toursContainer.getCurrentTour().getVideos().get(videoIndex);
-	    String path = getActivity().getFilesDir().getAbsolutePath();
-	    
+	    //String path = getActivity().getFilesDir().getAbsolutePath();
+	    File sdCard = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+	    String path = sdCard.getAbsolutePath();
 	    this.video = Uri.parse(path + "/" + videoName);
 	}
 	
@@ -65,8 +79,13 @@ public class VideoDetailsFragment extends Fragment {
         shareButton = (Button) rootView.findViewById(R.id.video_details_share);
         shareButton.setOnClickListener(new OnClickListener(){
         	@Override
-        	public void onClick(View v){
-        		//TODO add code to manage video sharing
+        	public void onClick(View v) {
+        		Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+        		sharingIntent.setType("video/mp4");
+        		String test = "file://" + video.toString();
+        		sharingIntent.putExtra(android.content.Intent.EXTRA_STREAM, 
+        				Uri.parse("file://" + video.toString()));
+        		startActivity(Intent.createChooser(sharingIntent,"Share via")); 
         	}
         });
         

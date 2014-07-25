@@ -27,8 +27,32 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+    	
+        <Button 
+    		android:layout_width="match_parent"
+        	android:layout_height="wrap_content"
+        	android:id="@+id/navigation_button_picture"
+        	android:layout_weight="0.3"
+        	android:text="@string/take_photo"
+       	 	style="@style/btnStyleArsenic" />
         
-    	<ImageButton 
+        <Button 
+    		android:layout_width="match_parent"
+        	android:layout_height="wrap_content"
+        	android:id="@+id/navigation_button_video"
+        	android:layout_weight="0.3"
+        	android:text="@string/rec_video"
+       	 	style="@style/btnStyleArsenic" />
+        
+        <Button 
+    		android:layout_width="match_parent"
+        	android:layout_height="wrap_content"
+        	android:id="@+id/navigation_button_help"
+        	android:layout_weight="0.3"
+        	android:text="@string/exit"
+       	 	style="@style/btnStyleArsenic" />
+        
+    	<!-- <ImageButton 
     	    android:id="@+id/navigation_button_picture"
     	    android:layout_width="match_parent"
     	    android:layout_height="wrap_content"
@@ -47,7 +71,7 @@
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
 		    android:layout_weight="0.3"
-		    android:contentDescription="@string/navigation_help_button"/>
+		    android:contentDescription="@string/navigation_help_button"/> -->
 		
    	</LinearLayout>
     

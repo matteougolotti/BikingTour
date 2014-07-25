@@ -19,6 +19,7 @@ public class VideoFragment extends Fragment{
 		View v = i.inflate(R.layout.fragment_video, vg, false);
 	    recorderView = (VideoRecorderView) v.findViewById(R.id.video_camera_preview);
 	    ImageButton recordVideoButton = (ImageButton) v.findViewById(R.id.record_video_button);
+	    recordVideoButton.setImageResource(R.drawable.video);
 	    recordVideoButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
@@ -33,6 +34,7 @@ public class VideoFragment extends Fragment{
 	    });
 	    
 	    ImageButton closeVideoFragmentButton = (ImageButton) v.findViewById(R.id.close_fragment_video);
+	    closeVideoFragmentButton.setImageResource(R.drawable.close);
 	    closeVideoFragmentButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
