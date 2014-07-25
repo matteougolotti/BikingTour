@@ -46,14 +46,14 @@ public class LazyAdapter extends BaseAdapter {
             vi = inflater.inflate(R.layout.list_places_support, null);
 
         TextView title = (TextView) vi.findViewById(R.id.title); // title
-        TextView distance = (TextView) vi.findViewById(R.id.distance); // distance 
+        //TextView distance = (TextView) vi.findViewById(R.id.distance); // distance 
         ImageView thumb_image=(ImageView) vi.findViewById(R.id.thumbImage); // thumb image
         
         Location location = data.get(position);
         
         // Setting all values in listview
         title.setText(location.getName());
-        distance.setText("Distance: " + String.valueOf(location.getDistance()));
+        //distance.setText("Distance: " + String.valueOf(location.getDistance()));
         imageLoader.DisplayImage(location.getUrlImage(), thumb_image);
         return vi;
     }
