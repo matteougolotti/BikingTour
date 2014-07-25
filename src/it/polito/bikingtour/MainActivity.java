@@ -65,9 +65,10 @@ public class MainActivity extends Activity {
 		// Tour Review
 		navDrawerItems.add(new NavDrawerItem(navMenuTitles[1], navMenuIcons.getResourceId(1, -1)));
 		// Search
-		navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(2, -1)));
+		//navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(2, -1)));
 		// Help
-		navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1)));
+		navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(2, -1)));
+		//navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1)));
 		
 		// Recycle the typed array
 		navMenuIcons.recycle();
@@ -172,11 +173,12 @@ public class MainActivity extends Activity {
 			fragment = new TourReviewFragment();
 			break;
 		case 2:
-			fragment = new SearchFragment();
-			break;
-		case 3:
 			fragment = new HelpFragment();
+			//fragment = new SearchFragment();
 			break;
+//		case 3:
+//			fragment = new HelpFragment();
+//			break;
 
 		default:
 			break;

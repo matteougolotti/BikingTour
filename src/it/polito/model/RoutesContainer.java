@@ -17,7 +17,7 @@ public class RoutesContainer extends JSONDataContainer {
 	private static RoutesContainer container;
 	private HashMap<String, Route> routes;
 	private String fileName = "routes.json";
-	
+
 	private RoutesContainer(){
 		try{
 			String jsonString = readJsonFromFile(fileName);
@@ -35,7 +35,7 @@ public class RoutesContainer extends JSONDataContainer {
 			System.exit(1);
 		}
 	}
-	
+
 	public static RoutesContainer newInstance(Context context){
 		if(RoutesContainer.container == null){
 			RoutesContainer.context = context;
@@ -43,7 +43,7 @@ public class RoutesContainer extends JSONDataContainer {
 		}
 		return RoutesContainer.container;
 	}
-	
+
 	public void CreateNewRoute(Location origin,
 			Location destination,
 			ArrayList<Location> wayPoints,
@@ -59,21 +59,7 @@ public class RoutesContainer extends JSONDataContainer {
 							RoutesContainer.context);
 		this.addRoute(route);
 	}
-	
-	public void CreateNewRoute(Location origin,
-			Location destination,
-			ArrayList<Location> wayPoints,
-			String difficulty,
-			String distance){
-		Route route = new Route(origin,
-							destination,
-							wayPoints,
-							difficulty,
-							distance,
-							RoutesContainer.context);
-		this.addRoute(route);
-	}
-	
+
 	public void save(){
 		try{
 			JSONObject jobject = new JSONObject();
@@ -88,12 +74,12 @@ public class RoutesContainer extends JSONDataContainer {
 			System.exit(1);
 		}
 	}
-	
+
 	public void addRoute(Route r){
 		this.routes.put(String.valueOf(r.getId()), r);
 		this.save();
 	}
-	
+
 	public void removeRoute(long id){
 		File file = new File(String.valueOf(id) + ".png");
 		if(file.exists())
@@ -101,13 +87,13 @@ public class RoutesContainer extends JSONDataContainer {
 		this.routes.remove(String.valueOf(id));
 		this.save();
 	}
-	
+
 	public Route getRoute(long id){
 		return this.routes.get(String.valueOf(id));
 	}
-	
+
 	public Collection<Route> getRoutes(){
 		return this.routes.values();
 	}
-	
+
 }

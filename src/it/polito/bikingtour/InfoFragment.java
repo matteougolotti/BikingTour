@@ -708,6 +708,10 @@ public class InfoFragment extends Fragment implements
 									try {
 										// TODO adjust route length in this
 										// constructor
+//										routesContainer.CreateNewRoute(
+//												locOrigin, locDestination,
+//												places, snapshot,
+//												textDifficulty, textDistance);
 										routesContainer.CreateNewRoute(
 												locOrigin, locDestination,
 												places, snapshot,

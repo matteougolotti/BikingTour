@@ -75,12 +75,12 @@
     	   		    	     android:textAppearance="?android:attr/textAppearanceMedium"
     	   		    	     android:text="@string/tour_destination"/>
     	   		    	 
-    	   		    	 <TextView
+    	   		    	 <!-- <TextView
     	   		    	     android:id="@+id/tour_length"
     	   		    	     android:layout_width="match_parent"
     	   		    	     android:layout_height="wrap_content"
     	   		    	     android:textAppearance="?android:attr/textAppearanceMedium"
-    	   		    	     android:text="@string/tour_length"/>
+    	   		    	     android:text="@string/tour_length"/> -->
     	   		    	 
     	   		    	 <TextView
     	   		    	     android:id="@+id/tour_date"

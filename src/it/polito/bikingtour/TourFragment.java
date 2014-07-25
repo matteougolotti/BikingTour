@@ -1,12 +1,16 @@
 package it.polito.bikingtour;
 
 import java.io.File;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import it.polito.bikingtour.R;
 import it.polito.adapter.TourMediaAdapter;
 import it.polito.model.Tour;
 import it.polito.model.ToursContainer;
+import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -48,6 +52,7 @@ public class TourFragment extends Fragment{
 	    super.onDestroyView();
 	}
 	
+	@SuppressLint("SimpleDateFormat")
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_tour, container, false);
@@ -138,6 +143,26 @@ public class TourFragment extends Fragment{
 						.replace(R.id.frame_container, fragment).commit();
 			}
         });
+        
+        TextView origin = (TextView) rootView.findViewById(R.id.tour_origin);
+        origin.setText("Origin: " + toursContainer.getTour(tourIndex).getRoute().getOrigin().getName());
+        
+        TextView destination = (TextView) rootView.findViewById(R.id.tour_destination);
+        destination.setText("Destination: " + toursContainer.getTour(tourIndex).getRoute().getDestination().getName());
+        
+        //TextView length = (TextView) rootView.findViewById(R.id.tour_length);
+        //length.setText("Length of the tour: " + toursContainer.getTour(tourIndex).getRoute().getDistance());
+        
+        TextView date = (TextView) rootView.findViewById(R.id.tour_date);
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy"); 
+        date.setText("Date of the tour: " + formatter.format(new Date(toursContainer.getTour(tourIndex).getTourDate())));
+        
+        long millis = toursContainer.getTour(tourIndex).getTourDuration();
+        String durationString = String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(millis),
+                TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)),
+                TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
+        TextView duration = (TextView) rootView.findViewById(R.id.tour_duration);
+        duration.setText("Duration of the tour: " + durationString);
         
         return rootView;
     }

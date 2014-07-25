@@ -27,7 +27,7 @@ public class TourReviewFragment extends Fragment {
         tours = ToursContainer.newInstance(getActivity());
         ListView myTours = (ListView) rootView.findViewById(R.id.myToursListView);
         myTours.setAdapter(new TourArrayAdapter(getActivity(), tours.getTours()));
-        myTours.setOnItemClickListener(new OnItemClickListener(){
+        myTours.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position,
 					long id) {

@@ -35,11 +35,11 @@ public class Route {
 	private int lengthInMeters; // It's better use the distance of the tour in km, because probably will be large tours. I made another constructor, with the basic informations
 	private String distance; 
 	private Context context;
-	
+
 	//This constructor should not be used.
 	protected Route(){
 	}
-	
+
 	public Route(Location origin,
 			Location destination,
 			ArrayList<Location> wayPoints,
@@ -47,7 +47,7 @@ public class Route {
 			String difficulty,
 			int lengthInMeters,
 			Context context){
-		
+
 		this.context = context;
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy_HHmm");
 		Date date = new Date();
@@ -59,7 +59,7 @@ public class Route {
 		this.wayPoints = wayPoints;
 		this.difficulty = difficulty;
 		this.lengthInMeters = lengthInMeters;
-		
+
 		String file_name = new String(String.valueOf(id) + ".png");
 	    File file = new File (file_name);
 	    if (file.exists ()) file.delete (); 
@@ -74,14 +74,14 @@ public class Route {
 	    }
 
 	}
-	
+
 	public Route(Location origin,
 			Location destination,
 			ArrayList<Location> wayPoints,
 			String difficulty,
 			String distance,
 			Context context){
-		
+
 		this.context = context;
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy_HHmm");
 		Date date = new Date();
@@ -94,24 +94,24 @@ public class Route {
 		this.difficulty = difficulty;
 		this.distance = distance;
 	}
-	
+
 	//Constructor used to load the object from a JSON object
 	public Route(JSONObject jobject){
 		try{
 			this.name = jobject.getString("name");
 			this.id = jobject.getLong("id");
-			
+
 			this.origin = new Location(jobject.getString("originName"));
 			origin.setLat(jobject.getDouble("srcLat"));
 			origin.setLon(jobject.getDouble("srcLon"));
-			
+
 			this.destination = new Location(jobject.getString("destinationName"));
 			destination.setLat(jobject.getDouble("dstLat"));
 			destination.setLon(jobject.getDouble("dstLon"));
-			
+
 			difficulty = jobject.getString("difficulty");
 			lengthInMeters = jobject.getInt("lengthInMeters");
-			
+
 			JSONArray JsonWayPoints = jobject.getJSONArray("wayPoints");
 			this.wayPoints = new ArrayList<Location>();
 			for(int i=0; i<JsonWayPoints.length(); i++){
@@ -125,7 +125,7 @@ public class Route {
 			Log.d("Route", "Error parsing json. " + e.getMessage());
 		}
 	}
-	
+
 	public JSONObject serializeToJson() throws JSONException {
 		JSONObject jRoute = new JSONObject();
 		jRoute.put("name", name);
@@ -148,31 +148,31 @@ public class Route {
 		jRoute.accumulate("wayPoints",  jWayPoints);
 		return jRoute;
 	}
-	
+
 	public void setName(String name){
 		this.name = name;
 	}
-	
+
 	public void setOrigin(Location origin){
 		this.origin = origin;
 	}
-	
+
 	public void setDestination(Location destination){
 		this.destination = destination;
 	}
-	
+
 	public void setDifficulty(String difficulty){
 		this.difficulty = difficulty;
 	}
-	
+
 	public void setLengthInMeters(int lengthInMeters){
 		this.lengthInMeters = lengthInMeters;
 	}
-	
+
 	public void setWayPoints(ArrayList<Location> wayPoints){
 		this.wayPoints = wayPoints;
 	}
-	
+
 	public void setMapImage(Bitmap mapImage){
 		String file_name = new String(String.valueOf(id) + ".png");
 	    File file = new File (file_name);
@@ -187,35 +187,35 @@ public class Route {
 	           Log.d("Route.Route", e.getMessage());
 	    }
 	}
-	
+
 	public String getName(){
 		return this.name;
 	}
-	
+
 	public Location getOrigin(){
 		return this.origin;
 	}
-	
+
 	public Location getDestination(){
 		return this.destination;
 	}
-	
+
 	public String getDifficulty(){
 		return this.difficulty;
 	}
-	
+
 	public int getLengthInMeters(){
 		return this.lengthInMeters;
 	}
-	
+
 	public ArrayList<Location> getWayPoints(){
 		return this.wayPoints;
 	}
-	
+
 	public long getId(){
 		return this.id;
 	}
-	
+
 	public Bitmap getMapImage(Context context){
 		String file_name = new String(String.valueOf(id) + ".png");
 		InputStream is = null;
@@ -226,7 +226,7 @@ public class Route {
 		}catch(Exception e){
 			Log.e("Route.getMapImage", e.getMessage());
 		}
-		
+
 		return null;
 	}
 
@@ -237,5 +237,5 @@ public class Route {
 	public void setDistance(String distance) {
 		this.distance = distance;
 	}
-	
+
 }
