@@ -1,23 +1,14 @@
 package it.polito.bikingtour;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.net.URLConnection;
 
 import it.polito.model.ToursContainer;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.content.ContentResolver;
-import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
-import android.provider.MediaStore.Images;
-import android.provider.MediaStore.Video;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">BikingTour</string>
+    <string name="app_name">Biking Tour</string>
     <string name="hello_world">Hello world!</string>
+    <string name="desc_logo">Logo</string>
     <string name="action_settings">Settings</string>
     <string name="add_route">New Route</string>
     <string name="my_routes">My Routes</string>

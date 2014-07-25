@@ -1,28 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center_horizontal"
-    android:orientation="vertical" >
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
     
     <ImageView
     	android:id="@+id/picture_details_image"
     	android:layout_width="268dp"
     	android:layout_height="268dp"
+    	android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
     	android:contentDescription="@string/tour_picture"/>
-    
-    <Button 
-        android:id="@+id/picture_details_share"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:text="@string/share_picture"
-    	style="@style/btnStyleArsenic"/>
-    
-    <Button
-        android:id="@+id/picture_details_delete"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:text="@string/delete_picture"
-        style="@style/btnStyleArsenic"/>
 
-</LinearLayout>
+    <LinearLayout
+        android:id="@+id/page_buttons"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/picture_details_image"
+        android:layout_marginTop="14dp"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/picture_details_share"
+            style="@style/btnStyleArsenic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/share_picture" />
+
+        <Button
+            android:id="@+id/picture_details_delete"
+            style="@style/btnStyleArsenic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/delete_picture" />
+    </LinearLayout>
+
+</RelativeLayout>
