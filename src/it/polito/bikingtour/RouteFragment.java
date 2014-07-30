@@ -65,8 +65,8 @@ public class RouteFragment extends Fragment {
         destination = (TextView) rootView.findViewById(R.id.route_textdestination);
         destination.append(route.getDestination().getName());
         
-        //length = (TextView) rootView.findViewById(R.id.route_textlength);
-        //length.append(String.valueOf(route.getLengthInMeters()) + "m");
+        length = (TextView) rootView.findViewById(R.id.route_textlength);
+        length.append(String.valueOf(route.getLengthInMeters()) + "m");
         
         ImageView mapImage = (ImageView) rootView.findViewById(R.id.route_mapimage);
         Bitmap mapBitmap = route.getMapImage(getActivity());

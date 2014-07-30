@@ -48,14 +48,12 @@ public class RoutesContainer extends JSONDataContainer {
 			Location destination,
 			ArrayList<Location> wayPoints,
 			Bitmap mapImage,
-			String difficulty,
-			int lengthInMeters){
+			String difficulty){
 		Route route = new Route(origin,
 							destination,
 							wayPoints,
 							mapImage,
 							difficulty,
-							lengthInMeters,
 							RoutesContainer.context);
 		this.addRoute(route);
 	}

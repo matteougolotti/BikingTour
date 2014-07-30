@@ -189,4 +189,11 @@ public class Tour {
         return bitmap;
     }
 	
+	public Double getTourLength(){
+		Double length = 0.0;
+		if(this.route != null)
+			length = route.getLengthInMeters();
+		return length;
+	}
+	
 }

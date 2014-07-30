@@ -24,6 +24,7 @@
         <item>Tour Review</item>
         <!-- <item>Search</item> -->
         <item>Help</item>
+        <item >Statistics</item>
     </string-array>
      
     <!-- Nav Drawer List Item Icons -->
@@ -33,6 +34,7 @@
         <item>@drawable/ic_review</item>
          <!-- <item>@drawable/ic_search</item> -->
         <item>@drawable/ic_help</item>
+        <item>@drawable/ic_statistics</item>
     </array>
 
     <!-- Content Description -->

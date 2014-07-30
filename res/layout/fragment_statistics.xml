@@ -14,6 +14,7 @@
     <ScrollView 
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="20dp"
         android:layout_weight="0.7">
         
         <LinearLayout
@@ -21,98 +22,47 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
         
-        	<LinearLayout
+        	<TextView 
+        	    android:id="@+id/statistics_number_of_tours"
             	android:layout_width="match_parent"
             	android:layout_height="wrap_content"
-            	android:orientation="horizontal"
-            	android:paddingTop="5dp">
-        		<TextView 
-            		android:layout_width="0dp"
-            		android:layout_height="wrap_content"
-            		android:layout_weight="0.5"
-            		android:textSize="20sp"
-            		android:text="@string/statistics_number_of_tours"/>
-        		<TextView 
-        	    	android:id="@+id/statistics_number_of_tours"
-            		android:layout_width="match_parent"
-            		android:layout_height="wrap_content"
-            		android:textSize="20sp"/>
-        	</LinearLayout>
+            	android:layout_marginTop="10dp"
+            	android:textSize="20sp"
+            	android:text="@string/statistics_number_of_tours"/>
         
-        	<LinearLayout
+        	<TextView 
+        	    android:id="@+id/statistics_total_distance_covered"
             	android:layout_width="match_parent"
             	android:layout_height="wrap_content"
-            	android:orientation="horizontal"
-            	android:paddingTop="5dp">
-        		<TextView 
-            		android:layout_width="0dp"
-            		android:layout_height="wrap_content"
-            		android:layout_weight="0.5"
-            		android:textSize="20sp"
-            		android:text="@string/statistics_total_distance_covered"/>
-        		<TextView 
-        	    	android:id="@+id/statistics_distance_covered"
-            		android:layout_width="match_parent"
-            		android:layout_height="wrap_content"
-            		android:textSize="20sp"/>
-        	</LinearLayout>
+            	android:layout_marginTop="10dp"
+            	android:textSize="20sp"
+            	android:text="@string/statistics_total_distance_covered"/>
         	
-        	<LinearLayout
+        	<TextView 
+        	    android:id="@+id/statistics_biking_time"
             	android:layout_width="match_parent"
             	android:layout_height="wrap_content"
-            	android:orientation="horizontal"
-            	android:paddingTop="5dp">
-        		<TextView 
-            		android:layout_width="0dp"
-            		android:layout_height="wrap_content"
-            		android:layout_weight="0.5"
-            		android:textSize="20sp"
-            		android:text="@string/statistics_biking_time"/>
-        		<TextView 
-        	    	android:id="@+id/statistics_biking_time"
-            		android:layout_width="match_parent"
-            		android:layout_height="wrap_content"
-            		android:textSize="20sp"/>
-        	</LinearLayout>
+            	android:layout_marginTop="10dp"
+            	android:textSize="20sp"
+            	android:text="@string/statistics_biking_time"/>
         
-        	<LinearLayout
+        	<TextView 
+        	    android:id="@+id/statistics_average_speed"
             	android:layout_width="match_parent"
             	android:layout_height="wrap_content"
-            	android:orientation="horizontal"
-            	android:paddingTop="5dp">
-        		<TextView 
-            		android:layout_width="0dp"
-            		android:layout_height="wrap_content"
-            		android:layout_weight="0.5"
-            		android:textSize="20sp"
-            		android:text="@string/statistics_average_speed"/>
-        		<TextView 
-        	    	android:id="@+id/statistics_average_speed"
-            		android:layout_width="match_parent"
-            		android:layout_height="wrap_content"
-            		android:textSize="20sp"/>
-        	</LinearLayout>
+            	android:layout_marginTop="10dp"
+            	android:textSize="20sp"
+            	android:text="@string/statistics_average_speed"/>
         	
-        	<LinearLayout
+        	<TextView 
+        	    android:id="@+id/statistics_longest_tour"
             	android:layout_width="match_parent"
             	android:layout_height="wrap_content"
-            	android:orientation="horizontal"
-            	android:paddingTop="5dp">
-        		<TextView 
-            		android:layout_width="0dp"
-            		android:layout_height="wrap_content"
-            		android:layout_weight="0.5"
-            		android:textSize="20sp"
-            		android:text="@string/statistics_longest_tour"/>
-        		<TextView 
-        	    	android:id="@+id/statistics_longest_tour"
-            		android:layout_width="match_parent"
-            		android:layout_height="wrap_content"
-            		android:textSize="20sp"/>
-        	</LinearLayout>
+            	android:layout_marginTop="10dp"
+            	android:textSize="20sp"
+            	android:text="@string/statistics_longest_tour"/>
         	
         </LinearLayout>
     </ScrollView>
-    
     
 </LinearLayout>

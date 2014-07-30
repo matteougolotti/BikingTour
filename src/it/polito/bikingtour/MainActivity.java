@@ -27,13 +27,10 @@ public class MainActivity extends Activity {
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
  
-    // nav drawer title
     private CharSequence mDrawerTitle;
  
-    // used to store app title
     private CharSequence mTitle;
  
-    // slide menu items
     private String[] navMenuTitles;
     private TypedArray navMenuIcons;
  
@@ -69,6 +66,8 @@ public class MainActivity extends Activity {
 		// Help
 		navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(2, -1)));
 		//navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1)));
+		//Statistics
+		navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3,  -1)));
 		
 		// Recycle the typed array
 		navMenuIcons.recycle();
@@ -148,22 +147,14 @@ public class MainActivity extends Activity {
 		}*/
 	}
 
-	/* *
-	 * Called when invalidateOptionsMenu() is triggered
-	 */
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		// if nav drawer is opened, hide the action items
 		boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
 		menu.findItem(R.id.action_settings).setVisible(!drawerOpen);
 		return super.onPrepareOptionsMenu(menu);
 	}
 
-	/**
-	 * Diplaying fragment view for selected nav drawer list item
-	 * */
 	private void displayView(int position) {
-		// update the main content by replacing fragments
 		Fragment fragment = null;
 		switch (position) {
 		case 0:
@@ -176,6 +167,8 @@ public class MainActivity extends Activity {
 			fragment = new HelpFragment();
 			//fragment = new SearchFragment();
 			break;
+		case 3:
+			fragment = new StatisticsFragment();
 //		case 3:
 //			fragment = new HelpFragment();
 //			break;
@@ -189,13 +182,11 @@ public class MainActivity extends Activity {
 			fragmentManager.beginTransaction()
 					.replace(R.id.frame_container, fragment).commit();
 
-			// update selected item and title, then close the drawer
 			mDrawerList.setItemChecked(position, true);
 			mDrawerList.setSelection(position);
 			setTitle(navMenuTitles[position]);
 			mDrawerLayout.closeDrawer(mDrawerList);
 		} else {
-			// error in creating fragment
 			Log.e("MainActivity", "Error in creating fragment");
 		}
 	}
@@ -229,7 +220,6 @@ public class MainActivity extends Activity {
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
-		// Pass any configuration change to the drawer toggls
 		mDrawerToggle.onConfigurationChanged(newConfig);
 	}
 	

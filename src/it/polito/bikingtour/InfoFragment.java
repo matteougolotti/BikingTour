@@ -83,6 +83,7 @@ public class InfoFragment extends Fragment implements
 	private Button buttonAccept, buttonDeny;
 	private RoutesContainer routesContainer;
 	Bitmap mapImage;
+	private ArrayList<Location> wayPoints;
 
 	public InfoFragment() {
 
@@ -714,8 +715,8 @@ public class InfoFragment extends Fragment implements
 //												textDifficulty, textDistance);
 										routesContainer.CreateNewRoute(
 												locOrigin, locDestination,
-												places, snapshot,
-												textDifficulty, (int) 10);
+												wayPoints, snapshot,
+												textDifficulty);
 										FragmentManager fragmentManager = getFragmentManager();
 										fragmentManager
 												.beginTransaction()
@@ -788,7 +789,8 @@ public class InfoFragment extends Fragment implements
 					.getJSONObject("overview_polyline");
 			String encodedString = overviewPolylines.getString("points");
 			List<LatLng> list = decodePoly(encodedString);
-
+			saveWaypoints(list);
+			
 			for (int z = 0; z < list.size() - 1; z++) {
 				LatLng src = list.get(z);
 				LatLng dest = list.get(z + 1);
@@ -837,6 +839,18 @@ public class InfoFragment extends Fragment implements
 		return poly;
 	}
 
+	private void saveWaypoints(List<LatLng> values){
+		double latitude = 0;
+		double longitude = 0;
+		this.wayPoints = new ArrayList<Location>();
+		for(int i=0; i<values.size(); i++){
+			latitude = values.get(i).latitude;
+			longitude = values.get(i).longitude;
+			Location wayPoint = new Location(latitude, longitude);
+			this.wayPoints.add(wayPoint);
+		}
+	}
+	
 	private int getScaledPolylineWidth() {
 		DisplayMetrics metrics = new DisplayMetrics();
 		getActivity().getWindowManager().getDefaultDisplay()

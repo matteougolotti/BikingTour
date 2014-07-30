@@ -32,7 +32,7 @@ public class Route {
 	private Location origin, destination;
 	private ArrayList<Location> wayPoints;
 	private String difficulty;
-	private int lengthInMeters; // It's better use the distance of the tour in km, because probably will be large tours. I made another constructor, with the basic informations
+	private double lengthInMeters;
 	private String distance; 
 	private Context context;
 
@@ -45,7 +45,6 @@ public class Route {
 			ArrayList<Location> wayPoints,
 			Bitmap mapImage,
 			String difficulty,
-			int lengthInMeters,
 			Context context){
 
 		this.context = context;
@@ -58,7 +57,7 @@ public class Route {
 		this.destination = destination;
 		this.wayPoints = wayPoints;
 		this.difficulty = difficulty;
-		this.lengthInMeters = lengthInMeters;
+		this.lengthInMeters = computeLengthInMeters();
 
 		String file_name = new String(String.valueOf(id) + ".png");
 	    File file = new File (file_name);
@@ -75,6 +74,7 @@ public class Route {
 
 	}
 
+	@Deprecated
 	public Route(Location origin,
 			Location destination,
 			ArrayList<Location> wayPoints,
@@ -93,6 +93,7 @@ public class Route {
 		this.wayPoints = wayPoints;
 		this.difficulty = difficulty;
 		this.distance = distance;
+		this.lengthInMeters = computeLengthInMeters();
 	}
 
 	//Constructor used to load the object from a JSON object
@@ -110,7 +111,7 @@ public class Route {
 			destination.setLon(jobject.getDouble("dstLon"));
 
 			difficulty = jobject.getString("difficulty");
-			lengthInMeters = jobject.getInt("lengthInMeters");
+			lengthInMeters = jobject.getDouble("lengthInMeters");
 
 			JSONArray JsonWayPoints = jobject.getJSONArray("wayPoints");
 			this.wayPoints = new ArrayList<Location>();
@@ -165,7 +166,7 @@ public class Route {
 		this.difficulty = difficulty;
 	}
 
-	public void setLengthInMeters(int lengthInMeters){
+	public void setLengthInMeters(double lengthInMeters){
 		this.lengthInMeters = lengthInMeters;
 	}
 
@@ -204,7 +205,7 @@ public class Route {
 		return this.difficulty;
 	}
 
-	public int getLengthInMeters(){
+	public double getLengthInMeters(){
 		return this.lengthInMeters;
 	}
 
@@ -236,6 +237,19 @@ public class Route {
 
 	public void setDistance(String distance) {
 		this.distance = distance;
+	}
+	
+	private double computeLengthInMeters(){
+		lengthInMeters = 0;
+		Location srcWayPoint, dstWayPoint;
+		if(wayPoints != null){
+			for(int i=0; i<(wayPoints.size() - 1); i++){
+				srcWayPoint = wayPoints.get(i);
+				dstWayPoint = wayPoints.get(i+1);
+				lengthInMeters += srcWayPoint.distanceFromLocationInMeters(dstWayPoint);
+			}	
+		}
+		return lengthInMeters;
 	}
 
 }

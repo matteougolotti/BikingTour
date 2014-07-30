@@ -118,7 +118,7 @@ public class VideoRecorderView extends SurfaceView
 		        recorder.setPreviewDisplay(surfaceHolder.getSurface());
 		        //recorder.setOutputFile(path + "/" + videoName);
 		        String path = file.getAbsolutePath();
-		        recorder.setOutputFile(file.getAbsolutePath());
+		        recorder.setOutputFile(path);
 		        recorder.prepare();
 		        recorder.start();
 

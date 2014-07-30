@@ -73,7 +73,6 @@ public class VideoDetailsFragment extends Fragment {
         	public void onClick(View v) {
         		Intent sharingIntent = new Intent(Intent.ACTION_SEND);
         		sharingIntent.setType("video/mp4");
-        		String test = "file://" + video.toString();
         		sharingIntent.putExtra(android.content.Intent.EXTRA_STREAM, 
         				Uri.parse("file://" + video.toString()));
         		startActivity(Intent.createChooser(sharingIntent,"Share via")); 
